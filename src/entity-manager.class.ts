@@ -8,8 +8,10 @@ export class EntityManager {
 
   constructor(entities: Type<BaseEntity>[]) {
     entities.forEach((type) => {
-      if (!type.prototype[META])
-        throw new Error(`The entity ${type.name} must be decorated`);
+      if (!type.prototype[META] || !type.prototype[META].inspected)
+        throw new Error(
+          `The entity ${type.name} must be decorated using "@Entity"`,
+        );
       this.map.set(type, new Map());
     });
   }

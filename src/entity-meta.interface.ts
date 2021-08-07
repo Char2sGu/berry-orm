@@ -5,4 +5,5 @@ import { Type } from "./utils/type.type";
 export interface EntityMeta {
   type: Type<BaseEntity>;
   fields: { items: Record<string, EntityFieldMeta>; primary: string };
+  inspected: boolean;
 }

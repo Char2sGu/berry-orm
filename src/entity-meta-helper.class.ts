@@ -18,6 +18,7 @@ export class EntityMetaHelper {
       throw new Error(
         `The field ${meta.fields.primary} of ${meta.type.name} must be firstly registered as a field before setting it as the primary key field`,
       );
+    meta.inspected = true;
     return this;
   }
 
@@ -27,6 +28,7 @@ export class EntityMetaHelper {
       meta = prototype[META] = {
         type: prototype.constructor as Type<BaseEntity>,
         fields: { items: {}, primary: "" },
+        inspected: false,
       };
     return meta;
   }

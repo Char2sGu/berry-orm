@@ -13,7 +13,7 @@ export class EntityManager {
 
   constructor({ entities }: EntityManagerOptions) {
     entities.forEach((type) => {
-      this.map.set(type, new Map());
+      this.map.set(type, new Map() as EntityStore<BaseEntity<any, any>>);
     });
   }
 

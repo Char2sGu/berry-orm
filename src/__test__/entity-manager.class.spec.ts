@@ -1,5 +1,5 @@
-import { BaseEntity, Entity, EntityManager, Field } from ".";
-import { EntityData } from "./entity-data.type";
+import { BaseEntity, Entity, EntityManager, Field } from "..";
+import { EntityData } from "../entity-data.type";
 
 describe("EntityManager", () => {
   describe(".transform()", () => {

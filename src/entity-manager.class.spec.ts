@@ -1,12 +1,11 @@
 import { BaseEntity, Entity, EntityManager, Field } from ".";
 import { EntityData } from "./entity-data.type";
-import { PrimaryKey } from "./decorators/primary-key.decorator";
 
 describe("EntityManager", () => {
   describe(".transform()", () => {
     @Entity()
     class User extends BaseEntity {
-      @PrimaryKey()
+      @Field({ primary: true })
       id!: number;
 
       @Field()

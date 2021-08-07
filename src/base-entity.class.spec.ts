@@ -1,12 +1,11 @@
 import { BaseEntity } from "./base-entity.class";
-import { Entity } from "./decorators";
-import { PrimaryKey } from "./decorators/primary-key.decorator";
+import { Entity, Field } from "./decorators";
 
 describe("BaseEntity", () => {
   describe("._pk", () => {
     @Entity()
     class TestingEntity extends BaseEntity {
-      @PrimaryKey()
+      @Field({ primary: true })
       id!: number;
     }
 

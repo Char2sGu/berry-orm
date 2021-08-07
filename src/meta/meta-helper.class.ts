@@ -2,7 +2,7 @@ import { BaseEntity } from "../base-entity.class";
 import { META } from "../symbols";
 import { Type } from "../utils";
 
-export class EntityMetaHelper {
+export class MetaHelper {
   registerField(prototype: BaseEntity, name: string, primary = false) {
     const meta = this.getMeta(prototype);
     meta.fields.items[name] = { name };

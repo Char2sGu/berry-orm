@@ -1,9 +1,9 @@
 import { BaseEntity } from "../base-entity.class";
 import { Type } from "../utils";
-import { EntityFieldMeta } from "./entity-field-meta.interface";
+import { FieldMeta } from "./field-meta.interface";
 
 export interface EntityMeta {
   type: Type<BaseEntity>;
-  fields: { items: Record<string, EntityFieldMeta>; primary: string };
+  fields: { items: Record<string, FieldMeta>; primary: string };
   inspected: boolean;
 }

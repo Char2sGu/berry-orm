@@ -3,7 +3,7 @@ import { META } from "./symbols";
 import { Type } from "./utils/type.type";
 
 export class EntityMetaHelper {
-  addField(prototype: BaseEntity, name: string, primary = false) {
+  registerField(prototype: BaseEntity, name: string, primary = false) {
     const meta = this.getMeta(prototype);
     meta.fields.items[name] = { name };
     if (primary) meta.fields.primary = name;

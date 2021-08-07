@@ -9,7 +9,7 @@ export class EntityManager {
   constructor(entities: Type<BaseEntity>[]) {
     entities.forEach((type) => {
       if (!type.prototype[META])
-        throw new Error(`Entity ${type.name} must be decorated`);
+        throw new Error(`The entity ${type.name} must be decorated`);
       this.map.set(type, new Map());
     });
   }
@@ -24,7 +24,7 @@ export class EntityManager {
     const store = this.map.get(type);
     if (!store)
       throw new Error(
-        `Entity ${type.name} must be registered when constructing the entity manager`,
+        `The entity ${type.name} must be registered to the entity manager`,
       );
     store.set(entity._pk, entity);
     return this;

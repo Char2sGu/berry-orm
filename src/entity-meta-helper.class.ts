@@ -13,7 +13,11 @@ export class EntityMetaHelper {
   inspect(prototype: BaseEntity) {
     const meta = this.getMeta(prototype);
     if (!meta.fields.primary)
-      throw new Error(`Entity ${meta.type} must have a primary key`);
+      throw new Error(`The entity ${meta.type.name} must have a primary key`);
+    if (!meta.fields.items[meta.fields.primary])
+      throw new Error(
+        `The field ${meta.fields.primary} of ${meta.type.name} must be firstly registered as a field before setting it as the primary key field`,
+      );
     return this;
   }
 

@@ -22,7 +22,7 @@ export class EntityManager {
     return this;
   }
 
-  insert<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T>) {
+  commit<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T>) {
     const store = this.getStore(type);
     const entity = this.transform(type, data);
     store.set(entity[PRIMARY], entity);

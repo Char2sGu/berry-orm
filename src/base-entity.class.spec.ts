@@ -1,8 +1,9 @@
 import { BaseEntity } from "./base-entity.class";
 import { Entity, Field } from "./meta";
+import { PK } from "./symbols";
 
 describe("BaseEntity", () => {
-  describe("._pk", () => {
+  describe(".[PK]", () => {
     @Entity()
     class TestingEntity extends BaseEntity {
       @Field({ primary: true })
@@ -17,7 +18,7 @@ describe("BaseEntity", () => {
     });
 
     it("should return the stringified primary key", () => {
-      expect(entity._pk).toBe("1");
+      expect(entity[PK]).toBe("1");
     });
   });
 });

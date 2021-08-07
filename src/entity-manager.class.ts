@@ -1,6 +1,6 @@
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
-import { META } from "./symbols";
+import { META, PK } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
@@ -34,7 +34,7 @@ export class EntityManager {
       throw new Error(
         `The entity ${type.name} must be registered to the entity manager`,
       );
-    store.set(entity._pk, entity);
+    store.set(entity[PK], entity);
     return this;
   }
 

@@ -1,33 +1,74 @@
-import { BaseEntity, Entity, EntityManager, Field } from "..";
+import { BaseEntity } from "..";
 import { EntityData } from "../entity-data.type";
+import { EntityManager } from "../entity-manager.class";
+import { FIELDS } from "../symbols";
 
 describe("EntityManager", () => {
   describe(".transform()", () => {
-    @Entity()
-    class User extends BaseEntity<User, "id"> {
-      @Field({ primary: true })
-      id!: number;
+    describe("Primitives", () => {
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        id!: number;
+        field1!: string;
+        field2!: Date;
+      }
+      TestingEntity.prototype[FIELDS] = {
+        id: { name: "id" },
+        field1: { name: "field1" },
+        field2: { name: "field2" },
+      };
 
-      @Field()
-      username!: string;
-    }
+      let data: EntityData<TestingEntity>;
+      let entity: TestingEntity;
 
-    let data: EntityData<User>;
-    let entity: User;
+      beforeEach(() => {
+        const em = new EntityManager({ entities: [TestingEntity] });
+        data = { id: 1, field1: "", field2: new Date() };
+        entity = em.transform(TestingEntity, data);
+      });
 
-    beforeEach(() => {
-      data = { id: 1, username: "s" };
-      const em = new EntityManager({ entities: [User] });
-      entity = em.transform(User, data);
+      it("should return an instance", () => {
+        expect(entity).toBeInstanceOf(TestingEntity);
+      });
+
+      it("should assign the values to the instance", () => {
+        for (const k in data) {
+          const key = k as keyof typeof data;
+          expect(entity[key]).toBe(data[key]);
+        }
+      });
     });
 
-    it("should transform the data into an entity", () => {
-      expect(entity).toBeInstanceOf(User);
-    });
+    describe("Relations", () => {
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        id!: number;
+        field1!: TestingEntity;
+        field2!: TestingEntity[];
+      }
+      TestingEntity.prototype[FIELDS] = {
+        id: { name: "id" },
+        field1: { name: "field1", relation: () => TestingEntity },
+        field2: { name: "field2", relation: () => TestingEntity },
+      };
 
-    it("should assign the data to the entity", () => {
-      expect(entity.id).toBe(data.id);
-      expect(entity.username).toBe(data.username);
+      const mockRelationEntity = {};
+      let data: EntityData<TestingEntity>;
+      let entity: TestingEntity;
+
+      beforeEach(() => {
+        const em = new EntityManager({ entities: [TestingEntity] });
+        data = { id: 1, field1: 1, field2: [1] };
+        jest.spyOn(em, "retrieve").mockReturnValue(mockRelationEntity);
+        entity = em.transform(TestingEntity, data);
+      });
+
+      it("should make the entity field return the entity", () => {
+        expect(entity.field1).toBe(mockRelationEntity);
+      });
+
+      it("should make the entities field return an array of entities", () => {
+        expect(entity.field2).toBeInstanceOf(Array);
+        expect(entity.field2[0]).toBe(mockRelationEntity);
+      });
     });
   });
 });

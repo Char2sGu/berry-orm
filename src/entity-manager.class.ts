@@ -24,11 +24,7 @@ export class EntityManager {
   }
 
   insert<T extends BaseEntity>(type: Type<T>, data: EntityData<T>) {
-    const store = this.map.get(type);
-    if (!store)
-      throw new Error(
-        `The entity ${type.name} must be registered to the entity manager`,
-      );
+    const store = this.getStore(type);
     const entity = this.transform(type, data);
     store.set(entity[PK], entity);
     return this;
@@ -42,5 +38,14 @@ export class EntityManager {
       entity[name] = data[name];
     }
     return entity;
+  }
+
+  private getStore(type: Type<BaseEntity>) {
+    const store = this.map.get(type);
+    if (!store)
+      throw new Error(
+        `The entity ${type.name} must be registered to the entity manager`,
+      );
+    return store;
   }
 }

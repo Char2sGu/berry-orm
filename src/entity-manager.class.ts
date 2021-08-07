@@ -1,21 +1,19 @@
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
-import { META, PK } from "./symbols";
+import { EntityManagerOptions } from "./entity-manager-options.interface";
+import { FIELDS, PRIMARY } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
-  private map = new Map<Type<BaseEntity>, Map<string, BaseEntity>>();
+  private map = new Map<
+    Type<BaseEntity<any, any>>,
+    Map<string, BaseEntity<any, any>>
+  >();
 
-  constructor(entities: Type<BaseEntity>[]) {
-    this.register(entities);
-  }
-
-  register(entities: Type<BaseEntity>[]) {
+  constructor({ entities }: EntityManagerOptions) {
     entities.forEach((type) => {
-      if (this.map.has(type)) return;
       this.map.set(type, new Map());
     });
-    return this;
   }
 
   clear() {
@@ -23,24 +21,23 @@ export class EntityManager {
     return this;
   }
 
-  insert<T extends BaseEntity>(type: Type<T>, data: EntityData<T>) {
+  insert<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T>) {
     const store = this.getStore(type);
     const entity = this.transform(type, data);
-    store.set(entity[PK], entity);
+    store.set(entity[PRIMARY], entity);
     return this;
   }
 
-  transform<T extends BaseEntity>(type: Type<T>, data: EntityData<T>) {
+  transform<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T>) {
     const entity: T = Object.create(type.prototype);
-    const meta = entity[META];
-    for (const k in meta.fields.items) {
+    for (const k in entity[FIELDS]) {
       const name = k as keyof typeof data;
       entity[name] = data[name];
     }
     return entity;
   }
 
-  private getStore(type: Type<BaseEntity>) {
+  private getStore<T extends BaseEntity<T, any>>(type: Type<T>) {
     const store = this.map.get(type);
     if (!store)
       throw new Error(

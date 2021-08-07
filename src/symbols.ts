@@ -1,2 +1,3 @@
-export const META = Symbol("vast-orm:meta");
-export const PK = Symbol("vast-orm:primary-key");
+export const TYPE = Symbol("vast-orm:type");
+export const FIELDS = Symbol("vast-orm:fields");
+export const PRIMARY = Symbol("vast-orm:primary-key-field");

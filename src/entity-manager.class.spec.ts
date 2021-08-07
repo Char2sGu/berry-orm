@@ -4,7 +4,7 @@ import { EntityData } from "./entity-data.type";
 describe("EntityManager", () => {
   describe(".transform()", () => {
     @Entity()
-    class User extends BaseEntity {
+    class User extends BaseEntity<User, "id"> {
       @Field({ primary: true })
       id!: number;
 
@@ -17,7 +17,7 @@ describe("EntityManager", () => {
 
     beforeEach(() => {
       data = { id: 1, username: "s" };
-      const em = new EntityManager([User]);
+      const em = new EntityManager({ entities: [User] });
       entity = em.transform(User, data);
     });
 

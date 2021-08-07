@@ -1,11 +1,13 @@
-import { EntityMeta } from "./meta";
-import { META, PK } from "./symbols";
+import { FieldMeta } from "./meta";
+import { PrimaryKeyField } from "./primary-key-field.type";
+import { FIELDS, PRIMARY, TYPE } from "./symbols";
+import { Type } from "./utils";
 
-export abstract class BaseEntity {
-  [META]: EntityMeta;
-
-  get [PK]() {
-    const field = this[META].fields.primary;
-    return this[field as keyof this] + "";
-  }
+export abstract class BaseEntity<
+  T extends BaseEntity<T, Primary>,
+  Primary extends PrimaryKeyField<T>,
+> {
+  [TYPE]: Type<T>;
+  [FIELDS]: Record<string, FieldMeta>;
+  [PRIMARY]: Primary;
 }

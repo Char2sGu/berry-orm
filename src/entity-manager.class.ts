@@ -1,13 +1,14 @@
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
+import { EntityStore } from "./entity-store.type";
 import { FIELDS, PRIMARY } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
   private map = new Map<
     Type<BaseEntity<any, any>>,
-    Map<string, BaseEntity<any, any>>
+    EntityStore<BaseEntity<any, any>>
   >();
 
   constructor({ entities }: EntityManagerOptions) {
@@ -43,6 +44,6 @@ export class EntityManager {
       throw new Error(
         `The entity ${type.name} must be registered to the entity manager`,
       );
-    return store;
+    return store as EntityStore<T>;
   }
 }

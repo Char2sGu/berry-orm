@@ -13,10 +13,6 @@ export class EntityManager {
   register(entities: Type<BaseEntity>[]) {
     entities.forEach((type) => {
       if (this.map.has(type)) return;
-      if (!type.prototype[META] || !type.prototype[META].inspected)
-        throw new Error(
-          `The entity ${type.name} must be decorated using "@Entity"`,
-        );
       this.map.set(type, new Map());
     });
     return this;
@@ -28,12 +24,12 @@ export class EntityManager {
   }
 
   insert<T extends BaseEntity>(type: Type<T>, data: EntityData<T>) {
-    const entity = this.transform(type, data);
     const store = this.map.get(type);
     if (!store)
       throw new Error(
         `The entity ${type.name} must be registered to the entity manager`,
       );
+    const entity = this.transform(type, data);
     store.set(entity[PK], entity);
     return this;
   }

@@ -6,5 +6,5 @@ import { MetaHelper } from "./meta-helper.class";
 export const Field =
   (options: FieldOptions = {}) =>
   (prototype: BaseEntity, name: string) => {
-    container.get(MetaHelper).registerField(prototype, name, options.primary);
+    container.get(MetaHelper).registerField(prototype, name, options);
   };

@@ -7,13 +7,19 @@ export class EntityManager {
   private map = new Map<Type<BaseEntity>, Map<string, BaseEntity>>();
 
   constructor(entities: Type<BaseEntity>[]) {
+    this.register(entities);
+  }
+
+  register(entities: Type<BaseEntity>[]) {
     entities.forEach((type) => {
+      if (this.map.has(type)) return;
       if (!type.prototype[META] || !type.prototype[META].inspected)
         throw new Error(
           `The entity ${type.name} must be decorated using "@Entity"`,
         );
       this.map.set(type, new Map());
     });
+    return this;
   }
 
   clear() {

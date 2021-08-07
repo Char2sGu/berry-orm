@@ -1,6 +1,6 @@
 import { BaseEntity } from "./base-entity.class";
 import { META } from "./symbols";
-import { Type } from "./utils/type.type";
+import { Type } from "./utils";
 
 export class EntityMetaHelper {
   registerField(prototype: BaseEntity, name: string, primary = false) {

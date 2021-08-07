@@ -1,7 +1,7 @@
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
 import { META } from "./symbols";
-import { Type } from "./utils/type.type";
+import { Type } from "./utils";
 
 export class EntityManager {
   private map = new Map<Type<BaseEntity>, Map<string, BaseEntity>>();

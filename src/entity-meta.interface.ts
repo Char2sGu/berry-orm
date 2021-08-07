@@ -1,6 +1,6 @@
 import { BaseEntity } from "./base-entity.class";
 import { EntityFieldMeta } from "./entity-field-meta.interface";
-import { Type } from "./utils/type.type";
+import { Type } from "./utils";
 
 export interface EntityMeta {
   type: Type<BaseEntity>;

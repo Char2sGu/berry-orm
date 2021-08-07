@@ -1,5 +1,5 @@
 import { BaseEntity } from "./base-entity.class";
-import { Entity, Field } from "./decorators";
+import { Entity, Field } from "./meta";
 
 describe("BaseEntity", () => {
   describe("._pk", () => {

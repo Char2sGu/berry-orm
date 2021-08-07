@@ -1,6 +1,6 @@
 import { BaseEntity } from "../base-entity.class";
 import { container } from "../container";
-import { EntityMetaHelper } from "../entity-meta-helper.class";
+import { EntityMetaHelper } from "./entity-meta-helper.class";
 
 export const Field =
   (options: { primary?: boolean } = {}) =>

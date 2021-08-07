@@ -1,4 +1,4 @@
-import { EntityMeta } from "./entity-meta.interface";
+import { EntityMeta } from "./meta";
 import { META } from "./symbols";
 
 export abstract class BaseEntity {

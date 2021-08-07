@@ -1,12 +1,13 @@
 import { BaseEntity } from "../base-entity.class";
 import { META } from "../symbols";
 import { Type } from "../utils";
+import { FieldOptions } from "./field-options.interface";
 
 export class MetaHelper {
-  registerField(prototype: BaseEntity, name: string, primary = false) {
+  registerField(prototype: BaseEntity, name: string, options: FieldOptions) {
     const meta = this.getMeta(prototype);
     meta.fields.items[name] = { name };
-    if (primary) meta.fields.primary = name;
+    if (options.primary) meta.fields.primary = name;
     return this;
   }
 

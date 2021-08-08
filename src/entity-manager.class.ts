@@ -17,7 +17,7 @@ export class EntityManager {
   }
 
   /**
-   * Insert an entity to the store.
+   * Commit an entity to the store.
    * @param type
    * @param data
    * @returns
@@ -36,16 +36,36 @@ export class EntityManager {
       // already defined in `.retrieve()`
       if (name == entity[PRIMARY]) continue;
 
-      const value = relation
-        ? relation.multi
-          ? (origin as PrimaryKey[]).map((fk) =>
-              this.retrieve<any, any>(relation.target(), fk),
-            )
-          : this.retrieve<any, any>(relation.target(), origin as PrimaryKey)
-        : origin;
-      Reflect.defineProperty(entity, name, {
-        get: () => value,
-      });
+      let fieldValue: unknown;
+      if (relation) {
+        const target = relation.target();
+
+        const handleRelation = <T extends BaseEntity>(
+          foreignKeyOrData: PrimaryKey | EntityData<T>,
+        ) => {
+          if (typeof foreignKeyOrData == "object") {
+            const data = foreignKeyOrData;
+            return this.commit<any, any>(target, data);
+          } else {
+            const fk = foreignKeyOrData;
+            return this.retrieve<any, any>(target, fk);
+          }
+        };
+
+        if (relation.multi) {
+          const relationReferences = origin as
+            | PrimaryKey[]
+            | EntityData<BaseEntity>[];
+          fieldValue = relationReferences.map(handleRelation);
+        } else {
+          const relationReference = origin as Primary | EntityData<BaseEntity>;
+          fieldValue = handleRelation(relationReference);
+        }
+      } else {
+        fieldValue = origin;
+      }
+
+      Reflect.defineProperty(entity, name, { get: () => fieldValue });
     }
 
     entity[POPULATED] = true;

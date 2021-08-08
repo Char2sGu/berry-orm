@@ -4,9 +4,9 @@ import { PrimaryKey } from "./primary-key.type";
 export type EntityData<T extends BaseEntity<T>> = {
   [K in string & keyof T]: T[K] extends Function
     ? never
-    : T[K] extends BaseEntity
-    ? PrimaryKey
-    : T[K] extends BaseEntity[]
-    ? PrimaryKey[]
+    : T[K] extends BaseEntity<any, any>
+    ? EntityData<T[K]> | PrimaryKey
+    : T[K] extends BaseEntity<any, any>[]
+    ? EntityData<T[K][0]>[] | PrimaryKey[]
     : T[K];
 };

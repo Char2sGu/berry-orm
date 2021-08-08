@@ -5,7 +5,7 @@ import { FIELDS, PRIMARY } from "../symbols";
 
 describe("EntityManager", () => {
   describe(".commit()", () => {
-    describe("Primitives", () => {
+    describe("Values", () => {
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
         id!: number;
         field1!: string;
@@ -53,7 +53,7 @@ describe("EntityManager", () => {
       });
     });
 
-    describe("Relations", () => {
+    describe("Foreign Keys", () => {
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
         id!: number;
         field1!: TestingEntity;
@@ -99,6 +99,67 @@ describe("EntityManager", () => {
       it("should make the entities field return an array of entities", () => {
         expect(entity.field2).toBeInstanceOf(Array);
         expect(entity.field2[0]).toBe(mockRelationEntity);
+      });
+    });
+
+    describe("Nested Data", () => {
+      class TestingParentEntity extends BaseEntity<TestingParentEntity, "id"> {
+        id!: number;
+        field1!: TestingChildEntity;
+        field2!: [TestingChildEntity];
+      }
+      TestingParentEntity.prototype[PRIMARY] = "id";
+      TestingParentEntity.prototype[FIELDS] = {
+        id: { name: "id" },
+        field1: {
+          name: "field1",
+          relation: { target: () => TestingChildEntity },
+        },
+        field2: {
+          name: "field2",
+          relation: { target: () => TestingChildEntity, multi: true },
+        },
+      };
+
+      class TestingChildEntity extends BaseEntity<TestingChildEntity, "id"> {
+        id!: number;
+      }
+      TestingChildEntity.prototype[PRIMARY] = "id";
+      TestingChildEntity.prototype[FIELDS] = {
+        id: { name: "id" },
+      };
+
+      const mockParent = new TestingParentEntity();
+      const mockChild = new TestingChildEntity();
+
+      let result: TestingParentEntity;
+
+      beforeEach(() => {
+        const em = new EntityManager({
+          entities: [TestingParentEntity, TestingChildEntity],
+        });
+        jest
+          .spyOn(em, "retrieve")
+          .mockReturnValueOnce(mockParent)
+          .mockReturnValue(mockChild);
+        result = em.commit(TestingParentEntity, {
+          id: 1,
+          field1: { id: 1 },
+          field2: [{ id: 2 }],
+        });
+      });
+
+      it("should return an instance of the parent entity", () => {
+        expect(result).toBeInstanceOf(TestingParentEntity);
+      });
+
+      it("should make the entity field return an entity", () => {
+        expect(result.field1).toBe(mockChild);
+      });
+
+      it("should make the entities field return an array of entities", () => {
+        expect(result.field2).toBeInstanceOf(Array);
+        expect(result.field2[0]).toBe(mockChild);
       });
     });
   });

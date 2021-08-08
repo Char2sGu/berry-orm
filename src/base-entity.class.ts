@@ -11,7 +11,7 @@ import { Type } from "./utils";
  * getters to get the metadata more conveniently.
  */
 export abstract class BaseEntity<
-  Entity extends BaseEntity<Entity, Primary> = any,
+  Entity extends BaseEntity = any,
   Primary extends PrimaryKeyField<Entity> = any,
 > {
   [TYPE]: Type<Entity>;

@@ -8,14 +8,11 @@ import { FIELDS, POPULATED, PRIMARY } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
-  private map = new Map<
-    Type<BaseEntity<any, any>>,
-    EntityStore<BaseEntity<any, any>>
-  >();
+  private map = new Map<Type<BaseEntity>, EntityStore<BaseEntity>>();
 
   constructor({ entities }: EntityManagerOptions) {
     entities.forEach((type) => {
-      this.map.set(type, new Map() as EntityStore<BaseEntity<any, any>>);
+      this.map.set(type, new Map() as EntityStore<BaseEntity>);
     });
   }
 
@@ -84,7 +81,7 @@ export class EntityManager {
     }
   }
 
-  private getStore<T extends BaseEntity<T, any>>(type: Type<T>) {
+  private getStore<T extends BaseEntity<T>>(type: Type<T>) {
     const store = this.map.get(type);
     if (!store)
       throw new Error(

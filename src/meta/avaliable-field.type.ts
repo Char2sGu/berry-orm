@@ -12,6 +12,6 @@ export type AvailableField<
   ? Primary
   : Options["relation"] extends NonNullable<FieldMeta["relation"]>
   ? Options["relation"]["multi"] extends true
-    ? ExtractKeys<Entity, BaseEntity<any, any>[]> & string
-    : ExtractKeys<Entity, BaseEntity<any, any>> & string
+    ? ExtractKeys<Entity, BaseEntity[]> & string
+    : ExtractKeys<Entity, BaseEntity> & string
   : string;

@@ -4,8 +4,8 @@ import { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
 import { Type } from "./utils";
 
 export abstract class BaseEntity<
-  T extends BaseEntity<T, Primary>,
-  Primary extends PrimaryKeyField<T>,
+  T extends BaseEntity<T, Primary> = any,
+  Primary extends PrimaryKeyField<T> = any,
 > {
   [TYPE]: Type<T>;
   [FIELDS]: Record<string, FieldMeta>;

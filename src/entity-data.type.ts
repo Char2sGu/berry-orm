@@ -1,12 +1,12 @@
 import { BaseEntity } from "./base-entity.class";
 import { PrimaryKey } from "./primary-key.type";
 
-export type EntityData<T extends BaseEntity<T>> = {
-  [K in string & keyof T]: T[K] extends Function
+export type EntityData<Entity extends BaseEntity<Entity>> = {
+  [K in string & keyof Entity]: Entity[K] extends Function
     ? never
-    : T[K] extends BaseEntity<any, any>
-    ? EntityData<T[K]> | PrimaryKey
-    : T[K] extends BaseEntity<any, any>[]
-    ? EntityData<T[K][0]>[] | PrimaryKey[]
-    : T[K];
+    : Entity[K] extends BaseEntity<any, any>
+    ? EntityData<Entity[K]> | PrimaryKey
+    : Entity[K] extends BaseEntity<any, any>[]
+    ? EntityData<Entity[K][0]>[] | PrimaryKey[]
+    : Entity[K];
 };

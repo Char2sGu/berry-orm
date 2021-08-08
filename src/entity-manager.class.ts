@@ -22,11 +22,11 @@ export class EntityManager {
    * @param data
    * @returns
    */
-  commit<T extends BaseEntity<T, Primary>, Primary extends PrimaryKeyField<T>>(
-    type: Type<T>,
-    data: EntityData<T>,
-  ) {
-    const primaryKey = data[type.prototype[PRIMARY]] as T[Primary];
+  commit<
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+  >(type: Type<Entity>, data: EntityData<Entity>) {
+    const primaryKey = data[type.prototype[PRIMARY]] as Entity[Primary];
     const entity = this.retrieve(type, primaryKey);
 
     for (const [k, { relation }] of Object.entries(entity[FIELDS])) {
@@ -40,8 +40,8 @@ export class EntityManager {
       if (relation) {
         const target = relation.target();
 
-        const handleRelation = <T extends BaseEntity>(
-          foreignKeyOrData: PrimaryKey | EntityData<T>,
+        const handleRelation = <Entity extends BaseEntity>(
+          foreignKeyOrData: PrimaryKey | EntityData<Entity>,
         ) => {
           if (typeof foreignKeyOrData == "object") {
             const data = foreignKeyOrData;
@@ -84,11 +84,11 @@ export class EntityManager {
    * @returns
    */
   retrieve<
-    T extends BaseEntity<T, Primary>,
-    Primary extends PrimaryKeyField<T>,
-  >(type: Type<T>, primaryKey: T[Primary]) {
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+  >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const store = this.getStore(type);
-    let entity = store.get(primaryKey) as T;
+    let entity = store.get(primaryKey) as Entity;
     if (entity) {
       return entity;
     } else {
@@ -101,12 +101,12 @@ export class EntityManager {
     }
   }
 
-  private getStore<T extends BaseEntity<T>>(type: Type<T>) {
+  private getStore<Entity extends BaseEntity<Entity>>(type: Type<Entity>) {
     const store = this.map.get(type);
     if (!store)
       throw new Error(
         `The entity ${type.name} must be registered to the entity manager`,
       );
-    return store as EntityStore<T>;
+    return store as EntityStore<Entity>;
   }
 }

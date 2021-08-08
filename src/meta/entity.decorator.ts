@@ -5,8 +5,11 @@ import { Type } from "../utils";
 
 export const Entity =
   () =>
-  <T extends BaseEntity<T, Primary>, Primary extends PrimaryKeyField<T>>(
-    type: Type<T>,
+  <
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+  >(
+    type: Type<Entity>,
   ) => {
     type.prototype[TYPE] = type;
     type.prototype[FIELDS] = type.prototype[FIELDS] ?? {};

@@ -7,7 +7,10 @@ import { RelationTarget } from "./relation-target.type";
 
 export const Field: FieldDecorator =
   (options?: FieldOptions) =>
-  <T extends BaseEntity<T, Primary>, Primary extends PrimaryKeyField<T>>(
+  <
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+  >(
     prototype: BaseEntity,
     name: string,
   ) => {
@@ -18,31 +21,31 @@ export const Field: FieldDecorator =
   };
 
 interface FieldDecorator {
-  (): <T extends BaseEntity<T>>(
-    prototype: T,
-    name: keyof EntityData<T>,
+  (): <Entity extends BaseEntity<Entity>>(
+    prototype: Entity,
+    name: keyof EntityData<Entity>,
   ) => void;
 
   (options: { primary: true }): <
-    T extends BaseEntity<T, Primary>,
-    Primary extends PrimaryKeyField<T>,
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
   >(
-    prototype: T,
+    prototype: Entity,
     name: Primary,
   ) => void;
 
   <TargetEntity extends BaseEntity<TargetEntity>>(
     options: FieldOptionsRelation<TargetEntity>,
-  ): <T extends BaseEntity<T>>(
-    prototype: T,
-    name: string & ExtractKeys<T, TargetEntity>,
+  ): <Entity extends BaseEntity<Entity>>(
+    prototype: Entity,
+    name: string & ExtractKeys<Entity, TargetEntity>,
   ) => void;
 
   <TargetEntity extends BaseEntity<TargetEntity>>(
     options: FieldOptionsRelationMulti<TargetEntity>,
-  ): <T extends BaseEntity<T>>(
-    prototype: T,
-    name: string & ExtractKeys<T, TargetEntity[]>,
+  ): <Entity extends BaseEntity<Entity>>(
+    prototype: Entity,
+    name: string & ExtractKeys<Entity, TargetEntity[]>,
   ) => void;
 }
 
@@ -54,9 +57,9 @@ type FieldOptions =
 interface FieldOptionsPrimary {
   primary: true;
 }
-interface FieldOptionsRelation<T extends BaseEntity<T>> {
-  relation: { target: RelationTarget<T> };
+interface FieldOptionsRelation<Entity extends BaseEntity<Entity>> {
+  relation: { target: RelationTarget<Entity> };
 }
-interface FieldOptionsRelationMulti<T extends BaseEntity<T>> {
-  relation: { target: RelationTarget<T>; multi: true };
+interface FieldOptionsRelationMulti<Entity extends BaseEntity<Entity>> {
+  relation: { target: RelationTarget<Entity>; multi: true };
 }

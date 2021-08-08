@@ -1,5 +1,5 @@
 import { BaseEntity } from "../base-entity.class";
 import { Type } from "../utils";
 
-export type RelationTarget<T extends BaseEntity<T> = BaseEntity> =
-  () => Type<T>;
+export type RelationTarget<Entity extends BaseEntity<Entity> = BaseEntity> =
+  () => Type<Entity>;

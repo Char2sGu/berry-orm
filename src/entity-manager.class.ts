@@ -38,7 +38,8 @@ export class EntityManager {
 
       let fieldValue: unknown;
       if (relation) {
-        const target = relation.target();
+        const { target: getTarget, multi } = relation;
+        const target = getTarget();
 
         const handleRelation = <Entity extends BaseEntity>(
           foreignKeyOrData: PrimaryKey | EntityData<Entity>,
@@ -52,7 +53,7 @@ export class EntityManager {
           }
         };
 
-        if (relation.multi) {
+        if (multi) {
           const relationReferences = origin as
             | PrimaryKey[]
             | EntityData<BaseEntity>[];

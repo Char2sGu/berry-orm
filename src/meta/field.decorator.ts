@@ -16,8 +16,11 @@ export const Field: FieldDecorator =
   ) => {
     let fields = prototype[FIELDS] ?? (prototype[FIELDS] = {});
     fields[name] = { name };
-    if (options && (options as FieldOptionsPrimary).primary)
-      prototype[PRIMARY] = name as Primary;
+    if (options) {
+      if ("primary" in options) prototype[PRIMARY] = name as Primary;
+      if ("relation" in options)
+        fields[name] = { ...fields[name], relation: options.relation };
+    }
   };
 
 interface FieldDecorator {
@@ -35,17 +38,17 @@ interface FieldDecorator {
   ) => void;
 
   <TargetEntity extends BaseEntity<TargetEntity>>(
-    options: FieldOptionsRelation<TargetEntity>,
-  ): <Entity extends BaseEntity<Entity>>(
-    prototype: Entity,
-    name: string & ExtractKeys<Entity, TargetEntity>,
-  ) => void;
-
-  <TargetEntity extends BaseEntity<TargetEntity>>(
     options: FieldOptionsRelationMulti<TargetEntity>,
   ): <Entity extends BaseEntity<Entity>>(
     prototype: Entity,
     name: string & ExtractKeys<Entity, TargetEntity[]>,
+  ) => void;
+
+  <TargetEntity extends BaseEntity<TargetEntity>>(
+    options: FieldOptionsRelation<TargetEntity>,
+  ): <Entity extends BaseEntity<Entity>>(
+    prototype: Entity,
+    name: string & ExtractKeys<Entity, TargetEntity>,
   ) => void;
 }
 

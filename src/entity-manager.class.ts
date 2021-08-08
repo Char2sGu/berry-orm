@@ -29,49 +29,11 @@ export class EntityManager {
   >(type: Type<Entity>, data: EntityData<Entity>) {
     const primaryKey = data[type.prototype[PRIMARY]] as Entity[Primary];
     const entity = this.retrieve(type, primaryKey);
-
-    for (const [k, { relation }] of Object.entries(entity[FIELDS])) {
-      const name = k as keyof typeof data;
-      const origin = data[name];
-
-      // already defined in `.retrieve()`
-      if (name == entity[PRIMARY]) continue;
-
-      let fieldValue: unknown;
-      if (relation) {
-        const { target: getTarget, multi } = relation;
-        const target = getTarget();
-
-        const handleRelation = <Entity extends BaseEntity>(
-          foreignKeyOrData: PrimaryKey | EntityData<Entity>,
-        ) => {
-          if (typeof foreignKeyOrData == "object") {
-            const data = foreignKeyOrData;
-            return this.commit(target, data);
-          } else {
-            const fk = foreignKeyOrData;
-            return this.retrieve(target, fk);
-          }
-        };
-
-        if (multi) {
-          const relationReferences = origin as
-            | PrimaryKey[]
-            | EntityData<AnyEntity>[];
-          fieldValue = relationReferences.map(handleRelation);
-        } else {
-          const relationReference = origin as Primary | EntityData<AnyEntity>;
-          fieldValue = handleRelation(relationReference);
-        }
-      } else {
-        fieldValue = origin;
-      }
-
-      Reflect.defineProperty(entity, name, { get: () => fieldValue });
+    for (const k in entity[FIELDS]) {
+      const field = k as keyof typeof data;
+      this.commitField(entity, field, data[field]);
     }
-
     entity[POPULATED] = true;
-
     return entity;
   }
 
@@ -110,5 +72,46 @@ export class EntityManager {
         `The entity ${type.name} must be registered to the entity manager`,
       );
     return store as EntityStore<Entity>;
+  }
+
+  private commitField<
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+    Field extends keyof EntityData<Entity>,
+    Data extends EntityData<Entity>[Field],
+  >(entity: Entity, field: Field, data: Data) {
+    const { relation } = entity[FIELDS][field];
+    let value: unknown;
+
+    if (relation) {
+      const { target: getTarget, multi } = relation;
+      const target = getTarget();
+
+      const handleRelation = <Entity extends BaseEntity>(
+        foreignKeyOrData: PrimaryKey | EntityData<Entity>,
+      ) => {
+        if (typeof foreignKeyOrData == "object") {
+          const data = foreignKeyOrData;
+          return this.commit(target, data);
+        } else {
+          const fk = foreignKeyOrData;
+          return this.retrieve(target, fk);
+        }
+      };
+
+      if (multi) {
+        const relationReferences = data as
+          | PrimaryKey[]
+          | EntityData<AnyEntity>[];
+        value = relationReferences.map(handleRelation);
+      } else {
+        const relationReference = data as Primary | EntityData<AnyEntity>;
+        value = handleRelation(relationReference);
+      }
+    } else {
+      value = data;
+    }
+
+    Reflect.defineProperty(entity, field, { get: () => value });
   }
 }

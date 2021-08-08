@@ -1,3 +1,4 @@
+import { EntityData } from "./entity-data.type";
 import { FieldMeta } from "./meta";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
@@ -15,7 +16,7 @@ export abstract class BaseEntity<
   Primary extends PrimaryKeyField<Entity> = any,
 > {
   [TYPE]: Type<Entity>;
-  [FIELDS]: Record<string & keyof Entity, FieldMeta<Entity>>;
+  [FIELDS]: Record<keyof EntityData<Entity>, FieldMeta<Entity>>;
   [PRIMARY]: Primary;
   [POPULATED]: boolean;
 }

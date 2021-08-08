@@ -1,3 +1,4 @@
+import { AnyEntity } from "./any-entity.type";
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
@@ -8,11 +9,11 @@ import { FIELDS, POPULATED, PRIMARY } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
-  private map = new Map<Type<BaseEntity>, EntityStore<BaseEntity>>();
+  private map = new Map<Type<AnyEntity>, EntityStore<AnyEntity>>();
 
   constructor({ entities }: EntityManagerOptions) {
     entities.forEach((type) => {
-      this.map.set(type, new Map() as EntityStore<BaseEntity>);
+      this.map.set(type, new Map());
     });
   }
 
@@ -46,20 +47,20 @@ export class EntityManager {
         ) => {
           if (typeof foreignKeyOrData == "object") {
             const data = foreignKeyOrData;
-            return this.commit<any, any>(target, data);
+            return this.commit(target, data);
           } else {
             const fk = foreignKeyOrData;
-            return this.retrieve<any, any>(target, fk);
+            return this.retrieve(target, fk);
           }
         };
 
         if (multi) {
           const relationReferences = origin as
             | PrimaryKey[]
-            | EntityData<BaseEntity>[];
+            | EntityData<AnyEntity>[];
           fieldValue = relationReferences.map(handleRelation);
         } else {
-          const relationReference = origin as Primary | EntityData<BaseEntity>;
+          const relationReference = origin as Primary | EntityData<AnyEntity>;
           fieldValue = handleRelation(relationReference);
         }
       } else {

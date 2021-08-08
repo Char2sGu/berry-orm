@@ -1,7 +1,7 @@
-import { BaseEntity } from "../base-entity.class";
+import { AnyEntity } from "../any-entity.type";
 import { Type } from "../utils";
 
 export interface FieldMeta {
   name: string;
-  relation?: { target: () => Type<BaseEntity>; multi?: boolean };
+  relation?: { target: () => Type<AnyEntity>; multi?: boolean };
 }

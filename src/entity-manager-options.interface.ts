@@ -1,6 +1,6 @@
-import { BaseEntity } from "./base-entity.class";
+import { AnyEntity } from "./any-entity.type";
 import { Type } from "./utils";
 
 export interface EntityManagerOptions {
-  entities: Type<BaseEntity>[];
+  entities: Type<AnyEntity>[];
 }

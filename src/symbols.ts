@@ -1,3 +1,7 @@
-export const TYPE = Symbol("vast-orm:type");
-export const FIELDS = Symbol("vast-orm:fields");
-export const PRIMARY = Symbol("vast-orm:primary-key-field");
+/**Build description. */
+const d = (s: string) => `vast-orm:${s}`;
+
+export const TYPE = Symbol(d("type"));
+export const FIELDS = Symbol(d("fields"));
+export const PRIMARY = Symbol(d("primary-key-field"));
+export const POPULATED = Symbol(d("populated"));

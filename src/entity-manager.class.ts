@@ -3,7 +3,8 @@ import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStore } from "./entity-store.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
-import { FIELDS, PRIMARY } from "./symbols";
+import { PrimaryKey } from "./primary-key.type";
+import { FIELDS, POPULATED, PRIMARY } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
@@ -18,42 +19,69 @@ export class EntityManager {
     });
   }
 
-  commit<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T> | T) {
-    const store = this.getStore(type);
-    const entity = isEntityData(data) ? this.transform(type, data) : data;
-    store.set(entity[PRIMARY], entity);
-    return entity;
+  /**
+   * Insert an entity to the store.
+   * @param type
+   * @param data
+   * @returns
+   */
+  commit<T extends BaseEntity<T, Primary>, Primary extends PrimaryKeyField<T>>(
+    type: Type<T>,
+    data: EntityData<T>,
+  ) {
+    const primaryKey = data[type.prototype[PRIMARY]] as T[Primary];
+    const entity = this.retrieve(type, primaryKey);
 
-    function isEntityData(v: typeof data): v is EntityData<T> {
-      return v instanceof type;
+    for (const [k, { relation }] of Object.entries(entity[FIELDS])) {
+      const name = k as keyof typeof data;
+      const origin = data[name];
+
+      // already defined in `.retrieve()`
+      if (name == entity[PRIMARY]) continue;
+
+      const value = relation
+        ? origin instanceof Array
+          ? (origin as PrimaryKey[]).map((fk) =>
+              this.retrieve<any, any>(relation(), fk),
+            )
+          : this.retrieve<any, any>(relation(), origin as PrimaryKey)
+        : origin;
+      Reflect.defineProperty(entity, name, {
+        get: () => value,
+      });
     }
+
+    entity[POPULATED] = true;
+
+    return entity;
   }
 
+  /**
+   * Get the reference to the target entity.
+   *
+   * Return the entity from the store if it exists, otherwise create an
+   * unpopulated one in the store and return it.
+   *
+   * @param type
+   * @param primaryKey
+   * @returns
+   */
   retrieve<
     T extends BaseEntity<T, Primary>,
     Primary extends PrimaryKeyField<T>,
   >(type: Type<T>, primaryKey: T[Primary]) {
     const store = this.getStore(type);
-    let entity = store.get(primaryKey) as T | undefined;
-    if (entity) return entity;
-    else return null;
-  }
-
-  transform<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T>) {
-    const entity: T = Object.create(type.prototype);
-    for (const k in entity[FIELDS]) {
-      const name = k as keyof typeof data;
-      const value = data[name];
-      const { relation } = entity[FIELDS][name];
-      Reflect.defineProperty(entity, name, {
-        get: relation
-          ? value instanceof Array
-            ? () => value.map((fk) => this.retrieve<any, any>(relation(), fk))
-            : () => this.retrieve<any, any>(relation(), value)
-          : () => value,
+    let entity = store.get(primaryKey) as T;
+    if (entity) {
+      return entity;
+    } else {
+      entity = Object.create(type);
+      entity[POPULATED] = false;
+      Reflect.defineProperty(entity, entity[PRIMARY], {
+        get: () => primaryKey,
       });
+      return entity;
     }
-    return entity;
   }
 
   private getStore<T extends BaseEntity<T, any>>(type: Type<T>) {

@@ -18,11 +18,6 @@ export class EntityManager {
     });
   }
 
-  clear() {
-    for (const map of this.map.values()) map.clear();
-    return this;
-  }
-
   commit<T extends BaseEntity<T, any>>(type: Type<T>, data: EntityData<T> | T) {
     const store = this.getStore(type);
     const entity = isEntityData(data) ? this.transform(type, data) : data;

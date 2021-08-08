@@ -1,10 +1,9 @@
 import { BaseEntity } from "./base-entity.class";
+import { EntityField } from "./entity-field.type";
 import { PrimaryKey } from "./primary-key.type";
 
 export type EntityData<Entity extends BaseEntity<Entity>> = {
-  [K in string & keyof Entity]: Entity[K] extends Function
-    ? never
-    : Entity[K] extends BaseEntity<any, any>
+  [K in EntityField<Entity>]: Entity[K] extends BaseEntity<any, any>
     ? EntityData<Entity[K]> | PrimaryKey
     : Entity[K] extends BaseEntity<any, any>[]
     ? EntityData<Entity[K][0]>[] | PrimaryKey[]

@@ -15,7 +15,7 @@ export abstract class BaseEntity<
   Primary extends PrimaryKeyField<Entity> = any,
 > {
   [TYPE]: Type<Entity>;
-  [FIELDS]: Record<string, FieldMeta>;
+  [FIELDS]: Record<string & keyof Entity, FieldMeta<Entity>>;
   [PRIMARY]: Primary;
   [POPULATED]: boolean;
 }

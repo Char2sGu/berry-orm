@@ -1,6 +1,7 @@
 import { BaseEntity } from "../base-entity.class";
 import { PrimaryKeyField } from "../primary-key-field.type";
 import { ExtractKeys } from "../utils";
+import { FieldMeta } from "./field-meta.interface";
 import { FieldOptions } from "./field-options.interface";
 
 export type AvailableField<
@@ -9,6 +10,8 @@ export type AvailableField<
   Primary extends PrimaryKeyField<Entity>,
 > = Options["primary"] extends true
   ? Primary
-  : Options["relation"] extends FieldOptions["relation"]
-  ? ExtractKeys<Entity, BaseEntity<any, any> | BaseEntity<any, any>[]> & string
+  : Options["relation"] extends NonNullable<FieldMeta["relation"]>
+  ? Options["relation"]["multi"] extends true
+    ? ExtractKeys<Entity, BaseEntity<any, any>[]> & string
+    : ExtractKeys<Entity, BaseEntity<any, any>> & string
   : string;

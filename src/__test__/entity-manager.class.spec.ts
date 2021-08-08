@@ -62,8 +62,14 @@ describe("EntityManager", () => {
       TestingEntity.prototype[PRIMARY] = "id";
       TestingEntity.prototype[FIELDS] = {
         id: { name: "id" },
-        field1: { name: "field1", relation: () => TestingEntity },
-        field2: { name: "field2", relation: () => TestingEntity },
+        field1: {
+          name: "field1",
+          relation: { target: () => TestingEntity },
+        },
+        field2: {
+          name: "field2",
+          relation: { target: () => TestingEntity, multi: true },
+        },
       };
 
       const mockRelationEntity = {};

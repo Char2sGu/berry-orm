@@ -3,5 +3,5 @@ import { Type } from "../utils";
 
 export interface FieldMeta {
   name: string;
-  relation?: () => Type<BaseEntity<any, any>>;
+  relation?: { target: () => Type<BaseEntity<any, any>>; multi?: boolean };
 }

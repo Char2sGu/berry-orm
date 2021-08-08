@@ -40,11 +40,11 @@ export class EntityManager {
       if (name == entity[PRIMARY]) continue;
 
       const value = relation
-        ? origin instanceof Array
+        ? relation.multi
           ? (origin as PrimaryKey[]).map((fk) =>
-              this.retrieve<any, any>(relation(), fk),
+              this.retrieve<any, any>(relation.target(), fk),
             )
-          : this.retrieve<any, any>(relation(), origin as PrimaryKey)
+          : this.retrieve<any, any>(relation.target(), origin as PrimaryKey)
         : origin;
       Reflect.defineProperty(entity, name, {
         get: () => value,

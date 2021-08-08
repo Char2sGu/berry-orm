@@ -13,16 +13,15 @@ export const Field: FieldDecorator =
     Primary extends PrimaryKeyField<Entity>,
   >(
     prototype: Entity,
-    name: keyof EntityData<Entity>,
+    name: string,
   ) => {
-    let fields = prototype[FIELDS] ?? {};
+    let fields = prototype[FIELDS] ?? (prototype[FIELDS] = {});
     fields[name] = { name };
     if (options) {
       if ("primary" in options) prototype[PRIMARY] = name as Primary;
       if ("relation" in options)
         fields[name] = { ...fields[name], relation: options.relation };
     }
-    prototype[FIELDS] = fields;
   };
 
 interface FieldDecorator {

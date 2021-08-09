@@ -5,7 +5,7 @@ import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStore } from "./entity-store.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { PrimaryKey } from "./primary-key.type";
-import { FIELDS, POPULATED, PRIMARY } from "./symbols";
+import { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
 import { Type } from "./utils";
 
 export class EntityManager {
@@ -15,6 +15,7 @@ export class EntityManager {
     entities.forEach((type) => {
       this.map.set(type, new Map());
     });
+    this.inspect();
   }
 
   /**
@@ -113,5 +114,31 @@ export class EntityManager {
     }
 
     Reflect.defineProperty(entity, field, { get: () => value });
+  }
+
+  /**
+   * Check the registered entities.
+   */
+  private inspect() {
+    for (const type of this.map.keys()) {
+      const throwErr = (field: string | null, msg: string) => {
+        throw new Error(`[${type.name}${field ? `:${field}` : ""}] ${msg}`);
+      };
+
+      if (!type.prototype[TYPE])
+        throwErr(null, "Entities must be decorated by @Entity()");
+      if (!type.prototype[FIELDS])
+        throwErr(null, "Entities must have at least one field");
+      if (!type.prototype[PRIMARY])
+        throwErr(null, "Entities must have a primary key field");
+
+      Object.values(type.prototype[FIELDS]).forEach(({ name, relation }) => {
+        if (relation) {
+          const { target } = relation;
+          if (!this.map.has(target()))
+            throwErr(name, "The relation entity is not registered");
+        }
+      });
+    }
   }
 }

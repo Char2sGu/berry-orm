@@ -1,7 +1,7 @@
 import { BaseEntity } from "..";
 import { EntityData } from "../entity-data.type";
 import { EntityManager } from "../entity-manager.class";
-import { FIELDS, PRIMARY } from "../symbols";
+import { FIELDS, PRIMARY, TYPE } from "../symbols";
 
 describe("EntityManager", () => {
   describe(".commit()", () => {
@@ -11,6 +11,7 @@ describe("EntityManager", () => {
         field1!: string;
         field2!: Date;
       }
+      TestingEntity.prototype[TYPE] = TestingEntity;
       TestingEntity.prototype[PRIMARY] = "id";
       TestingEntity.prototype[FIELDS] = {
         id: { name: "id" },
@@ -59,6 +60,7 @@ describe("EntityManager", () => {
         field1!: TestingEntity;
         field2!: TestingEntity[];
       }
+      TestingEntity.prototype[TYPE] = TestingEntity;
       TestingEntity.prototype[PRIMARY] = "id";
       TestingEntity.prototype[FIELDS] = {
         id: { name: "id" },
@@ -108,6 +110,7 @@ describe("EntityManager", () => {
         field1!: TestingChildEntity;
         field2!: [TestingChildEntity];
       }
+      TestingParentEntity.prototype[TYPE] = TestingParentEntity;
       TestingParentEntity.prototype[PRIMARY] = "id";
       TestingParentEntity.prototype[FIELDS] = {
         id: { name: "id" },
@@ -124,6 +127,7 @@ describe("EntityManager", () => {
       class TestingChildEntity extends BaseEntity<TestingChildEntity, "id"> {
         id!: number;
       }
+      TestingChildEntity.prototype[TYPE] = TestingChildEntity;
       TestingChildEntity.prototype[PRIMARY] = "id";
       TestingChildEntity.prototype[FIELDS] = {
         id: { name: "id" },

@@ -1,6 +1,6 @@
 import { AnyEntity } from "../any-entity.type";
 import { BaseEntity } from "../base-entity.class";
-import { EntityData } from "../entity-data.type";
+import { EntityField } from "../entity-field.type";
 import { PrimaryKeyField } from "../primary-key-field.type";
 import { FIELDS, PRIMARY } from "../symbols";
 import { ExtractKeys } from "../utils";
@@ -27,7 +27,7 @@ export const Field: FieldDecorator =
 interface FieldDecorator {
   (): <Entity extends BaseEntity<Entity>>(
     prototype: Entity,
-    name: keyof EntityData<Entity>,
+    name: EntityField<Entity>,
   ) => void;
 
   (options: { primary: true }): <

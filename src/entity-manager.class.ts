@@ -1,6 +1,7 @@
 import { AnyEntity } from "./any-entity.type";
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
+import { EntityField } from "./entity-field.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStore } from "./entity-store.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
@@ -78,7 +79,7 @@ export class EntityManager {
   private commitField<
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
-    Field extends keyof EntityData<Entity>,
+    Field extends EntityField<Entity>,
     Data extends EntityData<Entity>[Field],
   >(entity: Entity, field: Field, data: Data) {
     const { relation } = entity[FIELDS][field];

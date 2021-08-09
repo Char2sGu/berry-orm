@@ -1,7 +1,6 @@
 import { AnyEntity } from "./any-entity.type";
 import { BaseEntity } from "./base-entity.class";
 import { EntityData } from "./entity-data.type";
-import { EntityField } from "./entity-field.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStore } from "./entity-store.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
@@ -31,11 +30,40 @@ export class EntityManager {
   >(type: Type<Entity>, data: EntityData<Entity>) {
     const primaryKey = data[type.prototype[PRIMARY]] as Entity[Primary];
     const entity = this.retrieve(type, primaryKey);
-    for (const k in entity[FIELDS]) {
-      const field = k as keyof typeof data;
-      this.commitField(entity, field, data[field]);
+
+    if (!entity[POPULATED]) {
+      for (const k in entity[FIELDS]) {
+        const field = k as keyof typeof data;
+        const relationMeta = entity[FIELDS][field].relation!;
+        if (!relationMeta) {
+          this.defineFieldValue(entity, field, data[field]);
+        } else if (relationMeta.multi) {
+          const relationEntities: AnyEntity[] = [];
+          this.defineFieldValue(entity, field, relationEntities);
+          const foreignKeysOrDataList = data[field] as
+            | PrimaryKey[]
+            | EntityData<AnyEntity>[];
+          foreignKeysOrDataList.forEach((foreignKeyOrData) => {
+            const relationEntity = this.resolveRelationData(
+              entity,
+              field,
+              foreignKeyOrData,
+            );
+            relationEntities.push(relationEntity);
+          });
+        } else {
+          const foreignKeyOrData = data as PrimaryKey | EntityData<AnyEntity>;
+          const relationEntity = this.resolveRelationData(
+            entity,
+            field,
+            foreignKeyOrData,
+          );
+          this.defineFieldValue(entity, field, relationEntity);
+        }
+      }
+      entity[POPULATED] = true;
     }
-    entity[POPULATED] = true;
+
     return entity;
   }
 
@@ -60,9 +88,7 @@ export class EntityManager {
     } else {
       entity = Object.create(type);
       entity[POPULATED] = false;
-      Reflect.defineProperty(entity, entity[PRIMARY], {
-        get: () => primaryKey,
-      });
+      this.defineFieldValue(entity, entity[PRIMARY], primaryKey);
       return entity;
     }
   }
@@ -74,47 +100,6 @@ export class EntityManager {
         `The entity ${type.name} must be registered to the entity manager`,
       );
     return store as EntityStore<Entity>;
-  }
-
-  private commitField<
-    Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
-    Field extends EntityField<Entity>,
-    Data extends EntityData<Entity>[Field],
-  >(entity: Entity, field: Field, data: Data) {
-    const { relation } = entity[FIELDS][field];
-    let value: unknown;
-
-    if (relation) {
-      const { target: getTarget, multi } = relation;
-      const target = getTarget();
-
-      const handleRelation = <Entity extends BaseEntity>(
-        foreignKeyOrData: PrimaryKey | EntityData<Entity>,
-      ) => {
-        if (typeof foreignKeyOrData == "object") {
-          const data = foreignKeyOrData;
-          return this.commit(target, data);
-        } else {
-          const fk = foreignKeyOrData;
-          return this.retrieve(target, fk);
-        }
-      };
-
-      if (multi) {
-        const relationReferences = data as
-          | PrimaryKey[]
-          | EntityData<AnyEntity>[];
-        value = relationReferences.map(handleRelation);
-      } else {
-        const relationReference = data as Primary | EntityData<AnyEntity>;
-        value = handleRelation(relationReference);
-      }
-    } else {
-      value = data;
-    }
-
-    Reflect.defineProperty(entity, field, { get: () => value });
   }
 
   /**
@@ -135,11 +120,38 @@ export class EntityManager {
 
       Object.values(type.prototype[FIELDS]).forEach(({ name, relation }) => {
         if (relation) {
-          const { target } = relation;
-          if (!this.map.has(target()))
+          if (!this.map.has(relation.target()))
             throwErr(name, "The relation entity is not registered");
         }
       });
+    }
+  }
+
+  private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
+    Reflect.defineProperty(entity, field, { get: () => value });
+  }
+
+  /**
+   * Get the reference of the target relation entity from relation data.
+   * @param entity
+   * @param field
+   * @param data
+   * @returns
+   */
+  private resolveRelationData(
+    entity: AnyEntity,
+    field: string,
+    data:
+      | PrimaryKey
+      | PrimaryKey[]
+      | EntityData<AnyEntity>
+      | EntityData<AnyEntity>[],
+  ) {
+    const relationMeta = entity[FIELDS][field].relation!;
+    if (typeof data == "object") {
+      return this.commit(relationMeta.target(), data);
+    } else {
+      return this.retrieve(relationMeta.target(), data);
     }
   }
 }

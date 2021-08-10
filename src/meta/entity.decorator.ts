@@ -1,5 +1,5 @@
-import { BaseEntity } from "../base-entity.class";
-import { PrimaryKeyField } from "../primary-key-field.type";
+import { BaseEntity } from "../entity";
+import { PrimaryKeyField } from "../field";
 import { FIELDS, PRIMARY, TYPE } from "../symbols";
 import { Type } from "../utils";
 

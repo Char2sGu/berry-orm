@@ -1,8 +1,8 @@
-import { BaseEntity } from "..";
+import { Entity, Field } from "../../meta";
+import { POPULATED } from "../../symbols";
+import { BaseEntity } from "../base-entity.class";
 import { EntityData } from "../entity-data.type";
 import { EntityManager } from "../entity-manager.class";
-import { Entity, Field } from "../meta";
-import { POPULATED } from "../symbols";
 
 describe("EntityManager", () => {
   let em: EntityManager;

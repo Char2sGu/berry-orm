@@ -1,5 +1,5 @@
+import { PrimaryKeyField } from "../field";
 import { BaseEntity } from "./base-entity.class";
-import { PrimaryKeyField } from "./primary-key-field.type";
 
 export type EntityStore<Entity extends BaseEntity> = Map<
   Entity[Entity extends BaseEntity<infer _, infer Primary>

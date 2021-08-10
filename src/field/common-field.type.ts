@@ -1,4 +1,4 @@
-import { BaseEntity } from "./base-entity.class";
+import { BaseEntity } from "../entity";
 import { EntityField } from "./entity-field.type";
 import { RelationField } from "./relation-field.type";
 

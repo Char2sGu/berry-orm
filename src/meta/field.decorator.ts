@@ -1,8 +1,5 @@
-import { AnyEntity } from "../any-entity.type";
-import { BaseEntity } from "../base-entity.class";
-import { EntityField } from "../entity-field.type";
-import { PrimaryKeyField } from "../primary-key-field.type";
-import { RelationField } from "../relation-field.type";
+import { AnyEntity, BaseEntity } from "../entity";
+import { EntityField, PrimaryKeyField, RelationField } from "../field";
 import { FIELDS, PRIMARY } from "../symbols";
 import { ExtractKeys } from "../utils";
 import { RelationTarget } from "./relation-target.type";

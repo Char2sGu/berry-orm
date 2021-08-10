@@ -1,4 +1,4 @@
-import { AnyEntity } from "../any-entity.type";
+import { AnyEntity } from "../entity";
 import { Type } from "../utils";
 
 export interface FieldMeta {

@@ -1,11 +1,18 @@
-export { BaseEntity } from "./base-entity.class";
-export { CommonField } from "./common-field.type";
 export { container } from "./container";
-export { EntityData } from "./entity-data.type";
-export { EntityManager } from "./entity-manager.class";
+export {
+  AnyEntity,
+  BaseEntity,
+  EntityData,
+  EntityManager,
+  EntityManagerOptions,
+  EntityStore,
+} from "./entity";
+export {
+  CommonField,
+  PrimaryKey,
+  PrimaryKeyField,
+  RelationField,
+} from "./field";
 export { Entity, Field, FieldMeta, RelationTarget } from "./meta";
-export { PrimaryKeyField } from "./primary-key-field.type";
-export { PrimaryKey } from "./primary-key.type";
-export { RelationField } from "./relation-field.type";
-export { FIELDS, PRIMARY, TYPE } from "./symbols";
+export { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
 export { ExcludeKeys, ExtractKeys, Type } from "./utils";

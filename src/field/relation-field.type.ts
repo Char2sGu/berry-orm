@@ -1,6 +1,6 @@
-import { BaseEntity } from "./base-entity.class";
+import { BaseEntity } from "../entity";
+import { ExtractKeys } from "../utils";
 import { EntityField } from "./entity-field.type";
-import { ExtractKeys } from "./utils";
 
 export type RelationField<Entity extends BaseEntity<Entity>> = Extract<
   EntityField<Entity>,

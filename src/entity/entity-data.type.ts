@@ -1,7 +1,5 @@
+import { CommonField, PrimaryKey, RelationField } from "../field";
 import { BaseEntity } from "./base-entity.class";
-import { CommonField } from "./common-field.type";
-import { PrimaryKey } from "./primary-key.type";
-import { RelationField } from "./relation-field.type";
 
 // TODO: stricter type
 export type EntityData<Entity extends BaseEntity> = Pick<

@@ -1,8 +1,7 @@
-import { EntityData } from "./entity-data.type";
-import { FieldMeta } from "./meta";
-import { PrimaryKeyField } from "./primary-key-field.type";
-import { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
-import { Type } from "./utils";
+import { PrimaryKeyField } from "../field";
+import { FieldMeta } from "../meta";
+import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
+import { Type } from "../utils";
 
 /**
  * The base class of every entities, providing type support.

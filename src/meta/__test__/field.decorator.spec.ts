@@ -1,4 +1,4 @@
-import { BaseEntity } from "../../base-entity.class";
+import { BaseEntity } from "../../entity";
 import { FIELDS, PRIMARY } from "../../symbols";
 import { FieldMeta } from "../field-meta.interface";
 import { Field } from "../field.decorator";

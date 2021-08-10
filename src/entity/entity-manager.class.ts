@@ -79,16 +79,9 @@ export class EntityManager {
     if (entity) {
       return entity;
     } else {
-      const entity: Entity = Object.create(type.prototype);
+      const entity = Object.create(type.prototype);
       entity[POPULATED] = false;
-
       this.defineFieldValue(entity, entity[PRIMARY], primaryKey);
-
-      Object.values(entity[FIELDS]).forEach(({ name, relation }) => {
-        if (!relation?.multi) return;
-        this.defineFieldValue(entity, name, []);
-      });
-
       store.set(primaryKey, entity);
       return entity;
     }
@@ -199,8 +192,9 @@ export class EntityManager {
     const relationMeta = entity[FIELDS][field].relation!;
 
     if (relationMeta.multi) {
-      const relationEntities: AnyEntity[] = entity[field];
+      const relationEntities: AnyEntity[] = entity[field] ?? [];
       relationEntities.push(targetEntity);
+      this.defineFieldValue(entity, field, relationEntities);
     } else {
       this.defineFieldValue(entity, field, targetEntity);
     }

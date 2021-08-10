@@ -105,10 +105,7 @@ describe("EntityManager", () => {
         beforeEach(() => {
           result = em.commit(TestingEntity1, {
             id: 1,
-            entity2: {
-              id: 1,
-              entity1: 1,
-            },
+            entity2: { id: 1 },
           });
         });
 

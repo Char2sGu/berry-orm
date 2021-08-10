@@ -79,7 +79,7 @@ export class EntityManager {
     if (entity) {
       return entity;
     } else {
-      const entity = Object.create(type.prototype);
+      const entity: Entity = Object.create(type.prototype);
       entity[POPULATED] = false;
       this.defineFieldValue(entity, entity[PRIMARY], primaryKey);
       store.set(primaryKey, entity);

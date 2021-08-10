@@ -1,5 +1,10 @@
 import { AnyEntity, BaseEntity } from "../entity";
-import { EntityField, PrimaryKeyField, RelationField } from "../field";
+import {
+  EmptyValue,
+  EntityField,
+  PrimaryKeyField,
+  RelationField,
+} from "../field";
 import { FIELDS, PRIMARY } from "../symbols";
 import { ExtractKeys } from "../utils";
 import { RelationTarget } from "./relation-target.type";
@@ -41,14 +46,14 @@ interface FieldDecorator {
     options: FieldOptionsRelationMulti<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: Extract<ExtractKeys<Entity, TargetEntity[]>, string>,
+    name: Extract<ExtractKeys<Entity, TargetEntity[] | EmptyValue>, string>,
   ) => void;
 
   <TargetEntity extends BaseEntity>(
     options: FieldOptionsRelation<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: Extract<ExtractKeys<Entity, TargetEntity>, string>,
+    name: Extract<ExtractKeys<Entity, TargetEntity | EmptyValue>, string>,
   ) => void;
 }
 

@@ -44,14 +44,14 @@ interface FieldDecorator {
     options: FieldOptionsRelationMulti<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: string & ExtractKeys<Entity, TargetEntity[]>,
+    name: Extract<ExtractKeys<Entity, TargetEntity[]>, string>,
   ) => void;
 
   <TargetEntity extends BaseEntity>(
     options: FieldOptionsRelation<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: string & ExtractKeys<Entity, TargetEntity>,
+    name: Extract<ExtractKeys<Entity, TargetEntity>, string>,
   ) => void;
 }
 

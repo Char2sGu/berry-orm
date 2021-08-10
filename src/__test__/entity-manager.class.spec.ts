@@ -105,7 +105,7 @@ describe("EntityManager", () => {
         });
       });
 
-      describe.only("Nested Data", () => {
+      describe("Nested Data", () => {
         beforeEach(() => {
           result = em.commit(TestingEntity1, {
             id: 1,

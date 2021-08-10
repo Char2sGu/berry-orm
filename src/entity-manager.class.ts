@@ -36,7 +36,7 @@ export class EntityManager {
         const field = k as keyof typeof data;
 
         // relation field data is optional
-        if (!data[field]) continue;
+        if (!(field in data)) continue;
 
         const relationMeta = entity[FIELDS][field].relation!;
         if (!relationMeta) {

@@ -255,6 +255,13 @@ describe("EntityManager", () => {
     class TestingEntity extends BaseEntity<TestingEntity, "id"> {
       @Field({ primary: true })
       id!: number;
+
+      @Field({
+        target: () => TestingEntity,
+        inverse: "relations",
+        multi: true,
+      })
+      relations!: TestingEntity[];
     }
 
     let result: TestingEntity;
@@ -276,6 +283,10 @@ describe("EntityManager", () => {
 
     it("should mark it as unpopulated", () => {
       expect(result[POPULATED]).toBe(false);
+    });
+
+    it("should assign an array to multi-relation fields", () => {
+      expect(result.relations).toBeInstanceOf(Array);
     });
   });
 });

@@ -65,6 +65,6 @@ interface FieldOptionsRelation<Entity extends BaseEntity = AnyEntity> {
   inverse: RelationField<Entity>;
 }
 interface FieldOptionsRelationMulti<Entity extends BaseEntity = AnyEntity>
-  extends FieldOptionsRelation {
+  extends FieldOptionsRelation<Entity> {
   multi: true;
 }

@@ -82,13 +82,14 @@ export class EntityManager {
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const store = this.getStore(type);
-    let entity = store.get(primaryKey) as Entity;
+    let entity = store.get(primaryKey) as Entity | undefined;
     if (entity) {
       return entity;
     } else {
-      entity = Object.create(type);
+      const entity = Object.create(type.prototype);
       entity[POPULATED] = false;
       this.defineFieldValue(entity, entity[PRIMARY], primaryKey);
+      store.set(primaryKey, entity);
       return entity;
     }
   }

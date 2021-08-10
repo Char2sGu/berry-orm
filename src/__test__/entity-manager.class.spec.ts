@@ -1,7 +1,7 @@
 import { BaseEntity } from "..";
 import { EntityData } from "../entity-data.type";
 import { EntityManager } from "../entity-manager.class";
-import { FIELDS, PRIMARY, TYPE } from "../symbols";
+import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
 
 describe("EntityManager", () => {
   describe(".commit()", () => {
@@ -165,6 +165,38 @@ describe("EntityManager", () => {
         expect(result.field2).toBeInstanceOf(Array);
         expect(result.field2[0]).toBe(mockChild);
       });
+    });
+  });
+
+  describe(".retrieve()", () => {
+    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+      id!: number;
+    }
+    TestingEntity.prototype[TYPE] = TestingEntity;
+    TestingEntity.prototype[PRIMARY] = "id";
+    TestingEntity.prototype[FIELDS] = {
+      id: { name: "id" },
+    };
+
+    let result: TestingEntity;
+
+    beforeEach(() => {
+      const em = new EntityManager({
+        entities: [TestingEntity],
+      });
+      result = em.retrieve(TestingEntity, 1);
+    });
+
+    it("should return an instance", () => {
+      expect(result).toBeInstanceOf(TestingEntity);
+    });
+
+    it("should assign to the priamry key field", () => {
+      expect(result.id).toBe(1);
+    });
+
+    it("should mark it as unpopulated", () => {
+      expect(result[POPULATED]).toBe(false);
     });
   });
 });

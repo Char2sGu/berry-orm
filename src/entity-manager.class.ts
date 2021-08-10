@@ -88,7 +88,7 @@ export class EntityManager {
     }
   }
 
-  private getStore<Entity extends BaseEntity<Entity>>(type: Type<Entity>) {
+  private getStore<Entity extends BaseEntity>(type: Type<Entity>) {
     const store = this.map.get(type);
     if (!store)
       throw new Error(

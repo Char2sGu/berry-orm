@@ -151,7 +151,7 @@ export class EntityManager {
 
   /**
    * Get the reference of the target relation entity from relation data and
-   * define the bilateral relation.
+   * construct the bilateral relation.
    *
    * @param entity
    * @param field
@@ -178,13 +178,13 @@ export class EntityManager {
       targetEntity = this.retrieve(relationMeta.target(), data);
     }
 
-    this.buildRelation(entity, field, targetEntity);
-    this.buildRelation(targetEntity, relationMeta.inverse, entity);
+    this.constructRelation(entity, field, targetEntity);
+    this.constructRelation(targetEntity, relationMeta.inverse, entity);
 
     return targetEntity;
   }
 
-  private buildRelation(
+  private constructRelation(
     entity: AnyEntity,
     field: string,
     targetEntity: AnyEntity,
@@ -198,7 +198,5 @@ export class EntityManager {
     } else {
       this.defineFieldValue(entity, field, targetEntity);
     }
-
-    return entity;
   }
 }

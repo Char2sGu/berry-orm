@@ -1,4 +1,5 @@
 export { BaseEntity } from "./base-entity.class";
+export { CommonField } from "./common-field.type";
 export { container } from "./container";
 export { EntityData } from "./entity-data.type";
 export { EntityManager } from "./entity-manager.class";

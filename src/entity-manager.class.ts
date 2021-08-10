@@ -1,10 +1,12 @@
 import { AnyEntity } from "./any-entity.type";
 import { BaseEntity } from "./base-entity.class";
+import { CommonField } from "./common-field.type";
 import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStore } from "./entity-store.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { PrimaryKey } from "./primary-key.type";
+import { RelationField } from "./relation-field.type";
 import { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
 import { Type } from "./utils";
 

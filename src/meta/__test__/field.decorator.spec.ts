@@ -35,9 +35,9 @@ describe("@Field()", () => {
   });
 
   describe("Relation: One", () => {
-    const relation = { target: () => TestingEntity, inverse: "field" } as const;
+    const options = { target: () => TestingEntity, inverse: "field" } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
-      @Field({ relation })
+      @Field(options)
       field!: TestingEntity;
     }
 
@@ -45,18 +45,18 @@ describe("@Field()", () => {
       const fields = TestingEntity.prototype[FIELDS];
       expect(fields).toBeDefined();
       expect(fields.field).toBeDefined();
-      expect(fields.field.relation).toEqual(relation);
+      expect(fields.field.relation).toEqual(options);
     });
   });
 
   describe("Relation: Many", () => {
-    const relation = {
+    const options = {
       target: () => TestingEntity,
       inverse: "field",
       multi: true,
     } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
-      @Field({ relation })
+      @Field(options)
       field!: TestingEntity[];
     }
 
@@ -64,7 +64,7 @@ describe("@Field()", () => {
       const fields = TestingEntity.prototype[FIELDS];
       expect(fields).toBeDefined();
       expect(fields.field).toBeDefined();
-      expect(fields.field.relation).toEqual(relation);
+      expect(fields.field.relation).toEqual(options);
     });
   });
 });

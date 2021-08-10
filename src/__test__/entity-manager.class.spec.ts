@@ -49,10 +49,8 @@ describe("EntityManager", () => {
         id!: number;
 
         @Field({
-          relation: {
-            target: () => TestingEntity2,
-            inverse: "entity1",
-          },
+          target: () => TestingEntity2,
+          inverse: "entity1",
         })
         entity2!: TestingEntity2;
       }
@@ -63,10 +61,8 @@ describe("EntityManager", () => {
         id!: number;
 
         @Field({
-          relation: {
-            target: () => TestingEntity1,
-            inverse: "entity2",
-          },
+          target: () => TestingEntity1,
+          inverse: "entity2",
         })
         entity1!: TestingEntity1;
       }
@@ -142,11 +138,9 @@ describe("EntityManager", () => {
         id!: number;
 
         @Field({
-          relation: {
-            target: () => TestingEntityChild,
-            inverse: "parent",
-            multi: true,
-          },
+          target: () => TestingEntityChild,
+          inverse: "parent",
+          multi: true,
         })
         children!: TestingEntityChild[];
       }
@@ -157,10 +151,8 @@ describe("EntityManager", () => {
         id!: number;
 
         @Field({
-          relation: {
-            target: () => TestingEntityParent,
-            inverse: "children",
-          },
+          target: () => TestingEntityParent,
+          inverse: "children",
         })
         parent!: TestingEntityParent;
       }

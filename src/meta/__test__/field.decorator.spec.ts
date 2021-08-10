@@ -35,7 +35,7 @@ describe("@Field()", () => {
   });
 
   describe("Relation: One", () => {
-    const relation = { target: () => TestingEntity };
+    const relation = { target: () => TestingEntity, inverse: "field" } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
       @Field({ relation })
       field!: TestingEntity;
@@ -50,7 +50,11 @@ describe("@Field()", () => {
   });
 
   describe("Relation: Many", () => {
-    const relation = { target: () => TestingEntity, multi: true } as const;
+    const relation = {
+      target: () => TestingEntity,
+      inverse: "field",
+      multi: true,
+    } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
       @Field({ relation })
       field!: TestingEntity[];

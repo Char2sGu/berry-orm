@@ -2,6 +2,7 @@ import { AnyEntity } from "../any-entity.type";
 import { BaseEntity } from "../base-entity.class";
 import { EntityField } from "../entity-field.type";
 import { PrimaryKeyField } from "../primary-key-field.type";
+import { RelationField } from "../relation-field.type";
 import { FIELDS, PRIMARY } from "../symbols";
 import { ExtractKeys } from "../utils";
 import { RelationTarget } from "./relation-target.type";
@@ -62,10 +63,17 @@ interface FieldOptionsPrimary {
   primary: true;
 }
 interface FieldOptionsRelation<Entity extends BaseEntity<Entity> = AnyEntity> {
-  relation: { target: RelationTarget<Entity> };
+  relation: {
+    target: RelationTarget<Entity>;
+    inverse: RelationField<Entity>;
+  };
 }
 interface FieldOptionsRelationMulti<
   Entity extends BaseEntity<Entity> = AnyEntity,
 > {
-  relation: { target: RelationTarget<Entity>; multi: true };
+  relation: {
+    target: RelationTarget<Entity>;
+    inverse: RelationField<Entity>;
+    multi: true;
+  };
 }

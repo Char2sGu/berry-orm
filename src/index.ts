@@ -5,5 +5,6 @@ export { EntityManager } from "./entity-manager.class";
 export { Entity, Field, FieldMeta, RelationTarget } from "./meta";
 export { PrimaryKeyField } from "./primary-key-field.type";
 export { PrimaryKey } from "./primary-key.type";
+export { RelationField } from "./relation-field.type";
 export { FIELDS, PRIMARY, TYPE } from "./symbols";
 export { ExcludeKeys, ExtractKeys, Type } from "./utils";

@@ -1,40 +1,32 @@
 import { BaseEntity } from "..";
 import { EntityData } from "../entity-data.type";
 import { EntityManager } from "../entity-manager.class";
-import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
+import { Entity, Field } from "../meta";
+import { POPULATED } from "../symbols";
 
 describe("EntityManager", () => {
+  let em: EntityManager;
+
   describe(".commit()", () => {
     describe("Values", () => {
+      @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        @Field({ primary: true })
         id!: number;
+
+        @Field()
         field1!: string;
+
+        @Field()
         field2!: Date;
       }
-      TestingEntity.prototype[TYPE] = TestingEntity;
-      TestingEntity.prototype[PRIMARY] = "id";
-      TestingEntity.prototype[FIELDS] = {
-        id: { name: "id" },
-        field1: { name: "field1" },
-        field2: { name: "field2" },
-      };
 
       let data: EntityData<TestingEntity>;
       let entity: TestingEntity;
 
       beforeEach(() => {
-        const em = new EntityManager({ entities: [TestingEntity] });
+        em = new EntityManager({ entities: [TestingEntity] });
         data = { id: 1, field1: "", field2: new Date() };
-        jest
-          .spyOn(EntityManager.prototype, "retrieve")
-          .mockImplementation(() => {
-            const entity: TestingEntity = Object.create(
-              TestingEntity.prototype,
-            );
-            entity.id = data.id;
-            return entity;
-          });
-
         entity = em.commit(TestingEntity, data);
       });
 
@@ -48,140 +40,238 @@ describe("EntityManager", () => {
           expect(entity[key]).toBe(data[key]);
         }
       });
-
-      it("should call .retrieve() for only once", () => {
-        expect(EntityManager.prototype.retrieve).toHaveBeenCalledTimes(1);
-      });
     });
 
-    describe("Foreign Keys", () => {
-      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+    describe("Relations: One", () => {
+      @Entity()
+      class TestingEntity1 extends BaseEntity<TestingEntity1, "id"> {
+        @Field({ primary: true })
         id!: number;
-        field1!: TestingEntity;
-        field2!: TestingEntity[];
-      }
-      TestingEntity.prototype[TYPE] = TestingEntity;
-      TestingEntity.prototype[PRIMARY] = "id";
-      TestingEntity.prototype[FIELDS] = {
-        id: { name: "id" },
-        field1: {
-          name: "field1",
-          relation: { target: () => TestingEntity },
-        },
-        field2: {
-          name: "field2",
-          relation: { target: () => TestingEntity, multi: true },
-        },
-      };
 
-      const mockRelationEntity = {};
-      let data: EntityData<TestingEntity>;
-      let entity: TestingEntity;
+        @Field({
+          relation: {
+            target: () => TestingEntity2,
+            inverse: "entity1",
+          },
+        })
+        entity2!: TestingEntity2;
+      }
+
+      @Entity()
+      class TestingEntity2 extends BaseEntity<TestingEntity2, "id"> {
+        @Field({ primary: true })
+        id!: number;
+
+        @Field({
+          relation: {
+            target: () => TestingEntity1,
+            inverse: "entity2",
+          },
+        })
+        entity1!: TestingEntity1;
+      }
+
+      let result: TestingEntity1;
 
       beforeEach(() => {
-        const em = new EntityManager({ entities: [TestingEntity] });
-        data = { id: 1, field1: 1, field2: [1] };
-        jest
-          .spyOn(EntityManager.prototype, "retrieve")
-          .mockImplementationOnce(() => {
-            const entity: TestingEntity = Object.create(
-              TestingEntity.prototype,
-            );
-            entity.id = data.id;
-            return entity;
-          })
-          .mockReturnValue(mockRelationEntity);
-        entity = em.commit(TestingEntity, data);
-      });
-
-      it("should make the entity field return the entity", () => {
-        expect(entity.field1).toBe(mockRelationEntity);
-      });
-
-      it("should make the entities field return an array of entities", () => {
-        expect(entity.field2).toBeInstanceOf(Array);
-        expect(entity.field2[0]).toBe(mockRelationEntity);
-      });
-    });
-
-    describe("Nested Data", () => {
-      class TestingParentEntity extends BaseEntity<TestingParentEntity, "id"> {
-        id!: number;
-        field1!: TestingChildEntity;
-        field2!: [TestingChildEntity];
-      }
-      TestingParentEntity.prototype[TYPE] = TestingParentEntity;
-      TestingParentEntity.prototype[PRIMARY] = "id";
-      TestingParentEntity.prototype[FIELDS] = {
-        id: { name: "id" },
-        field1: {
-          name: "field1",
-          relation: { target: () => TestingChildEntity },
-        },
-        field2: {
-          name: "field2",
-          relation: { target: () => TestingChildEntity, multi: true },
-        },
-      };
-
-      class TestingChildEntity extends BaseEntity<TestingChildEntity, "id"> {
-        id!: number;
-      }
-      TestingChildEntity.prototype[TYPE] = TestingChildEntity;
-      TestingChildEntity.prototype[PRIMARY] = "id";
-      TestingChildEntity.prototype[FIELDS] = {
-        id: { name: "id" },
-      };
-
-      const mockParent = new TestingParentEntity();
-      const mockChild = new TestingChildEntity();
-
-      let result: TestingParentEntity;
-
-      beforeEach(() => {
-        const em = new EntityManager({
-          entities: [TestingParentEntity, TestingChildEntity],
-        });
-        jest
-          .spyOn(em, "retrieve")
-          .mockReturnValueOnce(mockParent)
-          .mockReturnValue(mockChild);
-        result = em.commit(TestingParentEntity, {
-          id: 1,
-          field1: { id: 1 },
-          field2: [{ id: 2 }],
+        em = new EntityManager({
+          entities: [TestingEntity1, TestingEntity2],
         });
       });
 
-      it("should return an instance of the parent entity", () => {
-        expect(result).toBeInstanceOf(TestingParentEntity);
+      describe("Foreign Keys", () => {
+        beforeEach(() => {
+          result = em.commit(TestingEntity1, {
+            id: 1,
+            entity2: 1,
+          });
+        });
+
+        it("should return an instance", () => {
+          expect(result).toBeInstanceOf(TestingEntity1);
+        });
+
+        it("should mark the entity as populated", () => {
+          expect(result[POPULATED]).toBe(true);
+        });
+
+        it("should build the bilateral relations", () => {
+          expect(result.entity2).toBeInstanceOf(TestingEntity2);
+          expect(result.entity2.entity1).toBe(result);
+        });
+
+        it("should mark the relation entity as unpopulated", () => {
+          expect(result.entity2[POPULATED]).toBe(false);
+        });
       });
 
-      it("should make the entity field return an entity", () => {
-        expect(result.field1).toBe(mockChild);
+      describe.only("Nested Data", () => {
+        beforeEach(() => {
+          result = em.commit(TestingEntity1, {
+            id: 1,
+            entity2: {
+              id: 1,
+              entity1: 1,
+            },
+          });
+        });
+
+        it("should return an instance", () => {
+          expect(result).toBeInstanceOf(TestingEntity1);
+        });
+
+        it("should mark the entity as populated", () => {
+          expect(result[POPULATED]).toBe(true);
+        });
+
+        it("should build the bilateral relations", () => {
+          expect(result.entity2).toBeInstanceOf(TestingEntity2);
+          expect(result.entity2.entity1).toBe(result);
+        });
+
+        it("should mark the relation entity as populated", () => {
+          expect(result.entity2[POPULATED]).toBe(true);
+        });
+      });
+    });
+
+    describe("Relations: Many", () => {
+      @Entity()
+      class TestingEntityParent extends BaseEntity<TestingEntityParent, "id"> {
+        @Field({ primary: true })
+        id!: number;
+
+        @Field({
+          relation: {
+            target: () => TestingEntityChild,
+            inverse: "parent",
+            multi: true,
+          },
+        })
+        children!: TestingEntityChild[];
+      }
+
+      @Entity()
+      class TestingEntityChild extends BaseEntity<TestingEntityChild, "id"> {
+        @Field({ primary: true })
+        id!: number;
+
+        @Field({
+          relation: {
+            target: () => TestingEntityParent,
+            inverse: "children",
+          },
+        })
+        parent!: TestingEntityParent;
+      }
+
+      beforeEach(() => {
+        em = new EntityManager({
+          entities: [TestingEntityChild, TestingEntityParent],
+        });
       });
 
-      it("should make the entities field return an array of entities", () => {
-        expect(result.field2).toBeInstanceOf(Array);
-        expect(result.field2[0]).toBe(mockChild);
+      describe("Foreign Keys", () => {
+        describe("Parent", () => {
+          let result: TestingEntityParent;
+
+          beforeEach(() => {
+            result = em.commit(TestingEntityParent, {
+              id: 1,
+              children: [1],
+            });
+          });
+
+          it("should return an instance", () => {
+            expect(result).toBeInstanceOf(TestingEntityParent);
+          });
+
+          it("should build the relations", () => {
+            expect(result.children).toBeInstanceOf(Array);
+            expect(result.children).toHaveLength(1);
+            expect(result.children[0].parent).toBe(result);
+          });
+        });
+
+        describe("Child", () => {
+          let result: TestingEntityChild;
+
+          beforeEach(() => {
+            result = em.commit(TestingEntityChild, {
+              id: 1,
+              parent: 1,
+            });
+          });
+
+          it("should return an instance", () => {
+            expect(result).toBeInstanceOf(TestingEntityChild);
+          });
+
+          it("should build the relations", () => {
+            expect(result.parent).toBeInstanceOf(TestingEntityParent);
+            expect(result.parent.children).toBeInstanceOf(Array);
+            expect(result.parent.children[0]).toBe(result);
+          });
+        });
+      });
+
+      describe("Nested Data", () => {
+        describe("Parent", () => {
+          let result: TestingEntityParent;
+
+          beforeEach(() => {
+            result = em.commit(TestingEntityParent, {
+              id: 1,
+              children: [{ id: 1 }],
+            });
+          });
+
+          it("should return an instance", () => {
+            expect(result).toBeInstanceOf(TestingEntityParent);
+          });
+
+          it("should build the relations", () => {
+            expect(result.children).toBeInstanceOf(Array);
+            expect(result.children[0]).toBeInstanceOf(TestingEntityChild);
+            expect(result.children[0].parent).toBe(result);
+          });
+        });
+
+        describe("Child", () => {
+          let result: TestingEntityChild;
+
+          beforeEach(() => {
+            result = em.commit(TestingEntityChild, {
+              id: 1,
+              parent: { id: 1 },
+            });
+          });
+
+          it("should return an instance", () => {
+            expect(result).toBeInstanceOf(TestingEntityChild);
+          });
+
+          it("should build the relations", () => {
+            expect(result.parent).toBeInstanceOf(TestingEntityParent);
+            expect(result.parent.children).toBeInstanceOf(Array);
+            expect(result.parent.children[0]).toBe(result);
+          });
+        });
       });
     });
   });
 
   describe(".retrieve()", () => {
+    @Entity()
     class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+      @Field({ primary: true })
       id!: number;
     }
-    TestingEntity.prototype[TYPE] = TestingEntity;
-    TestingEntity.prototype[PRIMARY] = "id";
-    TestingEntity.prototype[FIELDS] = {
-      id: { name: "id" },
-    };
 
     let result: TestingEntity;
 
     beforeEach(() => {
-      const em = new EntityManager({
+      em = new EntityManager({
         entities: [TestingEntity],
       });
       result = em.retrieve(TestingEntity, 1);

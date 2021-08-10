@@ -34,31 +34,25 @@ export class EntityManager {
     if (!entity[POPULATED]) {
       for (const k in entity[FIELDS]) {
         const field = k as keyof typeof data;
+
+        // relation field data is optional
+        if (!data[field]) continue;
+
         const relationMeta = entity[FIELDS][field].relation!;
         if (!relationMeta) {
           this.defineFieldValue(entity, field, data[field]);
         } else if (relationMeta.multi) {
-          const relationEntities: AnyEntity[] = [];
-          this.defineFieldValue(entity, field, relationEntities);
           const foreignKeysOrDataList = data[field] as
             | PrimaryKey[]
             | EntityData<AnyEntity>[];
           foreignKeysOrDataList.forEach((foreignKeyOrData) => {
-            const relationEntity = this.resolveRelationData(
-              entity,
-              field,
-              foreignKeyOrData,
-            );
-            relationEntities.push(relationEntity);
+            this.resolveRelationData(entity, field, foreignKeyOrData);
           });
         } else {
-          const foreignKeyOrData = data as PrimaryKey | EntityData<AnyEntity>;
-          const relationEntity = this.resolveRelationData(
-            entity,
-            field,
-            foreignKeyOrData,
-          );
-          this.defineFieldValue(entity, field, relationEntity);
+          const foreignKeyOrData = data[field] as
+            | PrimaryKey
+            | EntityData<AnyEntity>;
+          this.resolveRelationData(entity, field, foreignKeyOrData);
         }
       }
       entity[POPULATED] = true;
@@ -107,10 +101,14 @@ export class EntityManager {
    * Check the registered entities.
    */
   private inspect() {
-    for (const type of this.map.keys()) {
-      const throwErr = (field: string | null, msg: string) => {
+    const buildThrowErr =
+      (type: Type) => (field: string | null, msg: string) => {
         throw new Error(`[${type.name}${field ? `:${field}` : ""}] ${msg}`);
       };
+
+    // individual inspection of each entity
+    for (const type of this.map.keys()) {
+      const throwErr = buildThrowErr(type);
 
       if (!type.prototype[TYPE])
         throwErr(null, "Entities must be decorated by @Entity()");
@@ -126,6 +124,26 @@ export class EntityManager {
         }
       });
     }
+
+    // overall inspection
+    for (const type of this.map.keys()) {
+      const throwErr = buildThrowErr(type);
+      Object.values(type.prototype[FIELDS]).forEach(({ name, relation }) => {
+        if (relation) {
+          const { target, inverse } = relation;
+          const inverseMeta = target().prototype[FIELDS][inverse];
+          if (!inverseMeta.relation)
+            throwErr(name, "The inverse side must be a relation field");
+          if (inverseMeta.relation?.target() != type)
+            throwErr(name, "The inverse side must point back to this entity");
+          if (inverseMeta.relation?.inverse != name)
+            throwErr(
+              name,
+              "The inverse side of the inverse side must point back to this field",
+            );
+        }
+      });
+    }
   }
 
   private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
@@ -133,7 +151,9 @@ export class EntityManager {
   }
 
   /**
-   * Get the reference of the target relation entity from relation data.
+   * Get the reference of the target relation entity from relation data and
+   * define the bilateral relation.
+   *
    * @param entity
    * @param field
    * @param data
@@ -142,17 +162,41 @@ export class EntityManager {
   private resolveRelationData(
     entity: AnyEntity,
     field: string,
-    data:
-      | PrimaryKey
-      | PrimaryKey[]
-      | EntityData<AnyEntity>
-      | EntityData<AnyEntity>[],
+    data: PrimaryKey | EntityData<AnyEntity>,
   ) {
     const relationMeta = entity[FIELDS][field].relation!;
+
+    let targetEntity: AnyEntity;
     if (typeof data == "object") {
-      return this.commit(relationMeta.target(), data);
+      // TODO: Support this
+      // specifying inverse relations in nested data is not supported
+      delete data[relationMeta.inverse];
+      targetEntity = this.commit(relationMeta.target(), data);
     } else {
-      return this.retrieve(relationMeta.target(), data);
+      targetEntity = this.retrieve(relationMeta.target(), data);
     }
+
+    this.buildRelation(entity, field, targetEntity);
+    this.buildRelation(targetEntity, relationMeta.inverse, entity);
+
+    return targetEntity;
+  }
+
+  private buildRelation(
+    entity: AnyEntity,
+    field: string,
+    targetEntity: AnyEntity,
+  ) {
+    const relationMeta = entity[FIELDS][field].relation!;
+
+    if (relationMeta.multi) {
+      const relationEntities: AnyEntity[] = entity[field] ?? [];
+      relationEntities.push(targetEntity);
+      this.defineFieldValue(entity, field, relationEntities);
+    } else {
+      this.defineFieldValue(entity, field, targetEntity);
+    }
+
+    return entity;
   }
 }

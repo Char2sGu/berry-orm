@@ -168,7 +168,10 @@ export class EntityManager {
     let targetEntity: AnyEntity;
     if (typeof data == "object") {
       // TODO: Support this
-      // specifying inverse relations in nested data is not supported
+      if (relationMeta.inverse in data)
+        throw new Error(
+          "Specifying inverse relations in nested data is not supported",
+        );
       delete data[relationMeta.inverse];
       targetEntity = this.commit(relationMeta.target(), data);
     } else {

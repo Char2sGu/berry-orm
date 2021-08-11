@@ -1,5 +1,5 @@
 {
-  "name": "vast-orm",
+  "name": "berry-orm",
   "version": "0.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheNightmareX/vast-orm.git"
+    "url": "git+https://github.com/TheNightmareX/berry-orm.git"
   },
   "author": {
     "name": "Char2s",
@@ -19,9 +19,9 @@
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/TheNightmareX/vast-orm/issues"
+    "url": "https://github.com/TheNightmareX/berry-orm/issues"
   },
-  "homepage": "https://github.com/TheNightmareX/vast-orm#readme",
+  "homepage": "https://github.com/TheNightmareX/berry-orm#readme",
   "devDependencies": {
     "@types/jest": "^26.0.24",
     "jest": "^27.0.6",

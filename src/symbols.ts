@@ -1,5 +1,5 @@
 /**Build description. */
-const d = (s: string) => `vast-orm:${s}`;
+const d = (s: string) => `berry-orm:${s}`;
 
 export const TYPE = Symbol(d("type"));
 export const FIELDS = Symbol(d("fields"));

@@ -1,4 +1,4 @@
-import { EntityData } from "../../data/entity-data.type";
+import { EntityData } from "../../data";
 import { Entity, Field } from "../../meta";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";

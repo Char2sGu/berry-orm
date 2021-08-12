@@ -1,5 +1,4 @@
-import { RelationFieldData } from "../data";
-import { EntityData } from "../data/entity-data.type";
+import { EntityData, RelationFieldData } from "../data";
 import { PrimaryKeyField } from "../field";
 import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
 import { Type } from "../utils";

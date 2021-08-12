@@ -6,9 +6,8 @@ import { Type } from "../utils";
 /**
  * The base class of every entities, providing type support.
  *
- * If the user is going to take advantage of these metadata,
- * it is recommended to create an own `BaseEntity` which has
- * getters to get the metadata more conveniently.
+ * It is recommended to create an own `BaseEntity`, which extends this one and
+ * is defined getters so that the metadata can be accessed more conveniently.
  */
 export abstract class BaseEntity<
   Entity extends BaseEntity = any,

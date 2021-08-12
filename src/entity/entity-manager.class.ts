@@ -189,8 +189,8 @@ export class EntityManager {
     const relationMeta = entity[FIELDS][field].relation!;
 
     if (relationMeta.multi) {
-      const relationEntities: AnyEntity[] = entity[field] ?? [];
-      relationEntities.push(targetEntity);
+      const relationEntities: Set<AnyEntity> = entity[field] ?? new Set();
+      relationEntities.add(targetEntity);
       this.defineFieldValue(entity, field, relationEntities);
     } else {
       this.defineFieldValue(entity, field, targetEntity);

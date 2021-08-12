@@ -139,7 +139,7 @@ describe("EntityManager", () => {
           inverse: "parent",
           multi: true,
         })
-        children!: TestingEntityChild[];
+        children!: Set<TestingEntityChild>;
       }
 
       @Entity()
@@ -176,9 +176,9 @@ describe("EntityManager", () => {
           });
 
           it("should build the relations", () => {
-            expect(result.children).toBeInstanceOf(Array);
-            expect(result.children).toHaveLength(1);
-            expect(result.children[0].parent).toBe(result);
+            expect(result.children).toBeInstanceOf(Set);
+            expect(result.children.size).toBe(1);
+            expect([...result.children][0].parent).toBe(result);
           });
         });
 
@@ -198,8 +198,8 @@ describe("EntityManager", () => {
 
           it("should build the relations", () => {
             expect(result.parent).toBeInstanceOf(TestingEntityParent);
-            expect(result.parent.children).toBeInstanceOf(Array);
-            expect(result.parent.children[0]).toBe(result);
+            expect(result.parent.children).toBeInstanceOf(Set);
+            expect([...result.parent.children][0]).toBe(result);
           });
         });
       });
@@ -220,9 +220,9 @@ describe("EntityManager", () => {
           });
 
           it("should build the relations", () => {
-            expect(result.children).toBeInstanceOf(Array);
-            expect(result.children[0]).toBeInstanceOf(TestingEntityChild);
-            expect(result.children[0].parent).toBe(result);
+            expect(result.children).toBeInstanceOf(Set);
+            expect([...result.children][0]).toBeInstanceOf(TestingEntityChild);
+            expect([...result.children][0].parent).toBe(result);
           });
         });
 
@@ -242,8 +242,8 @@ describe("EntityManager", () => {
 
           it("should build the relations", () => {
             expect(result.parent).toBeInstanceOf(TestingEntityParent);
-            expect(result.parent.children).toBeInstanceOf(Array);
-            expect(result.parent.children[0]).toBe(result);
+            expect(result.parent.children).toBeInstanceOf(Set);
+            expect([...result.parent.children][0]).toBe(result);
           });
         });
       });

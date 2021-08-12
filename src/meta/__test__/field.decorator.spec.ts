@@ -57,7 +57,7 @@ describe("@Field()", () => {
     } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
       @Field(options)
-      field!: TestingEntity[];
+      field!: Set<TestingEntity>;
     }
 
     it("should define the meta", () => {

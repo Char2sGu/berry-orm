@@ -46,7 +46,7 @@ interface FieldDecorator {
     options: FieldOptionsRelationMulti<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: Extract<ExtractKeys<Entity, TargetEntity[] | EmptyValue>, string>,
+    name: Extract<ExtractKeys<Entity, Set<TargetEntity> | EmptyValue>, string>,
   ) => void;
 
   <TargetEntity extends BaseEntity>(

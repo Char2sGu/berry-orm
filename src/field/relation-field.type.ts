@@ -5,5 +5,5 @@ import { EntityField } from "./entity-field.type";
 
 export type RelationField<Entity extends BaseEntity<Entity>> = Extract<
   EntityField<Entity>,
-  ExtractKeys<Entity, BaseEntity | BaseEntity[] | EmptyValue>
+  ExtractKeys<Entity, BaseEntity | Set<BaseEntity> | EmptyValue>
 >;

@@ -39,16 +39,19 @@ export class EntityManager {
         const relationMeta = entity[FIELDS][field].relation!;
         if (!relationMeta) {
           this.defineFieldValue(entity, field, data[field]);
-        } else if (relationMeta.multi) {
-          const foreignKeysOrDataList = data[
-            field
-          ] as RelationFieldData<Entity>[];
-          foreignKeysOrDataList.forEach((foreignKeyOrData) => {
-            this.resolveRelationData(entity, field, foreignKeyOrData);
-          });
         } else {
-          const foreignKeyOrData = data[field] as RelationFieldData;
-          this.resolveRelationData(entity, field, foreignKeyOrData);
+          const relationData = (
+            relationMeta.multi ? data[field] : [data[field]]
+          ) as RelationFieldData[];
+          relationData.forEach((data) => {
+            const targetEntity = this.resolveRelationFieldData(
+              entity,
+              field,
+              data,
+            );
+            this.constructRelation(entity, field, targetEntity);
+            this.constructRelation(targetEntity, relationMeta.inverse, entity);
+          });
         }
       }
       entity[POPULATED] = true;
@@ -158,34 +161,26 @@ export class EntityManager {
   }
 
   /**
-   * Get the target relation entity from a primary key or a data object and
-   * construct a bilateral relation.
+   * Get the target relation entity from a primary key or a data object.
    * @param entity
    * @param field
    * @param data
    * @returns
    */
-  private resolveRelationData(
+  private resolveRelationFieldData(
     entity: AnyEntity,
     field: string,
     data: RelationFieldData,
   ) {
     const relationMeta = entity[FIELDS][field].relation!;
-
-    let targetEntity: AnyEntity;
     if (typeof data == "object") {
       // TODO: Support this
       // specifying inverse relations in nested data is not supported
       delete data[relationMeta.inverse];
-      targetEntity = this.commit(relationMeta.target(), data);
+      return this.commit(relationMeta.target(), data);
     } else {
-      targetEntity = this.retrieve(relationMeta.target(), data);
+      return this.retrieve(relationMeta.target(), data);
     }
-
-    this.constructRelation(entity, field, targetEntity);
-    this.constructRelation(targetEntity, relationMeta.inverse, entity);
-
-    return targetEntity;
   }
 
   /**

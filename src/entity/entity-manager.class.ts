@@ -76,15 +76,13 @@ export class EntityManager {
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const store = this.getStore(type);
     let entity = store.get(primaryKey) as Entity | undefined;
-    if (entity) {
-      return entity;
-    } else {
-      const entity: Entity = Object.create(type.prototype);
+    if (!entity) {
+      entity = new type();
       entity[POPULATED] = false;
       this.defineFieldValue(entity, entity[PRIMARY], primaryKey);
       store.set(primaryKey, entity);
-      return entity;
     }
+    return entity;
   }
 
   private getStore<Entity extends BaseEntity>(type: Type<Entity>) {

@@ -11,9 +11,7 @@ export class EntityManager {
   private map = new Map<Type<AnyEntity>, EntityStore<AnyEntity>>();
 
   constructor({ entities }: EntityManagerOptions) {
-    entities.forEach((type) => {
-      this.map.set(type, new Map());
-    });
+    entities.forEach((type) => this.map.set(type, new Map()));
     this.inspect();
   }
 
@@ -85,6 +83,12 @@ export class EntityManager {
     return entity;
   }
 
+  /**
+   * Get the store of the target entity or throw an error if the entity is not
+   * registered.
+   * @param type
+   * @returns
+   */
   private getStore<Entity extends BaseEntity>(type: Type<Entity>) {
     const store = this.map.get(type);
     if (!store)
@@ -95,7 +99,7 @@ export class EntityManager {
   }
 
   /**
-   * Check the registered entities.
+   * Inspect the registered entities.
    */
   private inspect() {
     const buildThrowErr =
@@ -143,14 +147,20 @@ export class EntityManager {
     }
   }
 
+  /**
+   * Define a getter on the specified field of the entity which
+   * returns the value directly.
+   * @param entity
+   * @param field
+   * @param value
+   */
   private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
     Reflect.defineProperty(entity, field, { get: () => value });
   }
 
   /**
-   * Get the reference of the target relation entity from relation data and
-   * construct the bilateral relation.
-   *
+   * Get the target relation entity from a primary key or a data object and
+   * construct a bilateral relation.
    * @param entity
    * @param field
    * @param data
@@ -179,13 +189,19 @@ export class EntityManager {
     return targetEntity;
   }
 
+  /**
+   * Construct a unilateral relation to the target entity on the specified field
+   * of the entity.
+   * @param entity
+   * @param field
+   * @param targetEntity
+   */
   private constructRelation(
     entity: AnyEntity,
     field: string,
     targetEntity: AnyEntity,
   ) {
     const relationMeta = entity[FIELDS][field].relation!;
-
     if (relationMeta.multi) {
       const relationEntities: Set<AnyEntity> = entity[field] ?? new Set();
       relationEntities.add(targetEntity);

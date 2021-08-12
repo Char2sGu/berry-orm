@@ -1,8 +1,8 @@
 export { container } from "./container";
+export { EntityData, RelationFieldData } from "./data";
 export {
   AnyEntity,
   BaseEntity,
-  EntityData,
   EntityManager,
   EntityManagerOptions,
   EntityStore,

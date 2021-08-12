@@ -1,9 +1,10 @@
-import { PrimaryKey, PrimaryKeyField } from "../field";
+import { RelationFieldData } from "../data";
+import { EntityData } from "../data/entity-data.type";
+import { PrimaryKeyField } from "../field";
 import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
 import { Type } from "../utils";
 import { AnyEntity } from "./any-entity.type";
 import { BaseEntity } from "./base-entity.class";
-import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStore } from "./entity-store.type";
 
@@ -39,16 +40,14 @@ export class EntityManager {
         if (!relationMeta) {
           this.defineFieldValue(entity, field, data[field]);
         } else if (relationMeta.multi) {
-          const foreignKeysOrDataList = data[field] as
-            | PrimaryKey[]
-            | EntityData<AnyEntity>[];
+          const foreignKeysOrDataList = data[
+            field
+          ] as RelationFieldData<Entity>[];
           foreignKeysOrDataList.forEach((foreignKeyOrData) => {
             this.resolveRelationData(entity, field, foreignKeyOrData);
           });
         } else {
-          const foreignKeyOrData = data[field] as
-            | PrimaryKey
-            | EntityData<AnyEntity>;
+          const foreignKeyOrData = data[field] as RelationFieldData;
           this.resolveRelationData(entity, field, foreignKeyOrData);
         }
       }
@@ -169,7 +168,7 @@ export class EntityManager {
   private resolveRelationData(
     entity: AnyEntity,
     field: string,
-    data: PrimaryKey | EntityData<AnyEntity>,
+    data: RelationFieldData,
   ) {
     const relationMeta = entity[FIELDS][field].relation!;
 

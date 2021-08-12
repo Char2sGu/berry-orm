@@ -1,7 +1,7 @@
+import { EntityData } from "../../data/entity-data.type";
 import { Entity, Field } from "../../meta";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
-import { EntityData } from "../entity-data.type";
 import { EntityManager } from "../entity-manager.class";
 
 describe("EntityManager", () => {

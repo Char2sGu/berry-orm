@@ -1,5 +1,5 @@
 import { EntityData, RelationFieldData } from "../data";
-import { PrimaryKeyField } from "../field";
+import { EmptyValue, PrimaryKeyField } from "../field";
 import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
 import { Type } from "../utils";
 import { AnyEntity } from "./any-entity.type";
@@ -84,6 +84,9 @@ export class EntityManager {
     return entity;
   }
 
+  // --------------------------------------------------------------------------
+  // Common
+
   /**
    * Get the store of the target entity or throw an error if the entity is not
    * registered.
@@ -98,6 +101,81 @@ export class EntityManager {
       );
     return store as EntityStore<Entity>;
   }
+
+  /**
+   * Define a getter on the specified field of the entity which
+   * returns the value directly.
+   * @param entity
+   * @param field
+   * @param value
+   */
+  private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
+    Reflect.defineProperty(entity, field, { get: () => value });
+  }
+
+  // --------------------------------------------------------------------------
+  // Relation
+
+  /**
+   * Get the target relation entity from a primary key or a data object.
+   * @param entity
+   * @param field
+   * @param data
+   * @returns
+   */
+  private resolveRelationFieldData(
+    entity: AnyEntity,
+    field: string,
+    data: RelationFieldData,
+  ) {
+    const relationMeta = entity[FIELDS][field].relation!;
+    if (typeof data == "object") {
+      // TODO: Support this
+      // specifying inverse relations in nested data is not supported
+      delete data[relationMeta.inverse];
+      return this.commit(relationMeta.target(), data);
+    } else {
+      return this.retrieve(relationMeta.target(), data);
+    }
+  }
+
+  /**
+   * Construct a unilateral relation to the target entity on the specified field
+   * of the entity.
+   * @param entity
+   * @param field
+   * @param targetEntity
+   */
+  private constructRelation(
+    entity: AnyEntity,
+    field: string,
+    targetEntity: AnyEntity,
+  ) {
+    const value = entity[field];
+    if (this.isToManyFieldValue(entity, field, value)) {
+      const relationEntities = value ?? new Set();
+      relationEntities.add(targetEntity);
+      this.defineFieldValue(entity, field, relationEntities);
+    } else {
+      this.defineFieldValue(entity, field, targetEntity);
+    }
+  }
+
+  /**
+   * @param entity
+   * @param field
+   * @param value - Field value.
+   * @returns
+   */
+  private isToManyFieldValue(
+    entity: AnyEntity,
+    field: string,
+    value: unknown,
+  ): value is Set<AnyEntity> | EmptyValue {
+    return !!entity[FIELDS][field].relation?.multi;
+  }
+
+  // --------------------------------------------------------------------------
 
   /**
    * Inspect the registered entities.
@@ -145,62 +223,6 @@ export class EntityManager {
             );
         }
       });
-    }
-  }
-
-  /**
-   * Define a getter on the specified field of the entity which
-   * returns the value directly.
-   * @param entity
-   * @param field
-   * @param value
-   */
-  private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
-    Reflect.defineProperty(entity, field, { get: () => value });
-  }
-
-  /**
-   * Get the target relation entity from a primary key or a data object.
-   * @param entity
-   * @param field
-   * @param data
-   * @returns
-   */
-  private resolveRelationFieldData(
-    entity: AnyEntity,
-    field: string,
-    data: RelationFieldData,
-  ) {
-    const relationMeta = entity[FIELDS][field].relation!;
-    if (typeof data == "object") {
-      // TODO: Support this
-      // specifying inverse relations in nested data is not supported
-      delete data[relationMeta.inverse];
-      return this.commit(relationMeta.target(), data);
-    } else {
-      return this.retrieve(relationMeta.target(), data);
-    }
-  }
-
-  /**
-   * Construct a unilateral relation to the target entity on the specified field
-   * of the entity.
-   * @param entity
-   * @param field
-   * @param targetEntity
-   */
-  private constructRelation(
-    entity: AnyEntity,
-    field: string,
-    targetEntity: AnyEntity,
-  ) {
-    const relationMeta = entity[FIELDS][field].relation!;
-    if (relationMeta.multi) {
-      const relationEntities: Set<AnyEntity> = entity[field] ?? new Set();
-      relationEntities.add(targetEntity);
-      this.defineFieldValue(entity, field, relationEntities);
-    } else {
-      this.defineFieldValue(entity, field, targetEntity);
     }
   }
 }

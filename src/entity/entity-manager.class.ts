@@ -31,26 +31,15 @@ export class EntityManager {
     if (!entity[POPULATED]) {
       for (const k in entity[FIELDS]) {
         const field = k as keyof typeof data;
+        const fieldData = data[field];
 
-        // relation field data is optional
-        if (!(field in data)) continue;
-
-        const relationMeta = entity[FIELDS][field].relation!;
+        const relationMeta = entity[FIELDS][field].relation;
         if (!relationMeta) {
-          this.defineFieldValue(entity, field, data[field]);
+          this.defineFieldValue(entity, field, fieldData);
         } else {
-          const relationData = (
-            relationMeta.multi ? data[field] : [data[field]]
-          ) as RelationFieldData[];
-          relationData.forEach((data) => {
-            const targetEntity = this.resolveRelationFieldData(
-              entity,
-              field,
-              data,
-            );
-            this.constructRelation(entity, field, targetEntity);
-            this.constructRelation(targetEntity, relationMeta.inverse, entity);
-          });
+          // relation field data is optional
+          if (!fieldData) continue;
+          this.updateRelationFieldValue(entity, field, fieldData);
         }
       }
       entity[POPULATED] = true;
@@ -116,6 +105,22 @@ export class EntityManager {
   // --------------------------------------------------------------------------
   // Relation
 
+  private updateRelationFieldValue(
+    entity: AnyEntity,
+    field: string,
+    data: RelationFieldData | RelationFieldData[],
+  ) {
+    (isToManyData(data) ? data : [data]).forEach((data) => {
+      const targetEntity = this.resolveRelationFieldData(entity, field, data);
+      this.constructRelation(entity, field, targetEntity);
+    });
+
+    function isToManyData(data: unknown): data is RelationFieldData[] {
+      const relationMeta = entity[FIELDS][field].relation!;
+      return !!relationMeta.multi;
+    }
+  }
+
   /**
    * Get the target relation entity from a primary key or a data object.
    * @param entity
@@ -140,8 +145,8 @@ export class EntityManager {
   }
 
   /**
-   * Construct a unilateral relation to the target entity on the specified field
-   * of the entity.
+   * Construct a bilateral relation with the target entity on the specified
+   * field of the entity.
    * @param entity
    * @param field
    * @param targetEntity
@@ -151,28 +156,56 @@ export class EntityManager {
     field: string,
     targetEntity: AnyEntity,
   ) {
-    const value = entity[field];
-    if (this.isToManyFieldValue(entity, field, value)) {
-      const relationEntities = value ?? new Set();
-      relationEntities.add(targetEntity);
-      this.defineFieldValue(entity, field, relationEntities);
-    } else {
-      this.defineFieldValue(entity, field, targetEntity);
-    }
+    const constructRelationUnilateral = (
+      entity: AnyEntity,
+      field: string,
+      targetEntity: AnyEntity,
+    ) => {
+      this.invokeOnRelationField(
+        entity,
+        field,
+        () => targetEntity,
+        (entities) => (entities ?? new Set()).add(targetEntity),
+      );
+    };
+
+    const relationMeta = entity[FIELDS][field].relation!;
+    const inverseField = relationMeta.inverse;
+    constructRelationUnilateral(entity, field, targetEntity);
+    constructRelationUnilateral(targetEntity, inverseField, entity);
   }
 
   /**
+   * Invoke a callback based on the field's relation type and use the return
+   * value to update the field's value.
    * @param entity
    * @param field
-   * @param value - Field value.
-   * @returns
+   * @param onToOne
+   * @param onToMany
    */
-  private isToManyFieldValue(
+  private invokeOnRelationField(
     entity: AnyEntity,
     field: string,
-    value: unknown,
-  ): value is Set<AnyEntity> | EmptyValue {
-    return !!entity[FIELDS][field].relation?.multi;
+    onToOne?: (entity: AnyEntity | EmptyValue) => void | AnyEntity,
+    onToMany?: (entities: Set<AnyEntity> | EmptyValue) => void | Set<AnyEntity>,
+  ) {
+    const value = entity[field];
+    if (isToManyFieldValue(value)) {
+      const relationEntities = value;
+      const processed = onToMany?.(relationEntities);
+      this.defineFieldValue(entity, field, processed ?? relationEntities);
+    } else {
+      const relationEntity: AnyEntity | EmptyValue = value;
+      const processed = onToOne?.(relationEntity);
+      this.defineFieldValue(entity, field, processed ?? relationEntity);
+    }
+
+    function isToManyFieldValue(
+      value: unknown,
+    ): value is Set<AnyEntity> | EmptyValue {
+      const relationMeta = entity[FIELDS][field].relation;
+      return !!relationMeta?.multi;
+    }
   }
 
   // --------------------------------------------------------------------------

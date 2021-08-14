@@ -156,23 +156,52 @@ export class EntityManager {
     field: string,
     targetEntity: AnyEntity,
   ) {
-    const constructRelationUnilateral = (
+    this.invokeOnRelationFieldBilateral(
+      entity,
+      field,
+      targetEntity,
+      (_, targetEntity) => targetEntity,
+      (entities, targetEntity) => (entities ?? new Set()).add(targetEntity),
+    );
+  }
+
+  /**
+   * A wrap of {@link EntityManager.invokeOnRelationField} which makes it
+   * easier to operate on the both sides of the relation.
+   * @param entity
+   * @param field
+   * @param targetEntity
+   * @param onToOne
+   * @param onToMany
+   */
+  private invokeOnRelationFieldBilateral(
+    entity: AnyEntity,
+    field: string,
+    targetEntity: AnyEntity,
+    onToOne?: (
+      targetEntity: AnyEntity,
+      entity: AnyEntity | EmptyValue,
+    ) => AnyEntity | EmptyValue,
+    onToMany?: (
+      targetEntity: AnyEntity,
+      entities: Set<AnyEntity> | EmptyValue,
+    ) => Set<AnyEntity> | EmptyValue,
+  ) {
+    const wrappedInvoke = (
       entity: AnyEntity,
       field: string,
       targetEntity: AnyEntity,
-    ) => {
+    ) =>
       this.invokeOnRelationField(
         entity,
         field,
-        () => targetEntity,
-        (entities) => (entities ?? new Set()).add(targetEntity),
+        onToOne ? (entity) => onToOne(targetEntity, entity) : undefined,
+        onToMany ? (entities) => onToMany(targetEntity, entities) : undefined,
       );
-    };
 
     const relationMeta = entity[FIELDS][field].relation!;
-    const inverseField = relationMeta.inverse;
-    constructRelationUnilateral(entity, field, targetEntity);
-    constructRelationUnilateral(targetEntity, inverseField, entity);
+    wrappedInvoke(entity, field, targetEntity);
+    wrappedInvoke(targetEntity, relationMeta.inverse, entity);
   }
 
   /**
@@ -191,24 +220,18 @@ export class EntityManager {
       entities: Set<AnyEntity> | EmptyValue,
     ) => Set<AnyEntity> | EmptyValue,
   ) {
+    const relationMeta = entity[FIELDS][field].relation;
     const value = entity[field];
-    if (isToManyFieldValue(value)) {
+    if (relationMeta?.multi) {
       if (!onToMany) return;
-      const relationEntities = value;
+      const relationEntities = value as Set<AnyEntity> | EmptyValue;
       const processed = onToMany(relationEntities);
       this.defineFieldValue(entity, field, processed);
     } else {
       if (!onToOne) return;
-      const relationEntity: AnyEntity | EmptyValue = value;
+      const relationEntity = value as AnyEntity | EmptyValue;
       const processed = onToOne(relationEntity);
       this.defineFieldValue(entity, field, processed);
-    }
-
-    function isToManyFieldValue(
-      value: unknown,
-    ): value is Set<AnyEntity> | EmptyValue {
-      const relationMeta = entity[FIELDS][field].relation;
-      return !!relationMeta?.multi;
     }
   }
 

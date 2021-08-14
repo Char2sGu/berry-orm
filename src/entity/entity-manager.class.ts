@@ -186,18 +186,22 @@ export class EntityManager {
   private invokeOnRelationField(
     entity: AnyEntity,
     field: string,
-    onToOne?: (entity: AnyEntity | EmptyValue) => void | AnyEntity,
-    onToMany?: (entities: Set<AnyEntity> | EmptyValue) => void | Set<AnyEntity>,
+    onToOne?: (entity: AnyEntity | EmptyValue) => AnyEntity | EmptyValue,
+    onToMany?: (
+      entities: Set<AnyEntity> | EmptyValue,
+    ) => Set<AnyEntity> | EmptyValue,
   ) {
     const value = entity[field];
     if (isToManyFieldValue(value)) {
+      if (!onToMany) return;
       const relationEntities = value;
-      const processed = onToMany?.(relationEntities);
-      this.defineFieldValue(entity, field, processed ?? relationEntities);
+      const processed = onToMany(relationEntities);
+      this.defineFieldValue(entity, field, processed);
     } else {
+      if (!onToOne) return;
       const relationEntity: AnyEntity | EmptyValue = value;
-      const processed = onToOne?.(relationEntity);
-      this.defineFieldValue(entity, field, processed ?? relationEntity);
+      const processed = onToOne(relationEntity);
+      this.defineFieldValue(entity, field, processed);
     }
 
     function isToManyFieldValue(

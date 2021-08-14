@@ -2,6 +2,7 @@ import {
   AnyEntity,
   BaseEntity,
   EmptyValue,
+  EntityField,
   ExtractKeys,
   FIELDS,
   PRIMARY,
@@ -9,7 +10,6 @@ import {
   RelationField,
   RelationTarget,
 } from ".";
-import { EntityField } from "./entity-field.type";
 
 export const Field: FieldDecorator =
   (options?: FieldOptions) =>

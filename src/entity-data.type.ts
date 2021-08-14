@@ -1,5 +1,10 @@
-import { BaseEntity, CommonField, RelationField, RelationFieldData } from ".";
-import { EmptyValue } from "./empty-value.type";
+import {
+  BaseEntity,
+  CommonField,
+  EmptyValue,
+  RelationField,
+  RelationFieldData,
+} from ".";
 
 export type EntityData<Entity extends BaseEntity> = Pick<
   Entity,

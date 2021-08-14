@@ -16,7 +16,7 @@ export class EntityManager {
   }
 
   /**
-   * Commit an entity to the store.
+   * Create or update an entity in the store.
    * @param type
    * @param data
    * @returns
@@ -28,22 +28,20 @@ export class EntityManager {
     const primaryKey = data[type.prototype[PRIMARY]] as Entity[Primary];
     const entity = this.retrieve(type, primaryKey);
 
-    if (!entity[POPULATED]) {
-      for (const k in entity[FIELDS]) {
-        const field = k as keyof typeof data;
-        const fieldData = data[field];
+    for (const k in entity[FIELDS]) {
+      const field = k as keyof typeof data;
+      const fieldData = data[field];
 
-        const relationMeta = entity[FIELDS][field].relation;
-        if (!relationMeta) {
-          this.defineFieldValue(entity, field, fieldData);
-        } else {
-          // relation field data is optional
-          if (!fieldData) continue;
-          this.updateRelationFieldValue(entity, field, fieldData);
-        }
+      const relationMeta = entity[FIELDS][field].relation;
+      if (!relationMeta) {
+        this.defineFieldValue(entity, field, fieldData);
+      } else {
+        // relation field data is optional
+        if (!fieldData) continue;
+        this.updateRelationFieldValue(entity, field, fieldData);
       }
-      entity[POPULATED] = true;
     }
+    entity[POPULATED] = true;
 
     return entity;
   }
@@ -99,7 +97,10 @@ export class EntityManager {
    * @param value
    */
   private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
-    Reflect.defineProperty(entity, field, { get: () => value });
+    Reflect.defineProperty(entity, field, {
+      get: () => value,
+      configurable: true,
+    });
   }
 
   // --------------------------------------------------------------------------
@@ -110,6 +111,7 @@ export class EntityManager {
     field: string,
     data: RelationFieldData | RelationFieldData[],
   ) {
+    this.clearRelation(entity, field);
     (isToManyData(data) ? data : [data]).forEach((data) => {
       const targetEntity = this.resolveRelationFieldData(entity, field, data);
       this.constructRelation(entity, field, targetEntity);
@@ -145,6 +147,30 @@ export class EntityManager {
   }
 
   /**
+   * Destruct any bilateral relation on the specified field of the entity.
+   * @param entity
+   * @param field
+   */
+  private clearRelation(entity: AnyEntity, field: string) {
+    this.invokeOnRelationField(
+      entity,
+      field,
+      (relationEntity) => {
+        if (!relationEntity) return;
+        this.destructRelation(entity, field, relationEntity);
+        return undefined;
+      },
+      (relationEntities) => {
+        if (!relationEntities) return;
+        relationEntities.forEach((relationEntity) =>
+          this.destructRelation(entity, field, relationEntity),
+        );
+        return relationEntities;
+      },
+    );
+  }
+
+  /**
    * Construct a bilateral relation with the target entity on the specified
    * field of the entity.
    * @param entity
@@ -160,8 +186,32 @@ export class EntityManager {
       entity,
       field,
       targetEntity,
-      (_, targetEntity) => targetEntity,
-      (entities, targetEntity) => (entities ?? new Set()).add(targetEntity),
+      (targetEntity) => targetEntity,
+      (targetEntity, entities) => (entities ?? new Set()).add(targetEntity),
+    );
+  }
+
+  /**
+   * Destruct the bilateral relation with the target entity on the specified
+   * field of the entity if exists.
+   * @param entity
+   * @param field
+   * @param targetEntity
+   */
+  private destructRelation(
+    entity: AnyEntity,
+    field: string,
+    targetEntity: AnyEntity,
+  ) {
+    this.invokeOnRelationFieldBilateral(
+      entity,
+      field,
+      targetEntity,
+      (targetEntity, entity) => (entity == targetEntity ? undefined : entity),
+      (targetEntity, entities) => {
+        entities?.delete(targetEntity);
+        return entities;
+      },
     );
   }
 
@@ -209,8 +259,8 @@ export class EntityManager {
    * value to update the field's value.
    * @param entity
    * @param field
-   * @param onToOne
-   * @param onToMany
+   * @param onToOne - The callback to be invoked on a to-one relation field.
+   * @param onToMany - The callback to be invoked on a to-many relation field.
    */
   private invokeOnRelationField(
     entity: AnyEntity,
@@ -221,15 +271,14 @@ export class EntityManager {
     ) => Set<AnyEntity> | EmptyValue,
   ) {
     const relationMeta = entity[FIELDS][field].relation;
-    const value = entity[field];
     if (relationMeta?.multi) {
       if (!onToMany) return;
-      const relationEntities = value as Set<AnyEntity> | EmptyValue;
+      const relationEntities = entity[field] as Set<AnyEntity> | EmptyValue;
       const processed = onToMany(relationEntities);
       this.defineFieldValue(entity, field, processed);
     } else {
       if (!onToOne) return;
-      const relationEntity = value as AnyEntity | EmptyValue;
+      const relationEntity = entity[field] as AnyEntity | EmptyValue;
       const processed = onToOne(relationEntity);
       this.defineFieldValue(entity, field, processed);
     }

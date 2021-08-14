@@ -1,4 +1,3 @@
-import { EntityData } from "../../data";
 import { Entity, Field } from "../../meta";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
@@ -21,24 +20,51 @@ describe("EntityManager", () => {
         field2!: Date;
       }
 
-      let data: EntityData<TestingEntity>;
-      let entity: TestingEntity;
-
       beforeEach(() => {
         em = new EntityManager({ entities: [TestingEntity] });
-        data = { id: 1, field1: "", field2: new Date() };
-        entity = em.commit(TestingEntity, data);
       });
 
-      it("should return an instance", () => {
-        expect(entity).toBeInstanceOf(TestingEntity);
+      let entity: TestingEntity;
+
+      describe("Create", () => {
+        beforeEach(() => {
+          entity = em.commit(TestingEntity, {
+            id: 1,
+            field1: "",
+            field2: new Date(),
+          });
+        });
+
+        it("should return an instance", () => {
+          expect(entity).toBeInstanceOf(TestingEntity);
+        });
+
+        it("should assign the values to the instance", () => {
+          expect(entity.id).toBe(1);
+          expect(entity.field1).toBe("");
+          expect(entity.field2).toBeInstanceOf(Date);
+        });
       });
 
-      it("should assign the values to the instance", () => {
-        for (const k in data) {
-          const key = k as keyof typeof data;
-          expect(entity[key]).toBe(data[key]);
-        }
+      describe("Update", () => {
+        beforeEach(() => {
+          entity = em.commit(TestingEntity, {
+            id: 1,
+            field1: "",
+            field2: new Date(),
+          });
+          em.commit(TestingEntity, {
+            id: 1,
+            field1: "updated",
+            field2: new Date(),
+          });
+        });
+
+        it("should update the values", () => {
+          expect(entity.id).toBe(1);
+          expect(entity.field1).toBe("updated");
+          expect(entity.field2).toBeInstanceOf(Date);
+        });
       });
     });
 
@@ -76,54 +102,98 @@ describe("EntityManager", () => {
       });
 
       describe("Foreign Keys", () => {
-        beforeEach(() => {
-          result = em.commit(TestingEntity1, {
-            id: 1,
-            entity2: 1,
+        describe("Create", () => {
+          beforeEach(() => {
+            result = em.commit(TestingEntity1, {
+              id: 1,
+              entity2: 1,
+            });
+          });
+
+          it("should return an instance", () => {
+            expect(result).toBeInstanceOf(TestingEntity1);
+          });
+
+          it("should mark the entity as populated", () => {
+            expect(result[POPULATED]).toBe(true);
+          });
+
+          it("should build the bilateral relations", () => {
+            expect(result.entity2).toBeInstanceOf(TestingEntity2);
+            expect(result.entity2.entity1).toBe(result);
+          });
+
+          it("should mark the relation entity as unpopulated", () => {
+            expect(result.entity2[POPULATED]).toBe(false);
           });
         });
 
-        it("should return an instance", () => {
-          expect(result).toBeInstanceOf(TestingEntity1);
-        });
+        describe("Update", () => {
+          beforeEach(() => {
+            result = em.commit(TestingEntity1, {
+              id: 1,
+              entity2: 1,
+            });
+            em.commit(TestingEntity1, {
+              id: 1,
+              entity2: 2,
+            });
+          });
 
-        it("should mark the entity as populated", () => {
-          expect(result[POPULATED]).toBe(true);
-        });
+          it("should construct the relation", () => {
+            expect(result.entity2.id).toBe(2);
+            expect(result.entity2.entity1).toBe(result);
+          });
 
-        it("should build the bilateral relations", () => {
-          expect(result.entity2).toBeInstanceOf(TestingEntity2);
-          expect(result.entity2.entity1).toBe(result);
-        });
-
-        it("should mark the relation entity as unpopulated", () => {
-          expect(result.entity2[POPULATED]).toBe(false);
+          it("should destruct the previous relation", () => {
+            const previous = em.retrieve(TestingEntity2, 1);
+            expect(previous.entity1).toBeUndefined();
+          });
         });
       });
 
       describe("Nested Data", () => {
-        beforeEach(() => {
-          result = em.commit(TestingEntity1, {
-            id: 1,
-            entity2: { id: 1 },
+        describe("Create", () => {
+          beforeEach(() => {
+            result = em.commit(TestingEntity1, {
+              id: 1,
+              entity2: { id: 1 },
+            });
+          });
+
+          it("should return an instance", () => {
+            expect(result).toBeInstanceOf(TestingEntity1);
+          });
+
+          it("should mark the entity as populated", () => {
+            expect(result[POPULATED]).toBe(true);
+          });
+
+          it("should build the bilateral relations", () => {
+            expect(result.entity2).toBeInstanceOf(TestingEntity2);
+            expect(result.entity2.entity1).toBe(result);
+          });
+
+          it("should mark the relation entity as populated", () => {
+            expect(result.entity2[POPULATED]).toBe(true);
           });
         });
 
-        it("should return an instance", () => {
-          expect(result).toBeInstanceOf(TestingEntity1);
-        });
+        describe("Update", () => {
+          beforeEach(() => {
+            result = em.commit(TestingEntity1, { id: 1, entity2: 1 });
+            em.commit(TestingEntity1, { id: 1, entity2: 2 });
+          });
 
-        it("should mark the entity as populated", () => {
-          expect(result[POPULATED]).toBe(true);
-        });
+          it("should construct the new relation", () => {
+            expect(result.entity2.id).toBe(2);
+            expect(result.entity2.entity1).toBe(result);
+          });
 
-        it("should build the bilateral relations", () => {
-          expect(result.entity2).toBeInstanceOf(TestingEntity2);
-          expect(result.entity2.entity1).toBe(result);
-        });
-
-        it("should mark the relation entity as populated", () => {
-          expect(result.entity2[POPULATED]).toBe(true);
+          it("should destruct the previous relation", () => {
+            const previous = em.retrieve(TestingEntity2, 1);
+            expect(previous.entity1).toBeUndefined();
+          });
         });
       });
     });
@@ -164,42 +234,82 @@ describe("EntityManager", () => {
         describe("Parent", () => {
           let result: TestingEntityParent;
 
-          beforeEach(() => {
-            result = em.commit(TestingEntityParent, {
-              id: 1,
-              children: [1],
+          describe("Create", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityParent, {
+                id: 1,
+                children: [1],
+              });
+            });
+
+            it("should return an instance", () => {
+              expect(result).toBeInstanceOf(TestingEntityParent);
+            });
+
+            it("should build the relations", () => {
+              expect(result.children).toBeInstanceOf(Set);
+              expect(result.children.size).toBe(1);
+              expect([...result.children][0].parent).toBe(result);
             });
           });
 
-          it("should return an instance", () => {
-            expect(result).toBeInstanceOf(TestingEntityParent);
-          });
+          describe("Update", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityParent, { id: 1, children: [1] });
+              em.commit(TestingEntityParent, { id: 1, children: [2] });
+            });
 
-          it("should build the relations", () => {
-            expect(result.children).toBeInstanceOf(Set);
-            expect(result.children.size).toBe(1);
-            expect([...result.children][0].parent).toBe(result);
+            it("should construct the relation", () => {
+              expect(result.children.size).toBe(1);
+              const child = [...result.children][0];
+              expect(child.id).toBe(2);
+              expect(child.parent).toBe(result);
+            });
+
+            it("should destruct the relation", () => {
+              const previous = em.retrieve(TestingEntityChild, 1);
+              expect(previous.parent).toBeUndefined();
+            });
           });
         });
 
         describe("Child", () => {
           let result: TestingEntityChild;
 
-          beforeEach(() => {
-            result = em.commit(TestingEntityChild, {
-              id: 1,
-              parent: 1,
+          describe("Create", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityChild, {
+                id: 1,
+                parent: 1,
+              });
+            });
+
+            it("should return an instance", () => {
+              expect(result).toBeInstanceOf(TestingEntityChild);
+            });
+
+            it("should build the relations", () => {
+              expect(result.parent).toBeInstanceOf(TestingEntityParent);
+              expect(result.parent.children).toBeInstanceOf(Set);
+              expect([...result.parent.children][0]).toBe(result);
             });
           });
 
-          it("should return an instance", () => {
-            expect(result).toBeInstanceOf(TestingEntityChild);
-          });
+          describe("Update", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityChild, { id: 1, parent: 1 });
+              em.commit(TestingEntityChild, { id: 1, parent: 2 });
+            });
 
-          it("should build the relations", () => {
-            expect(result.parent).toBeInstanceOf(TestingEntityParent);
-            expect(result.parent.children).toBeInstanceOf(Set);
-            expect([...result.parent.children][0]).toBe(result);
+            it("should construct the relation", () => {
+              expect(result.parent.id).toBe(2);
+              expect([...result.parent.children][0]).toBe(result);
+            });
+
+            it("should destruct the previous relation", () => {
+              const previous = em.retrieve(TestingEntityParent, 1);
+              expect(previous.children.size).toBe(0);
+            });
           });
         });
       });
@@ -208,42 +318,89 @@ describe("EntityManager", () => {
         describe("Parent", () => {
           let result: TestingEntityParent;
 
-          beforeEach(() => {
-            result = em.commit(TestingEntityParent, {
-              id: 1,
-              children: [{ id: 1 }],
+          describe("Create", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityParent, {
+                id: 1,
+                children: [{ id: 1 }],
+              });
+            });
+
+            it("should return an instance", () => {
+              expect(result).toBeInstanceOf(TestingEntityParent);
+            });
+
+            it("should build the relations", () => {
+              expect(result.children).toBeInstanceOf(Set);
+              expect([...result.children][0]).toBeInstanceOf(
+                TestingEntityChild,
+              );
+              expect([...result.children][0].parent).toBe(result);
             });
           });
 
-          it("should return an instance", () => {
-            expect(result).toBeInstanceOf(TestingEntityParent);
-          });
+          describe("Update", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityParent, {
+                id: 1,
+                children: [{ id: 1 }],
+              });
+              em.commit(TestingEntityParent, {
+                id: 1,
+                children: [{ id: 2 }],
+              });
+            });
 
-          it("should build the relations", () => {
-            expect(result.children).toBeInstanceOf(Set);
-            expect([...result.children][0]).toBeInstanceOf(TestingEntityChild);
-            expect([...result.children][0].parent).toBe(result);
+            it("should construct the relation", () => {
+              const child = [...result.children][0];
+              expect(child.id).toBe(2);
+              expect(child.parent).toBe(result);
+            });
+
+            it("should destruct the previous relation", () => {
+              const previous = em.retrieve(TestingEntityChild, 1);
+              expect(previous.parent).toBeUndefined();
+            });
           });
         });
 
         describe("Child", () => {
           let result: TestingEntityChild;
 
-          beforeEach(() => {
-            result = em.commit(TestingEntityChild, {
-              id: 1,
-              parent: { id: 1 },
+          describe("Create", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityChild, {
+                id: 1,
+                parent: { id: 1 },
+              });
+            });
+
+            it("should return an instance", () => {
+              expect(result).toBeInstanceOf(TestingEntityChild);
+            });
+
+            it("should build the relations", () => {
+              expect(result.parent).toBeInstanceOf(TestingEntityParent);
+              expect(result.parent.children).toBeInstanceOf(Set);
+              expect([...result.parent.children][0]).toBe(result);
             });
           });
 
-          it("should return an instance", () => {
-            expect(result).toBeInstanceOf(TestingEntityChild);
-          });
+          describe("Update", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntityChild, { id: 1, parent: 1 });
+              em.commit(TestingEntityChild, { id: 1, parent: 2 });
+            });
 
-          it("should build the relations", () => {
-            expect(result.parent).toBeInstanceOf(TestingEntityParent);
-            expect(result.parent.children).toBeInstanceOf(Set);
-            expect([...result.parent.children][0]).toBe(result);
+            it("should construct the relation", () => {
+              expect(result.parent.id).toBe(2);
+              expect([...result.parent.children][0]).toBe(result);
+            });
+
+            it("should destruct the relation", () => {
+              const previous = em.retrieve(TestingEntityParent, 1);
+              expect(previous.children.size).toBe(0);
+            });
           });
         });
       });

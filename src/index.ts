@@ -3,6 +3,8 @@ export { BaseEntity } from "./base-entity.class";
 export { CommonField } from "./common-field.type";
 export { container } from "./container";
 export { EmptyValue } from "./empty-value.type";
+export { EntityDataCommon } from "./entity-data-common.type";
+export { EntityDataRelation } from "./entity-data-relation.type";
 export { EntityData } from "./entity-data.type";
 export { EntityField } from "./entity-field.type";
 export { EntityManagerOptions } from "./entity-manager-options.interface";

@@ -44,7 +44,7 @@ export class EntityManager {
         this.defineFieldValue(entity, field, fieldData);
       } else {
         // relation field data is optional
-        if (!fieldData) continue;
+        if (!(field in data)) continue;
         this.updateRelationFieldValue(entity, field, fieldData);
       }
     }
@@ -116,9 +116,12 @@ export class EntityManager {
   private updateRelationFieldValue(
     entity: AnyEntity,
     field: string,
-    data: RelationFieldData | RelationFieldData[],
+    data: RelationFieldData | RelationFieldData[] | EmptyValue,
   ) {
     this.clearRelation(entity, field);
+
+    if (!data) return;
+
     (isToManyData(data) ? data : [data]).forEach((data) => {
       const targetEntity = this.resolveRelationFieldData(entity, field, data);
       this.constructRelation(entity, field, targetEntity);

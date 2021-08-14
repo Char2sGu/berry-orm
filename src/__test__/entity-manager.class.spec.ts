@@ -126,25 +126,42 @@ describe("EntityManager", () => {
         });
 
         describe("Update", () => {
-          beforeEach(() => {
-            result = em.commit(TestingEntity1, {
-              id: 1,
-              entity2: 1,
+          describe("Change", () => {
+            beforeEach(() => {
+              result = em.commit(TestingEntity1, {
+                id: 1,
+                entity2: 1,
+              });
+              em.commit(TestingEntity1, {
+                id: 1,
+                entity2: 2,
+              });
             });
-            em.commit(TestingEntity1, {
-              id: 1,
-              entity2: 2,
+
+            it("should construct the relation", () => {
+              expect(result.entity2.id).toBe(2);
+              expect(result.entity2.entity1).toBe(result);
+            });
+
+            it("should destruct the previous relation", () => {
+              const previous = em.retrieve(TestingEntity2, 1);
+              expect(previous.entity1).toBeUndefined();
             });
           });
 
-          it("should construct the relation", () => {
-            expect(result.entity2.id).toBe(2);
-            expect(result.entity2.entity1).toBe(result);
-          });
+          describe.each`
+            value
+            ${null}
+            ${undefined}
+          `("Remove: $value", ({ value }) => {
+            beforeEach(() => {
+              result = em.commit(TestingEntity1, { id: 1, entity2: 1 });
+              em.commit(TestingEntity1, { id: 1, entity2: value });
+            });
 
-          it("should destruct the previous relation", () => {
-            const previous = em.retrieve(TestingEntity2, 1);
-            expect(previous.entity1).toBeUndefined();
+            it("should destruct the relation", () => {
+              expect(result.entity2).toBeFalsy();
+            });
           });
         });
       });

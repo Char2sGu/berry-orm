@@ -1,7 +1,4 @@
-import { BaseEntity } from "../../entity";
-import { FIELDS, PRIMARY } from "../../symbols";
-import { FieldMeta } from "../field-meta.interface";
-import { Field } from "../field.decorator";
+import { BaseEntity, Field, FieldMeta, FIELDS, PRIMARY } from "..";
 
 describe("@Field()", () => {
   describe("Common", () => {

@@ -1,4 +1,4 @@
-import { Type } from "./utils";
+import { Type } from ".";
 
 const map = new Map<Type, unknown>();
 

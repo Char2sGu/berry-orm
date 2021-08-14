@@ -1,5 +1,4 @@
-import { BaseEntity } from "../entity";
-import { ExcludeKeys } from "../utils";
+import { BaseEntity, ExcludeKeys } from ".";
 
 export type EntityField<Entity extends BaseEntity> = string &
   ExcludeKeys<Entity, Function>;

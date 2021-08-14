@@ -1,7 +1,12 @@
-import { PrimaryKeyField } from "../field";
-import { FieldMeta } from "../meta";
-import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
-import { Type } from "../utils";
+import {
+  FieldMeta,
+  FIELDS,
+  POPULATED,
+  PRIMARY,
+  PrimaryKeyField,
+  TYPE,
+  Type,
+} from ".";
 
 /**
  * The base class of every entities, providing type support.

@@ -1,7 +1,4 @@
-import { BaseEntity } from "../entity";
-import { PrimaryKeyField } from "../field";
-import { FIELDS, PRIMARY, TYPE } from "../symbols";
-import { Type } from "../utils";
+import { BaseEntity, FIELDS, PRIMARY, PrimaryKeyField, Type, TYPE } from ".";
 
 export const Entity =
   () =>

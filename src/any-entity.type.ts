@@ -1,4 +1,4 @@
-import { BaseEntity } from "./base-entity.class";
+import { BaseEntity } from ".";
 
 /**
  * Represent an entity extending the `BaseEntity`.

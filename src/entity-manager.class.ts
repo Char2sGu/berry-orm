@@ -1,11 +1,18 @@
-import { EntityData, RelationFieldData } from "../data";
-import { EmptyValue, PrimaryKeyField } from "../field";
-import { FIELDS, POPULATED, PRIMARY, TYPE } from "../symbols";
-import { Type } from "../utils";
-import { AnyEntity } from "./any-entity.type";
-import { BaseEntity } from "./base-entity.class";
-import { EntityManagerOptions } from "./entity-manager-options.interface";
-import { EntityStore } from "./entity-store.type";
+import {
+  AnyEntity,
+  BaseEntity,
+  EmptyValue,
+  EntityData,
+  EntityManagerOptions,
+  EntityStore,
+  FIELDS,
+  POPULATED,
+  PRIMARY,
+  PrimaryKeyField,
+  RelationFieldData,
+  Type,
+  TYPE,
+} from ".";
 
 export class EntityManager {
   private map = new Map<Type<AnyEntity>, EntityStore<AnyEntity>>();

@@ -1,13 +1,15 @@
-import { AnyEntity, BaseEntity } from "../entity";
 import {
+  AnyEntity,
+  BaseEntity,
   EmptyValue,
-  EntityField,
+  ExtractKeys,
+  FIELDS,
+  PRIMARY,
   PrimaryKeyField,
   RelationField,
-} from "../field";
-import { FIELDS, PRIMARY } from "../symbols";
-import { ExtractKeys } from "../utils";
-import { RelationTarget } from "./relation-target.type";
+  RelationTarget,
+} from ".";
+import { EntityField } from "./entity-field.type";
 
 export const Field: FieldDecorator =
   (options?: FieldOptions) =>

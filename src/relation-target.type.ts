@@ -1,5 +1,4 @@
-import { AnyEntity, BaseEntity } from "../entity";
-import { Type } from "../utils";
+import { AnyEntity, BaseEntity, Type } from ".";
 
 export type RelationTarget<Entity extends BaseEntity = AnyEntity> =
   () => Type<Entity>;

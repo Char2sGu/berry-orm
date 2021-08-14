@@ -13,6 +13,7 @@ export { FieldMeta } from "./field-meta.interface";
 export { Field } from "./field.decorator";
 export { PrimaryKeyField } from "./primary-key-field.type";
 export { PrimaryKey } from "./primary-key.type";
+export { RelationEntityRepresentation } from "./relation-entity-representation.type";
 export { RelationFieldData } from "./relation-field-data.type";
 export { RelationField } from "./relation-field.type";
 export { RelationTarget } from "./relation-target.type";

@@ -9,6 +9,7 @@ import {
   POPULATED,
   PRIMARY,
   PrimaryKeyField,
+  RelationEntityRepresentation,
   RelationFieldData,
   Type,
   TYPE,
@@ -116,18 +117,24 @@ export class EntityManager {
   private updateRelationFieldValue(
     entity: AnyEntity,
     field: string,
-    data: RelationFieldData | RelationFieldData[] | EmptyValue,
+    data: RelationFieldData,
   ) {
     this.clearRelation(entity, field);
 
     if (!data) return;
 
     (isToManyData(data) ? data : [data]).forEach((data) => {
-      const targetEntity = this.resolveRelationFieldData(entity, field, data);
+      const targetEntity = this.resolveRelationEntityRepresentation(
+        entity,
+        field,
+        data,
+      );
       this.constructRelation(entity, field, targetEntity);
     });
 
-    function isToManyData(data: unknown): data is RelationFieldData[] {
+    function isToManyData(
+      data: unknown,
+    ): data is RelationEntityRepresentation[] {
       const relationMeta = entity[FIELDS][field].relation!;
       return !!relationMeta.multi;
     }
@@ -137,22 +144,22 @@ export class EntityManager {
    * Get the target relation entity from a primary key or a data object.
    * @param entity
    * @param field
-   * @param data
+   * @param reference
    * @returns
    */
-  private resolveRelationFieldData(
+  private resolveRelationEntityRepresentation(
     entity: AnyEntity,
     field: string,
-    data: RelationFieldData,
+    reference: RelationEntityRepresentation,
   ) {
     const relationMeta = entity[FIELDS][field].relation!;
-    if (typeof data == "object") {
+    if (typeof reference == "object") {
       // TODO: Support this
       // specifying inverse relations in nested data is not supported
-      delete data[relationMeta.inverse];
-      return this.commit(relationMeta.target(), data);
+      delete reference[relationMeta.inverse];
+      return this.commit(relationMeta.target(), reference);
     } else {
-      return this.retrieve(relationMeta.target(), data);
+      return this.retrieve(relationMeta.target(), reference);
     }
   }
 

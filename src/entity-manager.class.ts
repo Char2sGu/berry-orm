@@ -1,6 +1,7 @@
 import {
   AnyEntity,
   BaseEntity,
+  Collection,
   EmptyValue,
   EntityData,
   EntityManagerOptions,
@@ -10,9 +11,11 @@ import {
   PRIMARY,
   PrimaryKeyField,
   RelationEntityRepresentation,
+  RelationField,
   RelationFieldData,
   Type,
   TYPE,
+  EntityDataRelation,
 } from ".";
 
 export class EntityManager {
@@ -40,13 +43,19 @@ export class EntityManager {
       const field = k as keyof typeof data;
       const fieldData = data[field];
 
+      if (!(field in data)) continue;
+      if (field == entity[PRIMARY]) continue;
+
       const relationMeta = entity[FIELDS][field].relation;
       if (!relationMeta) {
-        this.defineFieldValue(entity, field, fieldData);
+        entity[field as keyof Entity] =
+          fieldData as unknown as Entity[keyof Entity];
       } else {
-        // relation field data is optional
-        if (!(field in data)) continue;
-        this.updateRelationFieldValue(entity, field, fieldData);
+        this.updateRelationField(
+          entity,
+          field as RelationField<Entity>,
+          fieldData as RelationFieldData<Entity>,
+        );
       }
     }
     entity[POPULATED] = true;
@@ -71,9 +80,7 @@ export class EntityManager {
     const store = this.getStore(type);
     let entity = store.get(primaryKey) as Entity | undefined;
     if (!entity) {
-      entity = new type();
-      entity[POPULATED] = false;
-      this.defineFieldValue(entity, entity[PRIMARY], primaryKey);
+      entity = this.createEntity(type, primaryKey);
       store.set(primaryKey, entity);
     }
     return entity;
@@ -98,32 +105,63 @@ export class EntityManager {
   }
 
   /**
-   * Define a getter on the specified field of the entity which
-   * returns the value directly.
+   * Instantiate an entity and initialize its fields.
+   * @param type
+   */
+  private createEntity<
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+  >(type: Type<Entity>, primaryKey: Entity[Primary]) {
+    const entity = new type();
+    entity[POPULATED] = false;
+    entity[entity[PRIMARY]] = primaryKey;
+    Object.keys(entity[FIELDS]).forEach((field) =>
+      this.initField(entity, field),
+    );
+    return entity;
+  }
+
+  /**
+   * Define accessors on the specified field of the entity to prevent
+   * unexpected bugs and instantiate {@link Collection}s.
    * @param entity
    * @param field
-   * @param value
    */
-  private defineFieldValue(entity: AnyEntity, field: string, value: unknown) {
+  private initField(entity: AnyEntity, field: string) {
+    const isPrimaryKeyField = entity[PRIMARY] == field;
+    const isCollectionField = !!entity[FIELDS][field].relation?.multi;
+
+    if (isCollectionField) entity[field] = new Collection(this, entity);
+
+    let fieldValue = entity[field];
     Reflect.defineProperty(entity, field, {
-      get: () => value,
-      configurable: true,
+      get: () => fieldValue,
+      set: (value: unknown) => {
+        if (isPrimaryKeyField)
+          throw new Error("The Primary key cannot be updated");
+        if (isCollectionField)
+          throw new Error("Collection fields cannot be set");
+        fieldValue = value;
+      },
     });
   }
 
   // --------------------------------------------------------------------------
   // Relation
 
-  private updateRelationFieldValue(
-    entity: AnyEntity,
-    field: string,
-    data: RelationFieldData,
-  ) {
+  private updateRelationField<
+    Entity extends BaseEntity,
+    Field extends RelationField<Entity>,
+  >(entity: Entity, field: Field, data: RelationFieldData<Entity, Field>) {
     this.clearRelation(entity, field);
 
     if (!data) return;
 
-    (isToManyData(data) ? data : [data]).forEach((data) => {
+    const relationMeta = entity[FIELDS][field].relation!;
+    const representations = (
+      relationMeta.multi ? data : [data]
+    ) as RelationEntityRepresentation[];
+    representations.forEach((data) => {
       const targetEntity = this.resolveRelationEntityRepresentation(
         entity,
         field,
@@ -131,13 +169,6 @@ export class EntityManager {
       );
       this.constructRelation(entity, field, targetEntity);
     });
-
-    function isToManyData(
-      data: unknown,
-    ): data is RelationEntityRepresentation[] {
-      const relationMeta = entity[FIELDS][field].relation!;
-      return !!relationMeta.multi;
-    }
   }
 
   /**
@@ -178,7 +209,6 @@ export class EntityManager {
         return undefined;
       },
       (relationEntities) => {
-        if (!relationEntities) return;
         relationEntities.forEach((relationEntity) =>
           this.destructRelation(entity, field, relationEntity),
         );
@@ -204,7 +234,7 @@ export class EntityManager {
       field,
       targetEntity,
       (targetEntity) => targetEntity,
-      (targetEntity, entities) => (entities ?? new Set()).add(targetEntity),
+      (targetEntity, entities) => entities.add(targetEntity),
     );
   }
 
@@ -251,8 +281,8 @@ export class EntityManager {
     ) => AnyEntity | EmptyValue,
     onToMany?: (
       targetEntity: AnyEntity,
-      entities: Set<AnyEntity> | EmptyValue,
-    ) => Set<AnyEntity> | EmptyValue,
+      entities: Collection<AnyEntity>,
+    ) => Collection<AnyEntity>,
   ) {
     const wrappedInvoke = (
       entity: AnyEntity,
@@ -272,32 +302,29 @@ export class EntityManager {
   }
 
   /**
-   * Invoke a callback based on the field's relation type and use the return
-   * value to update the field's value.
+   * Invoke a callback based on the field's relation type.
    * @param entity
    * @param field
    * @param onToOne - The callback to be invoked on a to-one relation field.
+   * The return value will be the value of the field.
    * @param onToMany - The callback to be invoked on a to-many relation field.
    */
   private invokeOnRelationField(
     entity: AnyEntity,
     field: string,
     onToOne?: (entity: AnyEntity | EmptyValue) => AnyEntity | EmptyValue,
-    onToMany?: (
-      entities: Set<AnyEntity> | EmptyValue,
-    ) => Set<AnyEntity> | EmptyValue,
+    onToMany?: (entities: Collection<AnyEntity>) => void,
   ) {
     const relationMeta = entity[FIELDS][field].relation;
     if (relationMeta?.multi) {
       if (!onToMany) return;
-      const relationEntities = entity[field] as Set<AnyEntity> | EmptyValue;
-      const processed = onToMany(relationEntities);
-      this.defineFieldValue(entity, field, processed);
+      const relationEntities = entity[field] as Collection<AnyEntity>;
+      onToMany(relationEntities);
     } else {
       if (!onToOne) return;
       const relationEntity = entity[field] as AnyEntity | EmptyValue;
       const processed = onToOne(relationEntity);
-      this.defineFieldValue(entity, field, processed);
+      entity[field] = processed;
     }
   }
 

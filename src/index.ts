@@ -1,5 +1,6 @@
 export { AnyEntity } from "./any-entity.type";
 export { BaseEntity } from "./base-entity.class";
+export { Collection } from "./collection.class";
 export { CommonField } from "./common-field.type";
 export { container } from "./container";
 export { EmptyValue } from "./empty-value.type";

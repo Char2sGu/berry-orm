@@ -1,4 +1,5 @@
 import { BaseEntity, Entity, EntityManager, Field, POPULATED } from "..";
+import { Collection } from "../collection.class";
 
 describe("EntityManager", () => {
   let em: EntityManager;
@@ -12,9 +13,6 @@ describe("EntityManager", () => {
 
         @Field()
         field1!: string;
-
-        @Field()
-        field2!: Date;
       }
 
       beforeEach(() => {
@@ -28,7 +26,6 @@ describe("EntityManager", () => {
           entity = em.commit(TestingEntity, {
             id: 1,
             field1: "",
-            field2: new Date(),
           });
         });
 
@@ -39,7 +36,6 @@ describe("EntityManager", () => {
         it("should assign the values to the instance", () => {
           expect(entity.id).toBe(1);
           expect(entity.field1).toBe("");
-          expect(entity.field2).toBeInstanceOf(Date);
         });
       });
 
@@ -48,19 +44,16 @@ describe("EntityManager", () => {
           entity = em.commit(TestingEntity, {
             id: 1,
             field1: "",
-            field2: new Date(),
           });
           em.commit(TestingEntity, {
             id: 1,
             field1: "updated",
-            field2: new Date(),
           });
         });
 
         it("should update the values", () => {
           expect(entity.id).toBe(1);
           expect(entity.field1).toBe("updated");
-          expect(entity.field2).toBeInstanceOf(Date);
         });
       });
     });
@@ -223,7 +216,7 @@ describe("EntityManager", () => {
           inverse: "parent",
           multi: true,
         })
-        children!: Set<TestingEntityChild>;
+        children!: Collection<TestingEntityChild>;
       }
 
       @Entity()
@@ -261,7 +254,7 @@ describe("EntityManager", () => {
             });
 
             it("should build the relations", () => {
-              expect(result.children).toBeInstanceOf(Set);
+              expect(result.children).toBeInstanceOf(Collection);
               expect(result.children.size).toBe(1);
               expect([...result.children][0].parent).toBe(result);
             });
@@ -304,7 +297,7 @@ describe("EntityManager", () => {
 
             it("should build the relations", () => {
               expect(result.parent).toBeInstanceOf(TestingEntityParent);
-              expect(result.parent.children).toBeInstanceOf(Set);
+              expect(result.parent.children).toBeInstanceOf(Collection);
               expect([...result.parent.children][0]).toBe(result);
             });
           });
@@ -345,7 +338,7 @@ describe("EntityManager", () => {
             });
 
             it("should build the relations", () => {
-              expect(result.children).toBeInstanceOf(Set);
+              expect(result.children).toBeInstanceOf(Collection);
               expect([...result.children][0]).toBeInstanceOf(
                 TestingEntityChild,
               );
@@ -395,7 +388,7 @@ describe("EntityManager", () => {
 
             it("should build the relations", () => {
               expect(result.parent).toBeInstanceOf(TestingEntityParent);
-              expect(result.parent.children).toBeInstanceOf(Set);
+              expect(result.parent.children).toBeInstanceOf(Collection);
               expect([...result.parent.children][0]).toBe(result);
             });
           });
@@ -434,19 +427,36 @@ describe("EntityManager", () => {
       em = new EntityManager({
         entities: [TestingEntity],
       });
-      result = em.retrieve(TestingEntity, 1);
     });
 
-    it("should return an instance", () => {
-      expect(result).toBeInstanceOf(TestingEntity);
+    describe("Not Exists", () => {
+      beforeEach(() => {
+        result = em.retrieve(TestingEntity, 1);
+      });
+
+      it("should return an instance", () => {
+        expect(result).toBeInstanceOf(TestingEntity);
+      });
+
+      it("should assign to the priamry key field", () => {
+        expect(result.id).toBe(1);
+      });
+
+      it("should mark it as unpopulated", () => {
+        expect(result[POPULATED]).toBe(false);
+      });
     });
 
-    it("should assign to the priamry key field", () => {
-      expect(result.id).toBe(1);
-    });
+    describe("Exists", () => {
+      let entity: TestingEntity;
+      beforeEach(() => {
+        entity = em.commit(TestingEntity, { id: 1 });
+        result = em.retrieve(TestingEntity, 1);
+      });
 
-    it("should mark it as unpopulated", () => {
-      expect(result[POPULATED]).toBe(false);
+      it("should return the existed entity", () => {
+        expect(result).toBe(entity);
+      });
     });
   });
 });

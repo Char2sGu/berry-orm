@@ -1,6 +1,7 @@
 import {
   AnyEntity,
   BaseEntity,
+  Collection,
   EmptyValue,
   EntityField,
   ExtractKeys,
@@ -48,7 +49,10 @@ interface FieldDecorator {
     options: FieldOptionsRelationMulti<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: Extract<ExtractKeys<Entity, Set<TargetEntity> | EmptyValue>, string>,
+    name: Extract<
+      ExtractKeys<Entity, Collection<TargetEntity> | EmptyValue>,
+      string
+    >,
   ) => void;
 
   <TargetEntity extends BaseEntity>(

@@ -1,4 +1,5 @@
 import { BaseEntity, Field, FieldMeta, FIELDS, PRIMARY } from "..";
+import { Collection } from "../collection.class";
 
 describe("@Field()", () => {
   describe("Common", () => {
@@ -54,7 +55,7 @@ describe("@Field()", () => {
     } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
       @Field(options)
-      field!: Set<TestingEntity>;
+      field!: Collection<TestingEntity>;
     }
 
     it("should define the meta", () => {

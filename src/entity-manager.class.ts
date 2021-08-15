@@ -156,7 +156,7 @@ export class EntityManager {
    * @param data
    * @returns
    */
-  private updateRelationField<
+  updateRelationField<
     Entity extends BaseEntity,
     Field extends RelationField<Entity>,
   >(entity: Entity, field: Field, data: RelationFieldData<Entity, Field>) {
@@ -185,9 +185,9 @@ export class EntityManager {
    * @param reference
    * @returns
    */
-  private resolveRelationEntityRepresentation(
-    entity: AnyEntity,
-    field: string,
+  resolveRelationEntityRepresentation<Entity extends BaseEntity>(
+    entity: Entity,
+    field: RelationField<Entity>,
     reference: RelationEntityRepresentation,
   ) {
     const relationMeta = entity[FIELDS][field].relation!;
@@ -206,7 +206,10 @@ export class EntityManager {
    * @param entity
    * @param field
    */
-  private clearRelation(entity: AnyEntity, field: string) {
+  clearRelation<Entity extends BaseEntity>(
+    entity: Entity,
+    field: RelationField<Entity>,
+  ) {
     this.invokeOnRelationField(
       entity,
       field,
@@ -231,9 +234,9 @@ export class EntityManager {
    * @param field
    * @param targetEntity
    */
-  private constructRelation(
-    entity: AnyEntity,
-    field: string,
+  constructRelation<Entity extends BaseEntity>(
+    entity: Entity,
+    field: RelationField<Entity>,
     targetEntity: AnyEntity,
   ) {
     this.invokeOnRelationFieldBilateral(
@@ -252,9 +255,9 @@ export class EntityManager {
    * @param field
    * @param targetEntity
    */
-  private destructRelation(
-    entity: AnyEntity,
-    field: string,
+  destructRelation<Entity extends BaseEntity>(
+    entity: Entity,
+    field: RelationField<Entity>,
     targetEntity: AnyEntity,
   ) {
     this.invokeOnRelationFieldBilateral(

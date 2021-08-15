@@ -18,8 +18,21 @@ export abstract class BaseEntity<
   Entity extends BaseEntity = any,
   Primary extends PrimaryKeyField<Entity> = any,
 > {
+  /**
+   * A short cut of `this.constructor as Type<Entity>`
+   */
   [TYPE]: Type<Entity>;
+  /**
+   * Meta of the fields of the entity.
+   */
   [FIELDS]: Record<string, FieldMeta>;
+  /**
+   * The primary key field of the entity.
+   */
   [PRIMARY]: Primary;
+  /**
+   * A `Set` storing the populated fields or `true` if all fields are
+   * populated.
+   */
   [POPULATED]: boolean;
 }

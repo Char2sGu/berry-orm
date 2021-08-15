@@ -15,7 +15,6 @@ import {
   RelationFieldData,
   Type,
   TYPE,
-  EntityDataRelation,
 } from ".";
 
 export class EntityManager {
@@ -113,11 +112,11 @@ export class EntityManager {
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const entity = new type();
-    entity[POPULATED] = false;
-    entity[entity[PRIMARY]] = primaryKey;
     Object.keys(entity[FIELDS]).forEach((field) =>
       this.initField(entity, field),
     );
+    entity[POPULATED] = false;
+    entity[entity[PRIMARY]] = primaryKey;
     return entity;
   }
 
@@ -131,24 +130,32 @@ export class EntityManager {
     const isPrimaryKeyField = entity[PRIMARY] == field;
     const isCollectionField = !!entity[FIELDS][field].relation?.multi;
 
-    if (isCollectionField) entity[field] = new Collection(this, entity);
-
-    let fieldValue = entity[field];
+    let fieldValue: unknown;
     Reflect.defineProperty(entity, field, {
       get: () => fieldValue,
       set: (value: unknown) => {
-        if (isPrimaryKeyField)
+        if (isPrimaryKeyField && fieldValue)
           throw new Error("The Primary key cannot be updated");
-        if (isCollectionField)
+        if (isCollectionField && fieldValue)
           throw new Error("Collection fields cannot be set");
         fieldValue = value;
       },
     });
+
+    if (isCollectionField) entity[field] = new Collection(this, entity);
   }
 
   // --------------------------------------------------------------------------
   // Relation
 
+  /**
+   * Update the bilateral relation on the specified field of the entity based
+   * on the data.
+   * @param entity
+   * @param field
+   * @param data
+   * @returns
+   */
   private updateRelationField<
     Entity extends BaseEntity,
     Field extends RelationField<Entity>,

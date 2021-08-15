@@ -419,6 +419,13 @@ describe("EntityManager", () => {
     class TestingEntity extends BaseEntity<TestingEntity, "id"> {
       @Field({ primary: true })
       id!: number;
+
+      @Field({
+        target: () => TestingEntity,
+        inverse: "relations",
+        multi: true,
+      })
+      relations!: Collection<TestingEntity>;
     }
 
     let result: TestingEntity;
@@ -444,6 +451,23 @@ describe("EntityManager", () => {
 
       it("should mark it as unpopulated", () => {
         expect(result[POPULATED]).toBe(false);
+      });
+
+      it("should initialize collection fields", () => {
+        expect(result.relations).toBeDefined();
+        expect(result.relations).toBeInstanceOf(Collection);
+      });
+
+      it("should forbid updating collection fields", () => {
+        expect(() => {
+          result.relations = Object.create(Collection.prototype);
+        }).toThrowError();
+      });
+
+      it("should forbid updating the priamry key field", () => {
+        expect(() => {
+          result.id = 2;
+        }).toThrowError();
       });
     });
 

@@ -2,7 +2,6 @@ import {
   AnyEntity,
   BaseEntity,
   Collection,
-  DATA,
   EmptyValue,
   EntityData,
   EntityManagerOptions,
@@ -113,11 +112,10 @@ export class EntityManager {
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const entity = new type();
-    entity[POPULATED] = false;
-    entity[DATA] = {};
     Object.keys(entity[FIELDS]).forEach((field) =>
       this.initField(entity, field),
     );
+    entity[POPULATED] = false;
     entity[entity[PRIMARY]] = primaryKey;
     return entity;
   }
@@ -131,17 +129,19 @@ export class EntityManager {
   private initField(entity: AnyEntity, field: string) {
     const isPrimaryKeyField = entity[PRIMARY] == field;
     const isCollectionField = !!entity[FIELDS][field].relation?.multi;
+
+    let fieldValue: unknown;
     Reflect.defineProperty(entity, field, {
-      get: () => entity[DATA][field],
+      get: () => fieldValue,
       set: (value: unknown) => {
-        const isFieldDefined = field in entity[DATA];
-        if (isPrimaryKeyField && isFieldDefined)
+        if (isPrimaryKeyField && fieldValue)
           throw new Error("The Primary key cannot be updated");
-        if (isCollectionField && isFieldDefined)
+        if (isCollectionField && fieldValue)
           throw new Error("Collection fields cannot be set");
-        entity[DATA][field] = value;
+        fieldValue = value;
       },
     });
+
     if (isCollectionField) entity[field] = new Collection(this, entity);
   }
 

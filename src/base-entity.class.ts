@@ -31,8 +31,8 @@ export abstract class BaseEntity<
    */
   [PRIMARY]: Primary;
   /**
-   * A `Set` storing the populated fields or `true` if all fields are
-   * populated.
+   * Indicates that the **data** fields (**relation** fields not included) of
+   * the entity has been populated.
    */
   [POPULATED]: boolean;
 }

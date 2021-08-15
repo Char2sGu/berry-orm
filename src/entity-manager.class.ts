@@ -85,69 +85,6 @@ export class EntityManager {
     return entity;
   }
 
-  // --------------------------------------------------------------------------
-  // Common
-
-  /**
-   * Get the store of the target entity or throw an error if the entity is not
-   * registered.
-   * @param type
-   * @returns
-   */
-  private getStore<Entity extends BaseEntity>(type: Type<Entity>) {
-    const store = this.map.get(type);
-    if (!store)
-      throw new Error(
-        `The entity ${type.name} must be registered to the entity manager`,
-      );
-    return store as EntityStore<Entity>;
-  }
-
-  /**
-   * Instantiate an entity and initialize its fields.
-   * @param type
-   */
-  private createEntity<
-    Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
-  >(type: Type<Entity>, primaryKey: Entity[Primary]) {
-    const entity = new type();
-    Object.keys(entity[FIELDS]).forEach((field) =>
-      this.initField(entity, field),
-    );
-    entity[POPULATED] = false;
-    entity[entity[PRIMARY]] = primaryKey;
-    return entity;
-  }
-
-  /**
-   * Define accessors on the specified field of the entity to prevent
-   * unexpected bugs and instantiate {@link Collection}s.
-   * @param entity
-   * @param field
-   */
-  private initField(entity: AnyEntity, field: string) {
-    const isPrimaryKeyField = entity[PRIMARY] == field;
-    const isCollectionField = !!entity[FIELDS][field].relation?.multi;
-
-    let fieldValue: unknown;
-    Reflect.defineProperty(entity, field, {
-      get: () => fieldValue,
-      set: (value: unknown) => {
-        if (isPrimaryKeyField && fieldValue)
-          throw new Error("The Primary key cannot be updated");
-        if (isCollectionField && fieldValue)
-          throw new Error("Collection fields cannot be set");
-        fieldValue = value;
-      },
-    });
-
-    if (isCollectionField) entity[field] = new Collection(this, entity);
-  }
-
-  // --------------------------------------------------------------------------
-  // Relation
-
   /**
    * Update the bilateral relation on the specified field of the entity based
    * on the data.
@@ -273,6 +210,63 @@ export class EntityManager {
   }
 
   /**
+   * Get the store of the target entity or throw an error if the entity is not
+   * registered.
+   * @param type
+   * @returns
+   */
+  private getStore<Entity extends BaseEntity>(type: Type<Entity>) {
+    const store = this.map.get(type);
+    if (!store)
+      throw new Error(
+        `The entity ${type.name} must be registered to the entity manager`,
+      );
+    return store as EntityStore<Entity>;
+  }
+
+  /**
+   * Instantiate an entity and initialize its fields.
+   * @param type
+   */
+  private createEntity<
+    Entity extends BaseEntity<Entity, Primary>,
+    Primary extends PrimaryKeyField<Entity>,
+  >(type: Type<Entity>, primaryKey: Entity[Primary]) {
+    const entity = new type();
+    Object.keys(entity[FIELDS]).forEach((field) =>
+      this.initField(entity, field),
+    );
+    entity[POPULATED] = false;
+    entity[entity[PRIMARY]] = primaryKey;
+    return entity;
+  }
+
+  /**
+   * Define accessors on the specified field of the entity to prevent
+   * unexpected bugs and instantiate {@link Collection}s.
+   * @param entity
+   * @param field
+   */
+  private initField(entity: AnyEntity, field: string) {
+    const isPrimaryKeyField = entity[PRIMARY] == field;
+    const isCollectionField = !!entity[FIELDS][field].relation?.multi;
+
+    let fieldValue: unknown;
+    Reflect.defineProperty(entity, field, {
+      get: () => fieldValue,
+      set: (value: unknown) => {
+        if (isPrimaryKeyField && fieldValue)
+          throw new Error("The Primary key cannot be updated");
+        if (isCollectionField && fieldValue)
+          throw new Error("Collection fields cannot be set");
+        fieldValue = value;
+      },
+    });
+
+    if (isCollectionField) entity[field] = new Collection(this, entity);
+  }
+
+  /**
    * A wrap of {@link EntityManager.invokeOnRelationField} which makes it
    * easier to operate on the both sides of the relation.
    * @param entity
@@ -337,8 +331,6 @@ export class EntityManager {
       entity[field] = processed;
     }
   }
-
-  // --------------------------------------------------------------------------
 
   /**
    * Inspect the registered entities.

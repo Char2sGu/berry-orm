@@ -20,7 +20,7 @@ export { RelationEntityRepresentation } from "./relation-entity-representation.t
 export { RelationFieldData } from "./relation-field-data.type";
 export { RelationField } from "./relation-field.type";
 export { RelationTarget } from "./relation-target.type";
-export { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
+export { DATA, FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";
 export { Type } from "./utils/type.type";

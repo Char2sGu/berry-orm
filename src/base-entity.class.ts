@@ -1,4 +1,5 @@
 import {
+  DATA,
   FieldMeta,
   FIELDS,
   POPULATED,
@@ -35,4 +36,8 @@ export abstract class BaseEntity<
    * populated.
    */
   [POPULATED]: boolean;
+  /**
+   * Store the value of each field which will be accessed by the accessors.
+   */
+  [DATA]: Partial<Entity>;
 }

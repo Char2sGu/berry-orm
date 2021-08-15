@@ -1,5 +1,12 @@
-import { BaseEntity, Entity, EntityManager, Field, POPULATED } from "..";
-import { Collection } from "../collection.class";
+import {
+  BaseEntity,
+  Entity,
+  EntityManager,
+  Field,
+  POPULATED,
+  Collection,
+  DATA,
+} from "..";
 
 describe("EntityManager", () => {
   let em: EntityManager;
@@ -468,6 +475,10 @@ describe("EntityManager", () => {
         expect(() => {
           result.id = 2;
         }).toThrowError();
+      });
+
+      it("should initialize the data", () => {
+        expect(result[DATA]).toBeDefined();
       });
     });
 

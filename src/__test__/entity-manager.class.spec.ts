@@ -23,7 +23,7 @@ describe("EntityManager", () => {
 
       describe("Create", () => {
         beforeEach(() => {
-          entity = em.commit(TestingEntity, {
+          entity = em.populate(TestingEntity, {
             id: 1,
             field1: "",
           });
@@ -41,11 +41,11 @@ describe("EntityManager", () => {
 
       describe("Update", () => {
         beforeEach(() => {
-          entity = em.commit(TestingEntity, {
+          entity = em.populate(TestingEntity, {
             id: 1,
             field1: "",
           });
-          em.commit(TestingEntity, {
+          em.populate(TestingEntity, {
             id: 1,
             field1: "updated",
           });
@@ -94,7 +94,7 @@ describe("EntityManager", () => {
       describe("Foreign Keys", () => {
         describe("Create", () => {
           beforeEach(() => {
-            result = em.commit(TestingEntity1, {
+            result = em.populate(TestingEntity1, {
               id: 1,
               entity2: 1,
             });
@@ -121,11 +121,11 @@ describe("EntityManager", () => {
         describe("Update", () => {
           describe("Change", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntity1, {
+              result = em.populate(TestingEntity1, {
                 id: 1,
                 entity2: 1,
               });
-              em.commit(TestingEntity1, {
+              em.populate(TestingEntity1, {
                 id: 1,
                 entity2: 2,
               });
@@ -148,8 +148,8 @@ describe("EntityManager", () => {
             ${undefined}
           `("Remove: $value", ({ value }) => {
             beforeEach(() => {
-              result = em.commit(TestingEntity1, { id: 1, entity2: 1 });
-              em.commit(TestingEntity1, { id: 1, entity2: value });
+              result = em.populate(TestingEntity1, { id: 1, entity2: 1 });
+              em.populate(TestingEntity1, { id: 1, entity2: value });
             });
 
             it("should destruct the relation", () => {
@@ -162,7 +162,7 @@ describe("EntityManager", () => {
       describe("Nested Data", () => {
         describe("Create", () => {
           beforeEach(() => {
-            result = em.commit(TestingEntity1, {
+            result = em.populate(TestingEntity1, {
               id: 1,
               entity2: { id: 1 },
             });
@@ -188,8 +188,8 @@ describe("EntityManager", () => {
 
         describe("Update", () => {
           beforeEach(() => {
-            result = em.commit(TestingEntity1, { id: 1, entity2: 1 });
-            em.commit(TestingEntity1, { id: 1, entity2: 2 });
+            result = em.populate(TestingEntity1, { id: 1, entity2: 1 });
+            em.populate(TestingEntity1, { id: 1, entity2: 2 });
           });
 
           it("should construct the new relation", () => {
@@ -243,7 +243,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityParent, {
+              result = em.populate(TestingEntityParent, {
                 id: 1,
                 children: [1],
               });
@@ -262,8 +262,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityParent, { id: 1, children: [1] });
-              em.commit(TestingEntityParent, { id: 1, children: [2] });
+              result = em.populate(TestingEntityParent, {
+                id: 1,
+                children: [1],
+              });
+              em.populate(TestingEntityParent, { id: 1, children: [2] });
             });
 
             it("should construct the relation", () => {
@@ -285,7 +288,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityChild, {
+              result = em.populate(TestingEntityChild, {
                 id: 1,
                 parent: 1,
               });
@@ -304,8 +307,8 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityChild, { id: 1, parent: 1 });
-              em.commit(TestingEntityChild, { id: 1, parent: 2 });
+              result = em.populate(TestingEntityChild, { id: 1, parent: 1 });
+              em.populate(TestingEntityChild, { id: 1, parent: 2 });
             });
 
             it("should construct the relation", () => {
@@ -327,7 +330,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityParent, {
+              result = em.populate(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 1 }],
               });
@@ -348,11 +351,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityParent, {
+              result = em.populate(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 1 }],
               });
-              em.commit(TestingEntityParent, {
+              em.populate(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 2 }],
               });
@@ -376,7 +379,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityChild, {
+              result = em.populate(TestingEntityChild, {
                 id: 1,
                 parent: { id: 1 },
               });
@@ -395,8 +398,8 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.commit(TestingEntityChild, { id: 1, parent: 1 });
-              em.commit(TestingEntityChild, { id: 1, parent: 2 });
+              result = em.populate(TestingEntityChild, { id: 1, parent: 1 });
+              em.populate(TestingEntityChild, { id: 1, parent: 2 });
             });
 
             it("should construct the relation", () => {
@@ -474,7 +477,7 @@ describe("EntityManager", () => {
     describe("Exists", () => {
       let entity: TestingEntity;
       beforeEach(() => {
-        entity = em.commit(TestingEntity, { id: 1 });
+        entity = em.populate(TestingEntity, { id: 1 });
         result = em.retrieve(TestingEntity, 1);
       });
 

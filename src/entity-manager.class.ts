@@ -26,12 +26,12 @@ export class EntityManager {
   }
 
   /**
-   * Create or update an entity in the store.
+   * Populate the entity using the data.
    * @param type
    * @param data
    * @returns
    */
-  commit<
+  populate<
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, data: EntityData<Entity>) {
@@ -50,7 +50,7 @@ export class EntityManager {
         entity[field as keyof Entity] =
           fieldData as unknown as Entity[keyof Entity];
       } else {
-        this.updateRelationField(
+        this.populateRelationField(
           entity,
           field as RelationField<Entity>,
           fieldData as RelationFieldData<Entity>,
@@ -60,6 +60,35 @@ export class EntityManager {
     entity[POPULATED] = true;
 
     return entity;
+  }
+
+  /**
+   * Populate the specified relation field of the entity using the data.
+   * @param entity
+   * @param field
+   * @param data
+   * @returns
+   */
+  populateRelationField<
+    Entity extends BaseEntity,
+    Field extends RelationField<Entity>,
+  >(entity: Entity, field: Field, data: RelationFieldData<Entity, Field>) {
+    this.clearRelations(entity, field);
+
+    if (!data) return;
+
+    const relationMeta = entity[FIELDS][field].relation!;
+    const representations = (
+      relationMeta.multi ? data : [data]
+    ) as RelationEntityRepresentation[];
+    representations.forEach((data) => {
+      const targetEntity = this.resolveRelationEntityRepresentation(
+        entity,
+        field,
+        data,
+      );
+      this.constructRelation(entity, field, targetEntity);
+    });
   }
 
   /**
@@ -86,36 +115,6 @@ export class EntityManager {
   }
 
   /**
-   * Update the bilateral relation on the specified field of the entity based
-   * on the data.
-   * @param entity
-   * @param field
-   * @param data
-   * @returns
-   */
-  updateRelationField<
-    Entity extends BaseEntity,
-    Field extends RelationField<Entity>,
-  >(entity: Entity, field: Field, data: RelationFieldData<Entity, Field>) {
-    this.clearRelation(entity, field);
-
-    if (!data) return;
-
-    const relationMeta = entity[FIELDS][field].relation!;
-    const representations = (
-      relationMeta.multi ? data : [data]
-    ) as RelationEntityRepresentation[];
-    representations.forEach((data) => {
-      const targetEntity = this.resolveRelationEntityRepresentation(
-        entity,
-        field,
-        data,
-      );
-      this.constructRelation(entity, field, targetEntity);
-    });
-  }
-
-  /**
    * Get the target relation entity from a primary key or a data object.
    * @param entity
    * @param field
@@ -132,7 +131,7 @@ export class EntityManager {
       // TODO: Support this
       // specifying inverse relations in nested data is not supported
       delete reference[relationMeta.inverse];
-      return this.commit(relationMeta.target(), reference);
+      return this.populate(relationMeta.target(), reference);
     } else {
       return this.retrieve(relationMeta.target(), reference);
     }
@@ -143,7 +142,7 @@ export class EntityManager {
    * @param entity
    * @param field
    */
-  clearRelation<Entity extends BaseEntity>(
+  clearRelations<Entity extends BaseEntity>(
     entity: Entity,
     field: RelationField<Entity>,
   ) {

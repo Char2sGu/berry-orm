@@ -12,7 +12,7 @@ export { EntityManagerOptions } from "./entity-manager-options.interface";
 export { EntityManager } from "./entity-manager.class";
 export { EntityMeta } from "./entity-meta.interface";
 export { EntityStoreMap } from "./entity-store-map.class";
-export { EntityStore } from "./entity-store.type";
+export { EntityStore } from "./entity-store.class";
 export { Entity } from "./entity.decorator";
 export { FieldMeta } from "./field-meta.interface";
 export { Field } from "./field.decorator";

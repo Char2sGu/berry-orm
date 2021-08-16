@@ -1,6 +1,6 @@
 import { AnyEntity } from ".";
 import { BaseEntity } from "./base-entity.class";
-import { EntityStore } from "./entity-store.type";
+import { EntityStore } from "./entity-store.class";
 import { META } from "./symbols";
 import { Type } from "./utils/type.type";
 
@@ -30,7 +30,7 @@ export class EntityStoreMap extends Map<
   }
 
   private createStore<Entity extends BaseEntity>(type: Type<Entity>) {
-    const store = new Map() as EntityStore<Entity>;
+    const store = new EntityStore<Entity>();
     this.set(type, store);
     return store;
   }

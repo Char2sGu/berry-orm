@@ -4,7 +4,7 @@ import { Collection } from "./collection.class";
 import { EmptyValue } from "./empty-value.type";
 import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
-import { EntityStore } from "./entity-store.type";
+import { EntityStoreMap } from "./entity-store-map.class";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationFieldData } from "./relation-field-data.type";
@@ -13,11 +13,10 @@ import { META, POPULATED } from "./symbols";
 import { Type } from "./utils/type.type";
 
 export class EntityManager {
-  private map = new Map<Type<AnyEntity>, EntityStore<AnyEntity>>();
+  private map;
 
   constructor({ entities }: EntityManagerOptions) {
-    entities.forEach((type) => this.map.set(type, new Map()));
-    this.inspect();
+    this.map = new EntityStoreMap(entities);
   }
 
   /**
@@ -102,7 +101,7 @@ export class EntityManager {
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
-    const store = this.getStore(type);
+    const store = this.map.get(type);
     let entity = store.get(primaryKey) as Entity | undefined;
     if (!entity) {
       entity = this.createEntity(type, primaryKey);
@@ -203,21 +202,6 @@ export class EntityManager {
         return entities;
       },
     );
-  }
-
-  /**
-   * Get the store of the target entity or throw an error if the entity is not
-   * registered.
-   * @param type
-   * @returns
-   */
-  private getStore<Entity extends BaseEntity>(type: Type<Entity>) {
-    const store = this.map.get(type);
-    if (!store)
-      throw new Error(
-        `The entity ${type.name} must be registered to the entity manager`,
-      );
-    return store as EntityStore<Entity>;
   }
 
   /**
@@ -326,60 +310,6 @@ export class EntityManager {
       const relationEntity = entity[field] as AnyEntity | EmptyValue;
       const processed = onToOne(relationEntity);
       entity[field] = processed;
-    }
-  }
-
-  /**
-   * Inspect the registered entities.
-   */
-  private inspect() {
-    const buildErrorBuilder =
-      (type: Type) => (field: string | null, msg: string) => {
-        return new Error(`[${type.name}${field ? `:${field}` : ""}] ${msg}`);
-      };
-
-    // individual inspection of each entity
-    for (const type of this.map.keys()) {
-      const buildError = buildErrorBuilder(type);
-
-      const meta = type.prototype[META];
-
-      if (!meta) throw buildError(null, "Entity must be decorated");
-      if (!meta.type)
-        throw buildError(null, "Entity must be decorated by @Entity()");
-      if (!meta.fields)
-        throw buildError(null, "Entity must have at least one field");
-      if (!meta.fields.primary)
-        throw buildError(null, "Entity must have a primary key field");
-
-      Object.values(meta.fields.items).forEach(({ name, relation }) => {
-        if (relation) {
-          if (!this.map.has(relation.target()))
-            throw buildError(name, "The relation entity is not registered");
-        }
-      });
-    }
-
-    // overall inspection
-    for (const type of this.map.keys()) {
-      const throwErr = buildErrorBuilder(type);
-      Object.values(type.prototype[META].fields.items).forEach(
-        ({ name, relation }) => {
-          if (relation) {
-            const { target, inverse } = relation;
-            const inverseMeta = target().prototype[META].fields.items[inverse];
-            if (!inverseMeta.relation)
-              throwErr(name, "The inverse side must be a relation field");
-            if (inverseMeta.relation?.target() != type)
-              throwErr(name, "The inverse side must point back to this entity");
-            if (inverseMeta.relation?.inverse != name)
-              throwErr(
-                name,
-                "The inverse side of the inverse side must point back to this field",
-              );
-          }
-        },
-      );
     }
   }
 }

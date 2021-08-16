@@ -461,10 +461,6 @@ describe("BerryOrm", () => {
         expect(result.id).toBe(1);
       });
 
-      it("should mark it as unpopulated", () => {
-        expect(result[POPULATED]).toBe(false);
-      });
-
       it("should initialize collection fields", () => {
         expect(result.relations).toBeDefined();
         expect(result.relations).toBeInstanceOf(Collection);

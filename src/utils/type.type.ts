@@ -1,1 +1,4 @@
-export type Type<T = unknown> = { new (...args: any[]): T; prototype: T };
+export type Type<T = unknown, Parameters extends any[] = any[]> = {
+  new (...args: Parameters): T;
+  prototype: T;
+};

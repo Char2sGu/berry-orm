@@ -1,41 +1,41 @@
 import { AnyEntity } from ".";
 import { BaseEntity } from "./base-entity.class";
 import { EntityStore } from "./entity-store.class";
+import { EntityType } from "./entity-type.type";
 import { META } from "./symbols";
-import { Type } from "./utils/type.type";
 
 export class EntityStoreMap extends Map<
-  Type<AnyEntity>,
+  EntityType<AnyEntity>,
   EntityStore<AnyEntity>
 > {
-  registry: Set<Type<AnyEntity>>;
+  registry: Set<EntityType<AnyEntity>>;
 
-  constructor(entities: Type<AnyEntity>[]) {
+  constructor(entities: EntityType<AnyEntity>[]) {
     super();
     this.registry = new Set(entities);
     this.inspect();
   }
 
-  get(type: Type<AnyEntity>) {
+  get(type: EntityType<AnyEntity>) {
     this.checkType(type);
     return super.get(type) ?? this.createStore(type);
   }
 
   set<Entity extends BaseEntity>(
-    type: Type<Entity>,
+    type: EntityType<Entity>,
     store: EntityStore<Entity>,
   ) {
     this.checkType(type);
     return super.set(type, store);
   }
 
-  private createStore<Entity extends BaseEntity>(type: Type<Entity>) {
+  private createStore<Entity extends BaseEntity>(type: EntityType<Entity>) {
     const store = new EntityStore<Entity>();
     this.set(type, store);
     return store;
   }
 
-  private checkType(type: Type<AnyEntity>) {
+  private checkType(type: EntityType<AnyEntity>) {
     if (!this.registry.has(type))
       throw new Error(`${type.name} is not a known entity type`);
   }
@@ -45,7 +45,7 @@ export class EntityStoreMap extends Map<
    */
   private inspect() {
     const buildErrorBuilder =
-      (type: Type) => (field: string | null, msg: string) => {
+      (type: EntityType) => (field: string | null, msg: string) => {
         return new Error(`[${type.name}${field ? `:${field}` : ""}] ${msg}`);
       };
 

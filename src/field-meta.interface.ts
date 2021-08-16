@@ -1,12 +1,12 @@
 import { AnyEntity } from ".";
 import { BaseEntity } from "./base-entity.class";
 import { EntityField } from "./entity-field.type";
-import { Type } from "./utils/type.type";
+import { EntityType } from "./entity-type.type";
 
 export interface FieldMeta<Entity extends BaseEntity = AnyEntity> {
   name: EntityField<Entity>;
   relation: {
-    target: () => Type<AnyEntity>;
+    target: () => EntityType<AnyEntity>;
     inverse: string;
     multi: boolean;
   } | null;

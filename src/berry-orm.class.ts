@@ -5,12 +5,12 @@ import { EmptyValue } from "./empty-value.type";
 import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStoreMap } from "./entity-store-map.class";
+import { EntityType } from "./entity-type.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationFieldData } from "./relation-field-data.type";
 import { RelationField } from "./relation-field.type";
 import { META, POPULATED } from "./symbols";
-import { Type } from "./utils/type.type";
 
 export class BerryOrm {
   private map;
@@ -28,7 +28,7 @@ export class BerryOrm {
   populate<
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
-  >(type: Type<Entity>, data: EntityData<Entity>) {
+  >(type: EntityType<Entity>, data: EntityData<Entity>) {
     const primaryKey = data[
       type.prototype[META].fields.primary
     ] as Entity[Primary];
@@ -100,11 +100,11 @@ export class BerryOrm {
   retrieve<
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
-  >(type: Type<Entity>, primaryKey: Entity[Primary]) {
+  >(type: EntityType<Entity>, primaryKey: Entity[Primary]) {
     const store = this.map.get(type);
     let entity = store.get(primaryKey) as Entity | undefined;
     if (!entity) {
-      entity = this.createEntity(type, primaryKey);
+      entity = new type(this, primaryKey);
       store.set(primaryKey, entity);
     }
     return entity;
@@ -202,49 +202,6 @@ export class BerryOrm {
         return entities;
       },
     );
-  }
-
-  /**
-   * Instantiate an entity and initialize its fields.
-   * @param type
-   */
-  private createEntity<
-    Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
-  >(type: Type<Entity>, primaryKey: Entity[Primary]) {
-    const entity = new type();
-    Object.keys(entity[META].fields.items).forEach((field) =>
-      this.initField(entity, field),
-    );
-    entity[POPULATED] = false;
-    entity[entity[META].fields.primary] = primaryKey;
-    return entity;
-  }
-
-  /**
-   * Define accessors on the specified field of the entity to prevent
-   * unexpected bugs and instantiate {@link Collection}s.
-   * @param entity
-   * @param field
-   */
-  private initField(entity: AnyEntity, field: string) {
-    const isPrimaryKeyField = entity[META].fields.primary == field;
-    const isCollectionField =
-      !!entity[META].fields.items[field].relation?.multi;
-
-    let fieldValue: unknown;
-    Reflect.defineProperty(entity, field, {
-      get: () => fieldValue,
-      set: (value: unknown) => {
-        if (isPrimaryKeyField && fieldValue)
-          throw new Error("The Primary key cannot be updated");
-        if (isCollectionField && fieldValue)
-          throw new Error("Collection fields cannot be set");
-        fieldValue = value;
-      },
-    });
-
-    if (isCollectionField) entity[field] = new Collection(this, entity);
   }
 
   /**

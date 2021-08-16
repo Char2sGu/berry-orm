@@ -1,5 +1,10 @@
+import { CollectionFieldAccessor } from "./accessors/collection-field-accessor.class";
+import { FieldAccessor } from "./accessors/field-accessor.class";
+import { PrimaryKeyFieldAccessor } from "./accessors/primary-key-field-accessor.class";
+import { RelationEntityFieldAccessor } from "./accessors/relation-entity-field-accessor.class";
 import { BerryOrm } from "./berry-orm.class";
 import { Collection } from "./collection.class";
+import { container } from "./container";
 import { EntityField } from "./entity-field.type";
 import { EntityMeta } from "./entity-meta.interface";
 import { PrimaryKeyField } from "./primary-key-field.type";
@@ -32,7 +37,7 @@ export abstract class BaseEntity<
   }
 
   /**
-   * Define accessors on the specified field of the this to prevent
+   * Apply accessors on the specified field of the this to prevent
    * unexpected bugs and instantiate {@link Collection}s.
    * @param this
    * @param field
@@ -40,21 +45,23 @@ export abstract class BaseEntity<
   private initField(field: EntityField<Entity>) {
     const entity = this as unknown as Entity;
 
-    const isPrimaryKeyField = entity[META].fields.primary == field;
-    const isCollectionField =
-      !!entity[META].fields.items[field].relation?.multi;
+    const fieldsMeta = entity[META].fields;
+    const fieldMeta = fieldsMeta.items[field];
 
-    let fieldValue: unknown;
-    Reflect.defineProperty(entity, field, {
-      get: () => fieldValue,
-      set: (value: unknown) => {
-        if (isPrimaryKeyField && fieldValue)
-          throw new Error("The Primary key cannot be updated");
-        if (isCollectionField && fieldValue)
-          throw new Error("Collection fields cannot be set");
-        fieldValue = value;
-      },
-    });
+    const isPrimaryKeyField = fieldsMeta.primary == field;
+    const isCollectionField = !!fieldMeta.relation?.multi;
+    const isRelationEntityField = !!fieldMeta.relation && !isCollectionField;
+
+    const accessor = container.get(
+      isPrimaryKeyField
+        ? PrimaryKeyFieldAccessor
+        : isCollectionField
+        ? CollectionFieldAccessor
+        : isRelationEntityField
+        ? RelationEntityFieldAccessor
+        : FieldAccessor,
+    );
+    accessor.apply(this.orm, entity, field);
 
     if (isCollectionField)
       entity[field] = new Collection(entity.orm, entity) as any;

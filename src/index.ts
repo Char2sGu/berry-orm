@@ -1,3 +1,7 @@
+export { CollectionFieldAccessor } from "./accessors/collection-field-accessor.class";
+export { FieldAccessor } from "./accessors/field-accessor.class";
+export { PrimaryKeyFieldAccessor } from "./accessors/primary-key-field-accessor.class";
+export { RelationEntityFieldAccessor } from "./accessors/relation-entity-field-accessor.class";
 export { AnyEntity } from "./any-entity.type";
 export { BaseEntity } from "./base-entity.class";
 export { BerryOrm } from "./berry-orm.class";

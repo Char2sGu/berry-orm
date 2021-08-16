@@ -15,5 +15,5 @@ export abstract class BaseEntity<
    * Indicates that the **data** fields (**relation** fields not included) of
    * the entity has been populated.
    */
-  [POPULATED] = false;
+  [POPULATED]: boolean;
 }

@@ -235,6 +235,7 @@ export class EntityManager {
     Object.keys(entity[META].fields.items).forEach((field) =>
       this.initField(entity, field),
     );
+    entity[POPULATED] = false;
     entity[entity[META].fields.primary] = primaryKey;
     return entity;
   }

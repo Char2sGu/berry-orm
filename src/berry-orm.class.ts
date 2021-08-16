@@ -3,7 +3,6 @@ import { BaseEntity } from "./base-entity.class";
 import { Collection } from "./collection.class";
 import { EmptyValue } from "./empty-value.type";
 import { EntityData } from "./entity-data.type";
-import { EntityManagerOptions } from "./entity-manager-options.interface";
 import { EntityStoreManager } from "./entity-store-manager.class";
 import { EntityType } from "./entity-type.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
@@ -15,7 +14,7 @@ import { META, POPULATED } from "./symbols";
 export class BerryOrm {
   private storeManager;
 
-  constructor({ entities }: EntityManagerOptions) {
+  constructor({ entities }: { entities: EntityType<AnyEntity>[] }) {
     this.storeManager = new EntityStoreManager(entities);
   }
 

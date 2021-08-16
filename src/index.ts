@@ -13,7 +13,6 @@ export { EntityDataCommon } from "./entity-data-common.type";
 export { EntityDataRelation } from "./entity-data-relation.type";
 export { EntityData } from "./entity-data.type";
 export { EntityField } from "./entity-field.type";
-export { EntityManagerOptions } from "./entity-manager-options.interface";
 export { EntityStoreManager as EntityStoreMap } from "./entity-store-manager.class";
 export { EntityStore } from "./entity-store.class";
 export { EntityMeta } from "./meta/entity-meta.interface";

@@ -1,4 +1,7 @@
-import { BaseEntity, CommonField, ExtractKeys, PrimaryKey } from ".";
+import { BaseEntity } from "./base-entity.class";
+import { CommonField } from "./common-field.type";
+import { PrimaryKey } from "./primary-key.type";
+import { ExtractKeys } from "./utils/extract-keys.type";
 
 export type PrimaryKeyField<Entity extends BaseEntity> = Extract<
   CommonField<Entity>,

@@ -1,4 +1,4 @@
-import { BaseEntity } from ".";
+import { BaseEntity } from "./base-entity.class";
 import { EntityDataCommon } from "./entity-data-common.type";
 import { EntityDataRelation } from "./entity-data-relation.type";
 

@@ -1,4 +1,6 @@
-import { BaseEntity, EntityField, RelationField } from ".";
+import { BaseEntity } from "./base-entity.class";
+import { EntityField } from "./entity-field.type";
+import { RelationField } from "./relation-field.type";
 
 export type CommonField<Entity extends BaseEntity> = Exclude<
   EntityField<Entity>,

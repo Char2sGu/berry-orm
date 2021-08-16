@@ -1,11 +1,9 @@
-import {
-  AnyEntity,
-  BaseEntity,
-  EntityField,
-  FieldMeta,
-  PrimaryKeyField,
-  Type,
-} from ".";
+import { AnyEntity } from ".";
+import { BaseEntity } from "./base-entity.class";
+import { EntityField } from "./entity-field.type";
+import { FieldMeta } from "./field-meta.interface";
+import { PrimaryKeyField } from "./primary-key-field.type";
+import { Type } from "./utils/type.type";
 
 export interface EntityMeta<
   Entity extends BaseEntity = AnyEntity,

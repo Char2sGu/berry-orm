@@ -1,4 +1,7 @@
-import { AnyEntity, BaseEntity, EntityField, Type } from ".";
+import { AnyEntity } from ".";
+import { BaseEntity } from "./base-entity.class";
+import { EntityField } from "./entity-field.type";
+import { Type } from "./utils/type.type";
 
 export interface FieldMeta<Entity extends BaseEntity = AnyEntity> {
   name: EntityField<Entity>;

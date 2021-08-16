@@ -1,4 +1,6 @@
-import { EntityMeta, META, POPULATED, PrimaryKeyField } from ".";
+import { EntityMeta } from "./entity-meta.interface";
+import { PrimaryKeyField } from "./primary-key-field.type";
+import { META, POPULATED } from "./symbols";
 
 /**
  * The base class of every entities, providing type support.

@@ -1,4 +1,8 @@
-import { BaseEntity, EntityMeta, META, PrimaryKeyField, Type } from ".";
+import { BaseEntity } from "./base-entity.class";
+import { EntityMeta } from "./entity-meta.interface";
+import { PrimaryKeyField } from "./primary-key-field.type";
+import { META } from "./symbols";
+import { Type } from "./utils/type.type";
 
 export const Entity =
   () =>

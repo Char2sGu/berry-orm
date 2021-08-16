@@ -1,10 +1,10 @@
-import { AnyEntity, Type } from ".";
+import { AnyEntity, BaseEntity, EntityField, Type } from ".";
 
-export interface FieldMeta {
-  name: string;
-  relation?: {
+export interface FieldMeta<Entity extends BaseEntity = AnyEntity> {
+  name: EntityField<Entity>;
+  relation: {
     target: () => Type<AnyEntity>;
     inverse: string;
-    multi?: boolean;
-  };
+    multi: boolean;
+  } | null;
 }

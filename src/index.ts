@@ -10,6 +10,7 @@ export { EntityData } from "./entity-data.type";
 export { EntityField } from "./entity-field.type";
 export { EntityManagerOptions } from "./entity-manager-options.interface";
 export { EntityManager } from "./entity-manager.class";
+export { EntityMeta } from "./entity-meta.interface";
 export { EntityStore } from "./entity-store.type";
 export { Entity } from "./entity.decorator";
 export { FieldMeta } from "./field-meta.interface";
@@ -20,7 +21,7 @@ export { RelationEntityRepresentation } from "./relation-entity-representation.t
 export { RelationFieldData } from "./relation-field-data.type";
 export { RelationField } from "./relation-field.type";
 export { RelationTarget } from "./relation-target.type";
-export { FIELDS, POPULATED, PRIMARY, TYPE } from "./symbols";
+export { META, POPULATED } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";
 export { Type } from "./utils/type.type";

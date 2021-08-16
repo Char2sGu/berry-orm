@@ -1,4 +1,4 @@
-import { BaseEntity, FIELDS, PRIMARY, PrimaryKeyField, Type, TYPE } from ".";
+import { BaseEntity, EntityMeta, META, PrimaryKeyField, Type } from ".";
 
 export const Entity =
   () =>
@@ -8,8 +8,7 @@ export const Entity =
   >(
     type: Type<Entity>,
   ) => {
-    type.prototype[TYPE] = type;
-    type.prototype[FIELDS] = type.prototype[FIELDS] ?? {};
-    if (!type.prototype[PRIMARY])
-      throw new Error(`The entity ${type.name} must have a primary key field`);
+    const meta = (type.prototype[META] =
+      type.prototype[META] ?? ({} as EntityMeta<Entity, Primary>));
+    meta.type = type;
   };

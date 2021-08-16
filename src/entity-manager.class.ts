@@ -6,15 +6,13 @@ import {
   EntityData,
   EntityManagerOptions,
   EntityStore,
-  FIELDS,
+  META,
   POPULATED,
-  PRIMARY,
   PrimaryKeyField,
   RelationEntityRepresentation,
   RelationField,
   RelationFieldData,
   Type,
-  TYPE,
 } from ".";
 
 export class EntityManager {
@@ -35,17 +33,19 @@ export class EntityManager {
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, data: EntityData<Entity>) {
-    const primaryKey = data[type.prototype[PRIMARY]] as Entity[Primary];
+    const primaryKey = data[
+      type.prototype[META].fields.primary
+    ] as Entity[Primary];
     const entity = this.retrieve(type, primaryKey);
 
-    for (const k in entity[FIELDS]) {
+    for (const k in entity[META].fields.items) {
       const field = k as keyof typeof data;
       const fieldData = data[field];
 
       if (!(field in data)) continue;
-      if (field == entity[PRIMARY]) continue;
+      if (field == entity[META].fields.primary) continue;
 
-      const relationMeta = entity[FIELDS][field].relation;
+      const relationMeta = entity[META].fields.items[field].relation;
       if (!relationMeta) {
         entity[field as keyof Entity] =
           fieldData as unknown as Entity[keyof Entity];
@@ -77,7 +77,7 @@ export class EntityManager {
 
     if (!data) return;
 
-    const relationMeta = entity[FIELDS][field].relation!;
+    const relationMeta = entity[META].fields.items[field].relation!;
     const representations = (
       relationMeta.multi ? data : [data]
     ) as RelationEntityRepresentation[];
@@ -126,7 +126,7 @@ export class EntityManager {
     field: RelationField<Entity>,
     reference: RelationEntityRepresentation,
   ) {
-    const relationMeta = entity[FIELDS][field].relation!;
+    const relationMeta = entity[META].fields.items[field].relation!;
     if (typeof reference == "object") {
       // TODO: Support this
       // specifying inverse relations in nested data is not supported
@@ -232,11 +232,10 @@ export class EntityManager {
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const entity = new type();
-    Object.keys(entity[FIELDS]).forEach((field) =>
+    Object.keys(entity[META].fields.items).forEach((field) =>
       this.initField(entity, field),
     );
-    entity[POPULATED] = false;
-    entity[entity[PRIMARY]] = primaryKey;
+    entity[entity[META].fields.primary] = primaryKey;
     return entity;
   }
 
@@ -247,8 +246,9 @@ export class EntityManager {
    * @param field
    */
   private initField(entity: AnyEntity, field: string) {
-    const isPrimaryKeyField = entity[PRIMARY] == field;
-    const isCollectionField = !!entity[FIELDS][field].relation?.multi;
+    const isPrimaryKeyField = entity[META].fields.primary == field;
+    const isCollectionField =
+      !!entity[META].fields.items[field].relation?.multi;
 
     let fieldValue: unknown;
     Reflect.defineProperty(entity, field, {
@@ -299,7 +299,7 @@ export class EntityManager {
         onToMany ? (entities) => onToMany(targetEntity, entities) : undefined,
       );
 
-    const relationMeta = entity[FIELDS][field].relation!;
+    const relationMeta = entity[META].fields.items[field].relation!;
     wrappedInvoke(entity, field, targetEntity);
     wrappedInvoke(targetEntity, relationMeta.inverse, entity);
   }
@@ -318,7 +318,7 @@ export class EntityManager {
     onToOne?: (entity: AnyEntity | EmptyValue) => AnyEntity | EmptyValue,
     onToMany?: (entities: Collection<AnyEntity>) => void,
   ) {
-    const relationMeta = entity[FIELDS][field].relation;
+    const relationMeta = entity[META].fields.items[field].relation;
     if (relationMeta?.multi) {
       if (!onToMany) return;
       const relationEntities = entity[field] as Collection<AnyEntity>;
@@ -335,48 +335,53 @@ export class EntityManager {
    * Inspect the registered entities.
    */
   private inspect() {
-    const buildThrowErr =
+    const buildErrorBuilder =
       (type: Type) => (field: string | null, msg: string) => {
-        throw new Error(`[${type.name}${field ? `:${field}` : ""}] ${msg}`);
+        return new Error(`[${type.name}${field ? `:${field}` : ""}] ${msg}`);
       };
 
     // individual inspection of each entity
     for (const type of this.map.keys()) {
-      const throwErr = buildThrowErr(type);
+      const buildError = buildErrorBuilder(type);
 
-      if (!type.prototype[TYPE])
-        throwErr(null, "Entities must be decorated by @Entity()");
-      if (!type.prototype[FIELDS])
-        throwErr(null, "Entities must have at least one field");
-      if (!type.prototype[PRIMARY])
-        throwErr(null, "Entities must have a primary key field");
+      const meta = type.prototype[META];
 
-      Object.values(type.prototype[FIELDS]).forEach(({ name, relation }) => {
+      if (!meta) throw buildError(null, "Entity must be decorated");
+      if (!meta.type)
+        throw buildError(null, "Entity must be decorated by @Entity()");
+      if (!meta.fields)
+        throw buildError(null, "Entity must have at least one field");
+      if (!meta.fields.primary)
+        throw buildError(null, "Entity must have a primary key field");
+
+      Object.values(meta.fields.items).forEach(({ name, relation }) => {
         if (relation) {
           if (!this.map.has(relation.target()))
-            throwErr(name, "The relation entity is not registered");
+            throw buildError(name, "The relation entity is not registered");
         }
       });
     }
 
     // overall inspection
     for (const type of this.map.keys()) {
-      const throwErr = buildThrowErr(type);
-      Object.values(type.prototype[FIELDS]).forEach(({ name, relation }) => {
-        if (relation) {
-          const { target, inverse } = relation;
-          const inverseMeta = target().prototype[FIELDS][inverse];
-          if (!inverseMeta.relation)
-            throwErr(name, "The inverse side must be a relation field");
-          if (inverseMeta.relation?.target() != type)
-            throwErr(name, "The inverse side must point back to this entity");
-          if (inverseMeta.relation?.inverse != name)
-            throwErr(
-              name,
-              "The inverse side of the inverse side must point back to this field",
-            );
-        }
-      });
+      const throwErr = buildErrorBuilder(type);
+      Object.values(type.prototype[META].fields.items).forEach(
+        ({ name, relation }) => {
+          if (relation) {
+            const { target, inverse } = relation;
+            const inverseMeta = target().prototype[META].fields.items[inverse];
+            if (!inverseMeta.relation)
+              throwErr(name, "The inverse side must be a relation field");
+            if (inverseMeta.relation?.target() != type)
+              throwErr(name, "The inverse side must point back to this entity");
+            if (inverseMeta.relation?.inverse != name)
+              throwErr(
+                name,
+                "The inverse side of the inverse side must point back to this field",
+              );
+          }
+        },
+      );
     }
   }
 }

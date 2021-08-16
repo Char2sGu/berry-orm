@@ -1,5 +1,4 @@
-import { BaseEntity, Field, FieldMeta, FIELDS, PRIMARY } from "..";
-import { Collection } from "../collection.class";
+import { BaseEntity, Collection, Field, FieldMeta, META } from "..";
 
 describe("@Field()", () => {
   describe("Common", () => {
@@ -9,9 +8,12 @@ describe("@Field()", () => {
     }
 
     it("should define the meta", () => {
-      const fields = TestingEntity.prototype[FIELDS];
+      const fields = TestingEntity.prototype[META].fields.items;
       expect(fields).toBeDefined();
-      expect(fields.field).toEqual<FieldMeta>({ name: "field" });
+      expect(fields.field).toEqual<FieldMeta>({
+        name: "field",
+        relation: null,
+      });
     });
   });
 
@@ -22,13 +24,16 @@ describe("@Field()", () => {
     }
 
     it("should define the field meta", () => {
-      const fields = TestingEntity.prototype[FIELDS];
+      const fields = TestingEntity.prototype[META].fields.items;
       expect(fields).toBeDefined();
-      expect(fields.field).toEqual<FieldMeta>({ name: "field" });
+      expect(fields.field).toEqual<FieldMeta>({
+        name: "field",
+        relation: null,
+      });
     });
 
     it("should define the primary meta", () => {
-      expect(TestingEntity.prototype[PRIMARY]).toBe("field");
+      expect(TestingEntity.prototype[META].fields.primary).toBe("field");
     });
   });
 
@@ -44,10 +49,11 @@ describe("@Field()", () => {
     }
 
     it("should define the meta", () => {
-      const fields = TestingEntity.prototype[FIELDS];
+      const fields = TestingEntity.prototype[META].fields.items;
       expect(fields).toBeDefined();
       expect(fields.field).toBeDefined();
-      expect(fields.field.relation).toEqual(options);
+      const { type, ...value } = { ...options, multi: false };
+      expect(fields.field.relation).toEqual(value);
     });
   });
 
@@ -64,10 +70,11 @@ describe("@Field()", () => {
     }
 
     it("should define the meta", () => {
-      const fields = TestingEntity.prototype[FIELDS];
+      const fields = TestingEntity.prototype[META].fields.items;
       expect(fields).toBeDefined();
       expect(fields.field).toBeDefined();
-      expect(fields.field.relation).toEqual(options);
+      const { type, ...value } = options;
+      expect(fields.field.relation).toEqual(value);
     });
   });
 });

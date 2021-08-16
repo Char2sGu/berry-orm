@@ -4,9 +4,9 @@ import {
   Collection,
   EmptyValue,
   EntityField,
+  EntityMeta,
   ExtractKeys,
-  FIELDS,
-  PRIMARY,
+  META,
   PrimaryKeyField,
   RelationField,
   RelationTarget,
@@ -14,20 +14,29 @@ import {
 
 export const Field: FieldDecorator =
   (options?: FieldOptionsPrimary | FieldOptionsRelation) =>
-  <
-    Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
-  >(
+  <Entity extends BaseEntity, Primary extends PrimaryKeyField<Entity>>(
     prototype: Entity,
-    name: string,
+    name: EntityField<Entity>,
   ) => {
-    let fields = prototype[FIELDS] ?? (prototype[FIELDS] = {});
-    fields[name] = { name };
+    const meta = (prototype[META] =
+      prototype[META] ??
+      ({
+        fields: { items: {} },
+      } as EntityMeta<Entity, Primary>));
 
-    if (!options) return;
+    meta.fields.items[name] = {
+      name,
+      relation:
+        options?.type == "relation"
+          ? {
+              target: options.target,
+              inverse: options.inverse,
+              multi: options.multi ?? false,
+            }
+          : null,
+    };
 
-    if (options.type == "primary") prototype[PRIMARY] = name as Primary;
-    if (options.type == "relation") fields[name].relation = options;
+    if (options?.type == "primary") meta.fields.primary = name as Primary;
   };
 
 interface FieldDecorator {
@@ -48,14 +57,20 @@ interface FieldDecorator {
     options: FieldOptionsRelation<TargetEntity> & { multi: true },
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: Extract<ExtractKeys<Entity, Collection<TargetEntity>>, string>,
+    name: Extract<
+      EntityField<Entity>,
+      ExtractKeys<Entity, Collection<TargetEntity>>
+    >,
   ) => void;
 
   <TargetEntity extends BaseEntity>(
     options: FieldOptionsRelation<TargetEntity>,
   ): <Entity extends BaseEntity>(
     prototype: Entity,
-    name: Extract<ExtractKeys<Entity, TargetEntity | EmptyValue>, string>,
+    name: Extract<
+      EntityField<Entity>,
+      ExtractKeys<Entity, TargetEntity | EmptyValue>
+    >,
   ) => void;
 }
 

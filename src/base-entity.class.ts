@@ -1,12 +1,4 @@
-import {
-  FieldMeta,
-  FIELDS,
-  POPULATED,
-  PRIMARY,
-  PrimaryKeyField,
-  TYPE,
-  Type,
-} from ".";
+import { EntityMeta, META, POPULATED, PrimaryKeyField } from ".";
 
 /**
  * The base class of every entities, providing type support.
@@ -18,21 +10,10 @@ export abstract class BaseEntity<
   Entity extends BaseEntity = any,
   Primary extends PrimaryKeyField<Entity> = any,
 > {
-  /**
-   * A short cut of `this.constructor as Type<Entity>`
-   */
-  [TYPE]: Type<Entity>;
-  /**
-   * Meta of the fields of the entity.
-   */
-  [FIELDS]: Record<string, FieldMeta>;
-  /**
-   * The primary key field of the entity.
-   */
-  [PRIMARY]: Primary;
+  [META]: EntityMeta<Entity, Primary>;
   /**
    * Indicates that the **data** fields (**relation** fields not included) of
    * the entity has been populated.
    */
-  [POPULATED]: boolean;
+  [POPULATED] = false;
 }

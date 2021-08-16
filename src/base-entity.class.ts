@@ -1,6 +1,6 @@
 import { EntityMeta } from "./entity-meta.interface";
 import { PrimaryKeyField } from "./primary-key-field.type";
-import { META, POPULATED } from "./symbols";
+import { DATA, META, POPULATED } from "./symbols";
 
 /**
  * The base class of every entities, providing type support.
@@ -18,4 +18,9 @@ export abstract class BaseEntity<
    * the entity has been populated.
    */
   [POPULATED]: boolean;
+  /**
+   * Stores the actual value of each field, which is also the data source of
+   * the accesssors defined on the fields.
+   */
+  [DATA]: Record<string, unknown>;
 }

@@ -9,7 +9,7 @@ import { PrimaryKeyField } from "./primary-key-field.type";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationFieldData } from "./relation-field-data.type";
 import { RelationField } from "./relation-field.type";
-import { META, POPULATED } from "./symbols";
+import { DATA, META, POPULATED } from "./symbols";
 import { Type } from "./utils/type.type";
 
 export class EntityManager {
@@ -229,11 +229,12 @@ export class EntityManager {
     Primary extends PrimaryKeyField<Entity>,
   >(type: Type<Entity>, primaryKey: Entity[Primary]) {
     const entity = new type();
+    entity[POPULATED] = false;
+    entity[DATA] = {};
     Object.keys(entity[META].fields.items).forEach((field) =>
       this.initField(entity, field),
     );
-    entity[POPULATED] = false;
-    entity[entity[META].fields.primary] = primaryKey;
+    entity[DATA][entity[META].fields.primary] = primaryKey;
     return entity;
   }
 
@@ -248,19 +249,22 @@ export class EntityManager {
     const isCollectionField =
       !!entity[META].fields.items[field].relation?.multi;
 
-    let fieldValue: unknown;
-    Reflect.defineProperty(entity, field, {
-      get: () => fieldValue,
-      set: (value: unknown) => {
-        if (isPrimaryKeyField && fieldValue)
-          throw new Error("The Primary key cannot be updated");
-        if (isCollectionField && fieldValue)
-          throw new Error("Collection fields cannot be set");
-        fieldValue = value;
-      },
-    });
+    if (isCollectionField) entity[DATA][field] = new Collection(this, entity);
 
-    if (isCollectionField) entity[field] = new Collection(this, entity);
+    Reflect.defineProperty(entity, field, {
+      get: () => entity[DATA][field],
+      set: isPrimaryKeyField
+        ? () => {
+            throw new Error("The Primary key cannot be updated");
+          }
+        : isCollectionField
+        ? () => {
+            throw new Error("Collection fields cannot be set");
+          }
+        : (value: unknown) => {
+            entity[DATA][field] = value;
+          },
+    });
   }
 
   /**
@@ -325,7 +329,7 @@ export class EntityManager {
       if (!onToOne) return;
       const relationEntity = entity[field] as AnyEntity | EmptyValue;
       const processed = onToOne(relationEntity);
-      entity[field] = processed;
+      entity[DATA][field] = processed;
     }
   }
 

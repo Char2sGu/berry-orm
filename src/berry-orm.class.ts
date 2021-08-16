@@ -4,7 +4,7 @@ import { Collection } from "./collection.class";
 import { EmptyValue } from "./empty-value.type";
 import { EntityData } from "./entity-data.type";
 import { EntityManagerOptions } from "./entity-manager-options.interface";
-import { EntityStoreMap } from "./entity-store-map.class";
+import { EntityStoreManager } from "./entity-store-manager.class";
 import { EntityType } from "./entity-type.type";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
@@ -13,10 +13,10 @@ import { RelationField } from "./relation-field.type";
 import { META, POPULATED } from "./symbols";
 
 export class BerryOrm {
-  private map;
+  private storeManager;
 
   constructor({ entities }: EntityManagerOptions) {
-    this.map = new EntityStoreMap(entities);
+    this.storeManager = new EntityStoreManager(entities);
   }
 
   /**
@@ -101,7 +101,7 @@ export class BerryOrm {
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
   >(type: EntityType<Entity>, primaryKey: Entity[Primary]) {
-    const store = this.map.get(type);
+    const store = this.storeManager.get(type);
     let entity = store.get(primaryKey) as Entity | undefined;
     if (!entity) {
       entity = new type(this, primaryKey);

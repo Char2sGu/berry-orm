@@ -4,34 +4,24 @@ import { EntityStore } from "./entity-store.class";
 import { EntityType } from "./entity-type.type";
 import { META } from "./symbols";
 
-export class EntityStoreMap extends Map<
-  EntityType<AnyEntity>,
-  EntityStore<AnyEntity>
-> {
-  registry: Set<EntityType<AnyEntity>>;
+export class EntityStoreManager {
+  private map;
+  private registry;
 
   constructor(entities: EntityType<AnyEntity>[]) {
-    super();
-    this.registry = new Set(entities);
+    this.map = new Map<EntityType<AnyEntity>, EntityStore<AnyEntity>>();
+    this.registry = new Set<EntityType<AnyEntity>>(entities);
     this.inspect();
   }
 
   get(type: EntityType<AnyEntity>) {
     this.checkType(type);
-    return super.get(type) ?? this.createStore(type);
-  }
-
-  set<Entity extends BaseEntity>(
-    type: EntityType<Entity>,
-    store: EntityStore<Entity>,
-  ) {
-    this.checkType(type);
-    return super.set(type, store);
+    return this.map.get(type) ?? this.createStore(type);
   }
 
   private createStore<Entity extends BaseEntity>(type: EntityType<Entity>) {
     const store = new EntityStore<Entity>();
-    this.set(type, store);
+    this.map.set(type, store);
     return store;
   }
 

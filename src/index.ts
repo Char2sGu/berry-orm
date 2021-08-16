@@ -11,7 +11,7 @@ export { EntityData } from "./entity-data.type";
 export { EntityField } from "./entity-field.type";
 export { EntityManagerOptions } from "./entity-manager-options.interface";
 export { EntityMeta } from "./entity-meta.interface";
-export { EntityStoreMap } from "./entity-store-map.class";
+export { EntityStoreManager as EntityStoreMap } from "./entity-store-manager.class";
 export { EntityStore } from "./entity-store.class";
 export { Entity } from "./entity.decorator";
 export { FieldMeta } from "./field-meta.interface";

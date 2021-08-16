@@ -17,7 +17,7 @@ describe("@Field()", () => {
 
   describe("Primary", () => {
     class TestingEntity extends BaseEntity<TestingEntity> {
-      @Field({ primary: true })
+      @Field({ type: "primary" })
       field!: string;
     }
 
@@ -33,7 +33,11 @@ describe("@Field()", () => {
   });
 
   describe("Relation: One", () => {
-    const options = { target: () => TestingEntity, inverse: "field" } as const;
+    const options = {
+      type: "relation",
+      target: () => TestingEntity,
+      inverse: "field",
+    } as const;
     class TestingEntity extends BaseEntity<TestingEntity> {
       @Field(options)
       field!: TestingEntity;
@@ -49,6 +53,7 @@ describe("@Field()", () => {
 
   describe("Relation: Many", () => {
     const options = {
+      type: "relation",
       target: () => TestingEntity,
       inverse: "field",
       multi: true,

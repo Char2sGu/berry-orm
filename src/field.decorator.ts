@@ -13,7 +13,7 @@ import {
 } from ".";
 
 export const Field: FieldDecorator =
-  (options?: FieldOptions) =>
+  (options?: FieldOptionsPrimary | FieldOptionsRelation) =>
   <
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryKeyField<Entity>,
@@ -26,9 +26,8 @@ export const Field: FieldDecorator =
 
     if (!options) return;
 
-    if ("primary" in options) prototype[PRIMARY] = name as Primary;
-    if ("target" in options)
-      fields[name] = { ...fields[name], relation: options };
+    if (options.type == "primary") prototype[PRIMARY] = name as Primary;
+    if (options.type == "relation") fields[name].relation = options;
   };
 
 interface FieldDecorator {
@@ -46,7 +45,7 @@ interface FieldDecorator {
   ) => void;
 
   <TargetEntity extends BaseEntity>(
-    options: FieldOptionsRelationMulti<TargetEntity>,
+    options: FieldOptionsRelation<TargetEntity> & { multi: true },
   ): <Entity extends BaseEntity>(
     prototype: Entity,
     name: Extract<ExtractKeys<Entity, Collection<TargetEntity>>, string>,
@@ -60,19 +59,12 @@ interface FieldDecorator {
   ) => void;
 }
 
-type FieldOptions =
-  | FieldOptionsPrimary
-  | FieldOptionsRelation
-  | FieldOptionsRelationMulti;
-
 interface FieldOptionsPrimary {
-  primary: true;
+  type: "primary";
 }
 interface FieldOptionsRelation<Entity extends BaseEntity = AnyEntity> {
+  type: "relation";
   target: RelationTarget<Entity>;
   inverse: RelationField<Entity>;
-}
-interface FieldOptionsRelationMulti<Entity extends BaseEntity = AnyEntity>
-  extends FieldOptionsRelation<Entity> {
-  multi: true;
+  multi?: boolean;
 }

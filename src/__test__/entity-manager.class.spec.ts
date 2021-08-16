@@ -8,7 +8,7 @@ describe("EntityManager", () => {
     describe("Values", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-        @Field({ primary: true })
+        @Field({ type: "primary" })
         id!: number;
 
         @Field()
@@ -61,10 +61,11 @@ describe("EntityManager", () => {
     describe("Relations: One", () => {
       @Entity()
       class TestingEntity1 extends BaseEntity<TestingEntity1, "id"> {
-        @Field({ primary: true })
+        @Field({ type: "primary" })
         id!: number;
 
         @Field({
+          type: "relation",
           target: () => TestingEntity2,
           inverse: "entity1",
         })
@@ -73,10 +74,11 @@ describe("EntityManager", () => {
 
       @Entity()
       class TestingEntity2 extends BaseEntity<TestingEntity2, "id"> {
-        @Field({ primary: true })
+        @Field({ type: "primary" })
         id!: number;
 
         @Field({
+          type: "relation",
           target: () => TestingEntity1,
           inverse: "entity2",
         })
@@ -208,10 +210,11 @@ describe("EntityManager", () => {
     describe("Relations: Many", () => {
       @Entity()
       class TestingEntityParent extends BaseEntity<TestingEntityParent, "id"> {
-        @Field({ primary: true })
+        @Field({ type: "primary" })
         id!: number;
 
         @Field({
+          type: "relation",
           target: () => TestingEntityChild,
           inverse: "parent",
           multi: true,
@@ -221,10 +224,11 @@ describe("EntityManager", () => {
 
       @Entity()
       class TestingEntityChild extends BaseEntity<TestingEntityChild, "id"> {
-        @Field({ primary: true })
+        @Field({ type: "primary" })
         id!: number;
 
         @Field({
+          type: "relation",
           target: () => TestingEntityParent,
           inverse: "children",
         })
@@ -420,10 +424,11 @@ describe("EntityManager", () => {
   describe(".retrieve()", () => {
     @Entity()
     class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-      @Field({ primary: true })
+      @Field({ type: "primary" })
       id!: number;
 
       @Field({
+        type: "relation",
         target: () => TestingEntity,
         inverse: "relations",
         multi: true,

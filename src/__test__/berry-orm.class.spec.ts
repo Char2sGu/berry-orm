@@ -1,8 +1,8 @@
 import { BaseEntity } from "../base-entity.class";
 import { BerryOrm } from "../berry-orm.class";
 import { Collection } from "../collection.class";
-import { Entity } from "../entity.decorator";
-import { Field } from "../field.decorator";
+import { Entity } from "../meta/entity.decorator";
+import { Field } from "../meta/field.decorator";
 import { POPULATED } from "../symbols";
 
 describe("BerryOrm", () => {

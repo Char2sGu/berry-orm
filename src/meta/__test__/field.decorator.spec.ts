@@ -1,4 +1,4 @@
-import { BaseEntity, Collection, Field, FieldMeta, META } from "..";
+import { BaseEntity, Collection, Field, FieldMeta, META } from "../..";
 
 describe("@Field()", () => {
   describe("Common", () => {

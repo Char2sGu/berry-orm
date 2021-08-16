@@ -6,7 +6,7 @@ import { BerryOrm } from "./berry-orm.class";
 import { Collection } from "./collection.class";
 import { container } from "./container";
 import { EntityField } from "./entity-field.type";
-import { EntityMeta } from "./entity-meta.interface";
+import { EntityMeta } from "./meta/entity-meta.interface";
 import { PrimaryKeyField } from "./primary-key-field.type";
 import { META, POPULATED } from "./symbols";
 

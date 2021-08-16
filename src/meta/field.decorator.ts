@@ -1,14 +1,14 @@
-import { AnyEntity } from ".";
-import { BaseEntity } from "./base-entity.class";
-import { Collection } from "./collection.class";
-import { EmptyValue } from "./empty-value.type";
-import { EntityField } from "./entity-field.type";
+import { AnyEntity } from "..";
+import { BaseEntity } from "../base-entity.class";
+import { Collection } from "../collection.class";
+import { EmptyValue } from "../empty-value.type";
+import { EntityField } from "../entity-field.type";
+import { PrimaryKeyField } from "../primary-key-field.type";
+import { RelationField } from "../relation-field.type";
+import { RelationTarget } from "../relation-target.type";
+import { META } from "../symbols";
+import { ExtractKeys } from "../utils/extract-keys.type";
 import { EntityMeta } from "./entity-meta.interface";
-import { PrimaryKeyField } from "./primary-key-field.type";
-import { RelationField } from "./relation-field.type";
-import { RelationTarget } from "./relation-target.type";
-import { META } from "./symbols";
-import { ExtractKeys } from "./utils/extract-keys.type";
 
 export const Field: FieldDecorator =
   (options?: FieldOptionsPrimary | FieldOptionsRelation) =>

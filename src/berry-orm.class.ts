@@ -12,7 +12,7 @@ import { RelationField } from "./relation-field.type";
 import { META, POPULATED } from "./symbols";
 import { Type } from "./utils/type.type";
 
-export class EntityManager {
+export class BerryOrm {
   private map;
 
   constructor({ entities }: EntityManagerOptions) {
@@ -248,7 +248,7 @@ export class EntityManager {
   }
 
   /**
-   * A wrap of {@link EntityManager.invokeOnRelationField} which makes it
+   * A wrap of {@link BerryOrm.invokeOnRelationField} which makes it
    * easier to operate on the both sides of the relation.
    * @param entity
    * @param field

@@ -1,5 +1,6 @@
 export { AnyEntity } from "./any-entity.type";
 export { BaseEntity } from "./base-entity.class";
+export { BerryOrm } from "./berry-orm.class";
 export { Collection } from "./collection.class";
 export { CommonField } from "./common-field.type";
 export { container } from "./container";
@@ -9,7 +10,6 @@ export { EntityDataRelation } from "./entity-data-relation.type";
 export { EntityData } from "./entity-data.type";
 export { EntityField } from "./entity-field.type";
 export { EntityManagerOptions } from "./entity-manager-options.interface";
-export { EntityManager } from "./entity-manager.class";
 export { EntityMeta } from "./entity-meta.interface";
 export { EntityStoreMap } from "./entity-store-map.class";
 export { EntityStore } from "./entity-store.class";

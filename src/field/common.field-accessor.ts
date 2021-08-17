@@ -2,6 +2,7 @@ import { AnyEntity } from "..";
 import { BerryOrm } from "../berry-orm.class";
 import { BaseEntity } from "../entity/base-entity.class";
 import { EntityField } from "./entity-field.type";
+import { PerformSet } from "./perform-set.interface";
 
 export class CommonFieldAccessor<
   Entity extends BaseEntity = AnyEntity,
@@ -17,18 +18,15 @@ export class CommonFieldAccessor<
         return this.handleGet(currentValue, orm, entity, field);
       },
       set: (newValue: Entity[Field]) => {
-        currentValue = this.handleSet(
-          newValue,
-          currentValue,
-          orm,
-          entity,
-          field,
-        );
+        const performSet: PerformSet<Entity[Field]> = (newValue) => {
+          currentValue = newValue;
+        };
+        this.handleSet(performSet, newValue, currentValue, orm, entity, field);
       },
     });
   }
 
-  protected handleGet(
+  handleGet(
     currentValue: Entity[Field],
     orm: BerryOrm,
     entity: Entity,
@@ -37,13 +35,14 @@ export class CommonFieldAccessor<
     return currentValue;
   }
 
-  protected handleSet(
+  handleSet(
+    performSet: PerformSet<Entity[Field]>,
     newValue: Entity[Field],
     currentValue: Entity[Field],
     orm: BerryOrm,
     entity: Entity,
     field: Field,
   ) {
-    return newValue;
+    performSet(newValue);
   }
 }

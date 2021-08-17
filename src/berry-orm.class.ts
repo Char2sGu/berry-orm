@@ -1,12 +1,12 @@
 import { AnyEntity } from ".";
-import { BaseEntity } from "./base-entity.class";
-import { EntityData } from "./entity-data.type";
-import { EntityStoreManager } from "./entity-store-manager.class";
-import { EntityType } from "./entity-type.type";
-import { PrimaryKeyField } from "./primary-key-field.type";
-import { RelationEntityRepresentation } from "./relation-entity-representation.type";
-import { RelationFieldData } from "./relation-field-data.type";
-import { RelationField } from "./relation-field.type";
+import { BaseEntity } from "./entity/base-entity.class";
+import { EntityData } from "./entity/entity-data.type";
+import { EntityStoreManager } from "./entity/entity-store-manager.class";
+import { EntityType } from "./entity/entity-type.type";
+import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
+import { PrimaryKeyField } from "./field/primary-key-field.type";
+import { RelationFieldData } from "./field/relation-field-data.type";
+import { RelationField } from "./field/relation-field.type";
 import { RelationService } from "./relation-service.class";
 import { META, POPULATED } from "./symbols";
 

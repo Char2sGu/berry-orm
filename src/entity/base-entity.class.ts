@@ -1,14 +1,14 @@
-import { BaseFieldAccessor } from "./base.field-accessor";
-import { BerryOrm } from "./berry-orm.class";
-import { Collection } from "./collection.class";
-import { container } from "./container";
-import { EntityField } from "./entity-field.type";
-import { EntityMeta } from "./meta/entity-meta.interface";
-import { PrimaryKeyField } from "./primary-key-field.type";
-import { PrimaryFieldAccessor } from "./primary.field-accessor";
-import { META, POPULATED } from "./symbols";
-import { ToManyFieldAccessor } from "./to-many.field-accessor";
-import { RelationEntityFieldAccessor } from "./to-one.field-accessor";
+import { BerryOrm } from "../berry-orm.class";
+import { container } from "../container";
+import { Collection } from "../field/collection.class";
+import { CommonFieldAccessor } from "../field/common.field-accessor";
+import { EntityField } from "../field/entity-field.type";
+import { PrimaryKeyField } from "../field/primary-key-field.type";
+import { PrimaryFieldAccessor } from "../field/primary.field-accessor";
+import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-accessor";
+import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";
+import { EntityMeta } from "../meta/entity-meta.interface";
+import { META, POPULATED } from "../symbols";
 
 /**
  * The base class of every entities.
@@ -56,10 +56,10 @@ export abstract class BaseEntity<
       isPrimaryKeyField
         ? PrimaryFieldAccessor
         : isCollectionField
-        ? ToManyFieldAccessor
+        ? RelationToManyFieldAccessor
         : isRelationEntityField
-        ? RelationEntityFieldAccessor
-        : BaseFieldAccessor,
+        ? RelationToOneFieldAccessor
+        : CommonFieldAccessor,
     );
     accessor.apply(this.orm, entity, field);
 

@@ -1,8 +1,8 @@
 import { AnyEntity } from "..";
-import { BaseEntity } from "../base-entity.class";
-import { EntityField } from "../entity-field.type";
-import { EntityType } from "../entity-type.type";
-import { PrimaryKeyField } from "../primary-key-field.type";
+import { BaseEntity } from "../entity/base-entity.class";
+import { EntityType } from "../entity/entity-type.type";
+import { EntityField } from "../field/entity-field.type";
+import { PrimaryKeyField } from "../field/primary-key-field.type";
 import { FieldMeta } from "./field-meta.interface";
 
 export interface EntityMeta<

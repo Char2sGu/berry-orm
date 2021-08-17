@@ -1,6 +1,6 @@
-import { BaseEntity } from "../base-entity.class";
 import { BerryOrm } from "../berry-orm.class";
-import { Collection } from "../collection.class";
+import { BaseEntity } from "../entity/base-entity.class";
+import { Collection } from "../field/collection.class";
 import { Entity } from "../meta/entity.decorator";
 import { Field } from "../meta/field.decorator";
 import { POPULATED } from "../symbols";

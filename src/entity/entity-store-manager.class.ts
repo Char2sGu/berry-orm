@@ -1,8 +1,8 @@
-import { AnyEntity } from ".";
+import { AnyEntity } from "..";
+import { META } from "../symbols";
 import { BaseEntity } from "./base-entity.class";
 import { EntityStore } from "./entity-store.class";
 import { EntityType } from "./entity-type.type";
-import { META } from "./symbols";
 
 export class EntityStoreManager {
   private map;

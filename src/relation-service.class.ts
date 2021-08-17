@@ -1,10 +1,10 @@
 import { BaseEntity } from ".";
-import { AnyEntity } from "./any-entity.type";
 import { BerryOrm } from "./berry-orm.class";
-import { Collection } from "./collection.class";
-import { EmptyValue } from "./empty-value.type";
-import { RelationEntityRepresentation } from "./relation-entity-representation.type";
-import { RelationField } from "./relation-field.type";
+import { AnyEntity } from "./entity/any-entity.type";
+import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
+import { Collection } from "./field/collection.class";
+import { EmptyValue } from "./field/empty-value.type";
+import { RelationField } from "./field/relation-field.type";
 import { META } from "./symbols";
 
 export class RelationService {

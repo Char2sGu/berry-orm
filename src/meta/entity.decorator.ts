@@ -1,6 +1,6 @@
-import { BaseEntity } from "../base-entity.class";
-import { EntityType } from "../entity-type.type";
-import { PrimaryKeyField } from "../primary-key-field.type";
+import { BaseEntity } from "../entity/base-entity.class";
+import { EntityType } from "../entity/entity-type.type";
+import { PrimaryKeyField } from "../field/primary-key-field.type";
 import { META } from "../symbols";
 import { EntityMeta } from "./entity-meta.interface";
 

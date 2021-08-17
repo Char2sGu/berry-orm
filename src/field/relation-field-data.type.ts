@@ -1,8 +1,8 @@
-import { AnyEntity } from ".";
-import { BaseEntity } from "./base-entity.class";
+import { AnyEntity } from "..";
+import { BaseEntity } from "../entity/base-entity.class";
+import { RelationEntityRepresentation } from "../entity/relation-entity-representation.type";
 import { Collection } from "./collection.class";
 import { EmptyValue } from "./empty-value.type";
-import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationField } from "./relation-field.type";
 
 export type RelationFieldData<

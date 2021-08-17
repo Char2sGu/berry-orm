@@ -1,14 +1,14 @@
-import { CollectionFieldAccessor } from "./accessors/collection-field-accessor.class";
-import { FieldAccessor } from "./accessors/field-accessor.class";
-import { PrimaryKeyFieldAccessor } from "./accessors/primary-key-field-accessor.class";
-import { RelationEntityFieldAccessor } from "./accessors/relation-entity-field-accessor.class";
+import { BaseFieldAccessor } from "./base.field-accessor";
 import { BerryOrm } from "./berry-orm.class";
 import { Collection } from "./collection.class";
 import { container } from "./container";
 import { EntityField } from "./entity-field.type";
 import { EntityMeta } from "./meta/entity-meta.interface";
 import { PrimaryKeyField } from "./primary-key-field.type";
+import { PrimaryFieldAccessor } from "./primary.field-accessor";
 import { META, POPULATED } from "./symbols";
+import { ToManyFieldAccessor } from "./to-many.field-accessor";
+import { RelationEntityFieldAccessor } from "./to-one.field-accessor";
 
 /**
  * The base class of every entities.
@@ -54,12 +54,12 @@ export abstract class BaseEntity<
 
     const accessor = container.get(
       isPrimaryKeyField
-        ? PrimaryKeyFieldAccessor
+        ? PrimaryFieldAccessor
         : isCollectionField
-        ? CollectionFieldAccessor
+        ? ToManyFieldAccessor
         : isRelationEntityField
         ? RelationEntityFieldAccessor
-        : FieldAccessor,
+        : BaseFieldAccessor,
     );
     accessor.apply(this.orm, entity, field);
 

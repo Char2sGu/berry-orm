@@ -64,6 +64,6 @@ export abstract class BaseEntity<
     accessor.apply(this.orm, entity, field);
 
     if (isCollectionField)
-      entity[field] = new Collection(entity.orm, entity) as any;
+      entity[field] = new Collection(entity.orm, entity, field) as any;
   }
 }

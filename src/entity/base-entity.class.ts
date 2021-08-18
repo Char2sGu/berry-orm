@@ -11,7 +11,7 @@ import { EntityMeta } from "../meta/entity-meta.interface";
 import { META, POPULATED } from "../symbols";
 
 /**
- * The base class of every entities.
+ * The base class of every entity.
  *
  * It is recommended to create an own `BaseEntity`, which extends this one and
  * is defined getters so that the metadata can be accessed more conveniently.

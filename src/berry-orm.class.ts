@@ -1,8 +1,8 @@
 import { AnyEntity } from ".";
 import { BaseEntity } from "./entity/base-entity.class";
 import { EntityData } from "./entity/entity-data.type";
-import { EntityStoreManager } from "./entity/entity-store-manager.class";
 import { EntityType } from "./entity/entity-type.type";
+import { IdentityMapManager } from "./entity/identity-map-manager.class";
 import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
 import { Collection } from "./field/collection.class";
 import { EmptyValue } from "./field/empty-value.type";
@@ -12,10 +12,10 @@ import { RelationField } from "./field/relation-field.type";
 import { META, POPULATED } from "./symbols";
 
 export class BerryOrm {
-  private storeManager;
+  private identityMapManager;
 
   constructor({ entities }: { entities: EntityType<AnyEntity>[] }) {
-    this.storeManager = new EntityStoreManager(entities);
+    this.identityMapManager = new IdentityMapManager(entities);
   }
 
   /**
@@ -89,8 +89,8 @@ export class BerryOrm {
   /**
    * Get the reference to the target entity.
    *
-   * Return the entity from the store if it exists, otherwise create an
-   * unpopulated one in the store and return it.
+   * Return the entity from the identity map if it exists, otherwise create an
+   * unpopulated one in the identity map and return it.
    *
    * @param type
    * @param primaryKey
@@ -100,11 +100,11 @@ export class BerryOrm {
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
   >(type: EntityType<Entity>, primaryKey: Entity[Primary]) {
-    const store = this.storeManager.get(type);
-    let entity = store.get(primaryKey) as Entity | undefined;
+    const map = this.identityMapManager.get(type);
+    let entity = map.get(primaryKey) as Entity | undefined;
     if (!entity) {
       entity = new type(this, primaryKey);
-      store.set(primaryKey, entity);
+      map.set(primaryKey, entity);
     }
     return entity;
   }

@@ -1,28 +1,33 @@
 import { AnyEntity } from "..";
 import { META } from "../symbols";
 import { BaseEntity } from "./base-entity.class";
-import { EntityStore } from "./entity-store.class";
 import { EntityType } from "./entity-type.type";
+import { IdentityMap } from "./identity-map.class";
 
-export class EntityStoreManager {
-  private map;
+export class IdentityMapManager {
+  private identityMaps;
   private registry;
 
   constructor(entities: EntityType<AnyEntity>[]) {
-    this.map = new Map<EntityType<AnyEntity>, EntityStore<AnyEntity>>();
+    this.identityMaps = new Map<
+      EntityType<AnyEntity>,
+      IdentityMap<AnyEntity>
+    >();
     this.registry = new Set<EntityType<AnyEntity>>(entities);
     this.inspect();
   }
 
   get(type: EntityType<AnyEntity>) {
     this.checkType(type);
-    return this.map.get(type) ?? this.createStore(type);
+    return this.identityMaps.get(type) ?? this.createIdentityMap(type);
   }
 
-  private createStore<Entity extends BaseEntity>(type: EntityType<Entity>) {
-    const store = new EntityStore<Entity>();
-    this.map.set(type, store);
-    return store;
+  private createIdentityMap<Entity extends BaseEntity>(
+    type: EntityType<Entity>,
+  ) {
+    const map = new IdentityMap<Entity>();
+    this.identityMaps.set(type, map);
+    return map;
   }
 
   private checkType(type: EntityType<AnyEntity>) {

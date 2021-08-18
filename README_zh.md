@@ -1,9 +1,9 @@
 # Berry ORM
 
-为前端而生的纯粹的对象关系映射
+纯粹的对象关系映射
 
 ```ts
-const user = orm.populate(User, {
+const user = orm.em.populate(User, {
   id: 1,
   username: "Charles",
   addresses: [
@@ -27,7 +27,7 @@ user.addresses.forEach((address) => {
 
 一个*实体*代表一条数据表中的记录。
 
-在不使用 ORM 时，*实体*仅由简单对象（Plain Object）来表示：
+通常，在不使用 ORM 时，*实体*仅由简单对象（Plain Object）来表示：
 
 ```ts
 interface User {
@@ -70,7 +70,7 @@ class User extends BaseEntity {
 
 ```ts
 const userData = await axios.get("/users/1/");
-const user = orm.populate(User, userData);
+const user = orm.em.populate(User, userData);
 user instanceof User; // true;
 user.fullName; // "马 牛逼"
 ```
@@ -152,19 +152,17 @@ department?: Department;
 addresses!: Collection<Address>;
 ```
 
-## 创建 BerryOrm 实例
+## 构造 BerryOrm 实例
 
-`BerryOrm` 实例是 Berry ORM 的中心实例，该实例提供对象关系映射，同时也将会根据实体的类型和主键来存储所有实体。
-
-构造 `BerryOrm` 实例需要传入所有想要在该实例中使用的实体类：
+`BerryOrm` 是 Berry ORM 的中心实例，其`.em`属性提供了一个 `EntityManager`。
 
 ```ts
 const orm = new BerryOrm({
-  entities: [User, Department, Address],
+  entities: [User, Department, Address], // 所有使用到的实体类
 });
 ```
 
-> 在 `BerryOrm` 的实例化的过程中，将会对传入的实体类进行检查，检查项包括：装饰器遗漏、主键缺失、未知关系实体等。
+> 传入的实体类将会被检查，检查项包括：装饰器遗漏、主键缺失、未知关系实体等。
 
 > 如果一个实体类中定义了关系字段，则该关系字段对应的实体类也需要传入。
 
@@ -174,10 +172,10 @@ const orm = new BerryOrm({
 
 ### 填充数据字段
 
-`orm.populate()` 会根据传入的实体类和**数据**返回一个填充了数据的实体类实例。`orm.populate()`所接受的**数据**必须给该实体的每一个数据字段都指定一个值：
+`em.populate()` 会根据传入的实体类和**数据**返回一个填充了数据的实体类实例。`em.populate()`所接受的**数据**必须给该实体的每一个数据字段都指定一个值：
 
 ```ts
-const user = orm.populate(User, {
+const user = orm.em.populate(User, {
   id: 1,
   username: "Charles",
 });
@@ -191,12 +189,12 @@ user.username; // "Charles"
 
 ### 填充数据字段和关系字段
 
-`orm.populate()`接受的数据可以**可选地**给关系字段指定关系。
+`em.populate()`接受的数据可以**可选地**给关系字段指定关系。
 
 关系既可以使用主键来指定，也可以使用嵌套的数据对象来指定：
 
 ```ts
-const user = orm.populate(User, {
+const user = orm.em.populate(User, {
   id: 1,
   username: "Charles",
   department: 1,
@@ -205,7 +203,7 @@ const user = orm.populate(User, {
 ```
 
 ```ts
-const user = orm.populate(User, {
+const user = orm.em.populate(User, {
   id: 1,
   username: "Charles",
   department: {
@@ -233,7 +231,7 @@ user.addresses.forEach((address) => {
 > 不影响绝大部分使用情况，因为被忽略的关系会在其他数据中被指定。
 
 ```ts
-const user = orm.populate(User, {
+const user = orm.em.populate(User, {
   id: 1,
   username: "Charles",
   department: {
@@ -253,10 +251,10 @@ const user = orm.populate(User, {
 
 ### 填充关系字段
 
-在极少数情况下，也可以通过 `orm.populateRelationField()` 来单独填充关系字段：
+在极少数情况下，也可以通过 `em.populateRelationField()` 来单独填充关系字段：
 
 ```ts
-orm.populateRelationField(user, "department", 1);
+orm.em.populateRelationField(user, "department", 1);
 ```
 
 ```ts
@@ -268,7 +266,7 @@ user.department.members.has(user); // true
 使用主键来**填充关系字段**时，可以指定任意的主键，即使该主键所对应的实体还未知：
 
 ```ts
-const user = orm.populate(User, {
+const user = orm.em.populate(User, {
   id: 1,
   department: 9999999999999999999,
 });
@@ -303,10 +301,10 @@ user.department[POPULATED] == true; // false
 `BerryOrm` 实例提供 `.retrieve()` 方法以从存储的所有实体中检索具有指定主键的实体：
 
 ```ts
-const user = orm.retrieve(User, 1);
+const user = orm.em.retrieve(User, 1);
 ```
 
-`orm.retrieve()` 总会返回一个实体，但该实体可能处于[未填充状态](#实体填充状态)。
+`em.retrieve()` 总会返回一个实体，但该实体可能处于[未填充状态](#实体填充状态)。
 
 > Berry ORM 是一个纯粹的对象关系映射库，不应该使用 `BerryOrm` 实例来存储实体。实体应该存储在你自己能够管理的地方。
 

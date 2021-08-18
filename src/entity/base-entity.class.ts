@@ -1,5 +1,5 @@
-import { BerryOrm } from "../berry-orm.class";
 import { container } from "../container";
+import { EntityManager } from "../entity-manager.class";
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
@@ -17,7 +17,7 @@ import { META, POPULATED } from "../symbols";
  * is defined getters so that the metadata can be accessed more conveniently.
  */
 export abstract class BaseEntity<
-  Entity extends BaseEntity = any,
+  Entity extends BaseEntity<Entity, Primary> = any,
   Primary extends PrimaryField<Entity> = any,
 > {
   [META]: EntityMeta<Entity, Primary>;
@@ -28,7 +28,7 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
-  constructor(private orm: BerryOrm, primaryKey: Entity[Primary]) {
+  constructor(private em: EntityManager, primaryKey: Entity[Primary]) {
     Object.keys(this[META].fields.items).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );
@@ -36,12 +36,6 @@ export abstract class BaseEntity<
     entity[this[META].fields.primary] = primaryKey;
   }
 
-  /**
-   * Apply accessors on the specified field of the this to prevent
-   * unexpected bugs and instantiate {@link Collection}s.
-   * @param this
-   * @param field
-   */
   private initField(field: EntityField<Entity>) {
     const entity = this as unknown as Entity;
 
@@ -61,9 +55,9 @@ export abstract class BaseEntity<
         ? RelationToOneFieldAccessor
         : CommonFieldAccessor,
     );
-    accessor.apply(this.orm, entity, field);
+    accessor.apply(entity.em, entity, field);
 
     if (isCollectionField)
-      entity[field] = new Collection(entity.orm, entity, field) as any;
+      entity[field] = new Collection(entity.em, entity, field) as any;
   }
 }

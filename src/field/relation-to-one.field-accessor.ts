@@ -1,4 +1,5 @@
-import { AnyEntity, BerryOrm } from "..";
+import { AnyEntity } from "..";
+import { EntityManager } from "../entity-manager.class";
 import { BaseEntity } from "../entity/base-entity.class";
 import { CommonFieldAccessor } from "./common.field-accessor";
 import { PerformSet } from "./perform-set.interface";
@@ -12,7 +13,7 @@ export class RelationToOneFieldAccessor<
     performSet: PerformSet<Entity[Field]>,
     newValue: Entity[Field],
     currentValue: Entity[Field],
-    orm: BerryOrm,
+    em: EntityManager,
     entity: Entity,
     field: Field,
   ) {
@@ -20,7 +21,7 @@ export class RelationToOneFieldAccessor<
     if (newValue == currentValue) return;
 
     performSet(newValue);
-    if (newValue) orm.constructRelation(entity, field, newValue);
-    else orm.destructRelation(entity, field, currentValue);
+    if (newValue) em.constructRelation(entity, field, newValue);
+    else em.destructRelation(entity, field, currentValue);
   }
 }

@@ -1,10 +1,10 @@
-import { BerryOrm } from "../berry-orm.class";
+import { EntityManager } from "../entity-manager.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { BaseEntity } from "../entity/base-entity.class";
 
 export class Collection<Entity extends BaseEntity> extends Set<Entity> {
   constructor(
-    private orm: BerryOrm,
+    private em: EntityManager,
     private owner: AnyEntity,
     private field: string,
   ) {
@@ -15,7 +15,7 @@ export class Collection<Entity extends BaseEntity> extends Set<Entity> {
     // end up recursion
     if (!this.has(entity)) {
       super.add(entity);
-      this.orm.constructRelation(this.owner, this.field, entity);
+      this.em.constructRelation(this.owner, this.field, entity);
     }
     return this;
   }
@@ -24,13 +24,13 @@ export class Collection<Entity extends BaseEntity> extends Set<Entity> {
     // end up recursion
     if (this.has(entity)) {
       super.delete(entity);
-      this.orm.destructRelation(this.owner, this.field, entity);
+      this.em.destructRelation(this.owner, this.field, entity);
       return true;
     }
     return false;
   }
 
   clear() {
-    this.orm.clearRelations(this.owner, this.field);
+    this.em.clearRelations(this.owner, this.field);
   }
 }

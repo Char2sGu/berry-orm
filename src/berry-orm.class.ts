@@ -6,7 +6,7 @@ import { EntityType } from "./entity/entity-type.type";
 import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
 import { Collection } from "./field/collection.class";
 import { EmptyValue } from "./field/empty-value.type";
-import { PrimaryKeyField } from "./field/primary-key-field.type";
+import { PrimaryField } from "./field/primary-field.type";
 import { RelationFieldData } from "./field/relation-field-data.type";
 import { RelationField } from "./field/relation-field.type";
 import { META, POPULATED } from "./symbols";
@@ -26,7 +26,7 @@ export class BerryOrm {
    */
   populate<
     Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
+    Primary extends PrimaryField<Entity>,
   >(type: EntityType<Entity>, data: EntityData<Entity>) {
     const primaryKey = data[
       type.prototype[META].fields.primary
@@ -98,7 +98,7 @@ export class BerryOrm {
    */
   retrieve<
     Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
+    Primary extends PrimaryField<Entity>,
   >(type: EntityType<Entity>, primaryKey: Entity[Primary]) {
     const store = this.storeManager.get(type);
     let entity = store.get(primaryKey) as Entity | undefined;

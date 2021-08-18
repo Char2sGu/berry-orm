@@ -3,7 +3,7 @@ import { container } from "../container";
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
-import { PrimaryKeyField } from "../field/primary-key-field.type";
+import { PrimaryField } from "../field/primary-field.type";
 import { PrimaryFieldAccessor } from "../field/primary.field-accessor";
 import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-accessor";
 import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";
@@ -18,7 +18,7 @@ import { META, POPULATED } from "../symbols";
  */
 export abstract class BaseEntity<
   Entity extends BaseEntity = any,
-  Primary extends PrimaryKeyField<Entity> = any,
+  Primary extends PrimaryField<Entity> = any,
 > {
   [META]: EntityMeta<Entity, Primary>;
 
@@ -48,12 +48,12 @@ export abstract class BaseEntity<
     const fieldsMeta = entity[META].fields;
     const fieldMeta = fieldsMeta.items[field];
 
-    const isPrimaryKeyField = fieldsMeta.primary == field;
+    const isPrimaryField = fieldsMeta.primary == field;
     const isCollectionField = !!fieldMeta.relation?.multi;
     const isRelationEntityField = !!fieldMeta.relation && !isCollectionField;
 
     const accessor = container.get(
-      isPrimaryKeyField
+      isPrimaryField
         ? PrimaryFieldAccessor
         : isCollectionField
         ? RelationToManyFieldAccessor

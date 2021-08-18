@@ -13,7 +13,7 @@ export { CommonField } from "./field/common-field.type";
 export { CommonFieldAccessor } from "./field/common.field-accessor";
 export { EmptyValue } from "./field/empty-value.type";
 export { EntityField } from "./field/entity-field.type";
-export { PrimaryKeyField } from "./field/primary-key-field.type";
+export { PrimaryField } from "./field/primary-field.type";
 export { PrimaryKey } from "./field/primary-key.type";
 export { PrimaryFieldAccessor } from "./field/primary.field-accessor";
 export { RelationFieldData } from "./field/relation-field-data.type";

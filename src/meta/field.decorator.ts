@@ -3,7 +3,7 @@ import { BaseEntity } from "../entity/base-entity.class";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
 import { EntityField } from "../field/entity-field.type";
-import { PrimaryKeyField } from "../field/primary-key-field.type";
+import { PrimaryField } from "../field/primary-field.type";
 import { RelationField } from "../field/relation-field.type";
 import { META } from "../symbols";
 import { ExtractKeys } from "../utils/extract-keys.type";
@@ -12,7 +12,7 @@ import { RelationTarget } from "./relation-target.type";
 
 export const Field: FieldDecorator =
   (options?: FieldOptionsPrimary | FieldOptionsRelation) =>
-  <Entity extends BaseEntity, Primary extends PrimaryKeyField<Entity>>(
+  <Entity extends BaseEntity, Primary extends PrimaryField<Entity>>(
     prototype: Entity,
     name: EntityField<Entity>,
   ) => {
@@ -45,7 +45,7 @@ interface FieldDecorator {
 
   (options: FieldOptionsPrimary): <
     Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryKeyField<Entity>,
+    Primary extends PrimaryField<Entity>,
   >(
     prototype: Entity,
     name: Primary,

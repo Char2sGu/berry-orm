@@ -32,12 +32,12 @@ export abstract class BaseEntity<
     Object.keys(this[META].fields.items).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );
-    const entity = this as unknown as Entity;
-    entity[this[META].fields.primary] = primaryKey;
+    const entity = this.asEntity;
+    entity[entity[META].fields.primary] = primaryKey;
   }
 
   private initField(field: EntityField<Entity>) {
-    const entity = this as unknown as Entity;
+    const entity = this.asEntity;
 
     const fieldsMeta = entity[META].fields;
     const fieldMeta = fieldsMeta.items[field];
@@ -59,5 +59,9 @@ export abstract class BaseEntity<
 
     if (isCollectionField)
       entity[field] = new Collection(entity.em, entity, field) as any;
+  }
+
+  private get asEntity() {
+    return this as unknown as Entity;
   }
 }

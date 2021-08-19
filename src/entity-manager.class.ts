@@ -15,6 +15,13 @@ export class EntityManager {
   constructor(private identityMapManager: IdentityMapManager) {}
 
   /**
+   * Clear the identity maps.
+   */
+  clear() {
+    this.identityMapManager.clear();
+  }
+
+  /**
    * Populate the entity using the data.
    * @param type
    * @param data

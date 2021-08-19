@@ -123,7 +123,7 @@ bio!: string;
 
 ### 对单关系字段
 
-**对单关系字段**代表 _OneToOne_ 或 _ManyToOne_ 关系，其的类型必须可赋值给 `BaseEntity | undefined | null`：
+**对单关系字段**代表 _OneToOne_ 或 _ManyToOne_ 关系，其类型必须可赋值给 `BaseEntity | undefined | null`：
 
 ```ts
 @Field({
@@ -140,7 +140,7 @@ department?: Department;
 
 **对多关系字段**表示 _ManyToOne_ 或 _ManyToMany_ 关系，其类型必须可赋值给 `Collection`：
 
-> `Collection` 是一种特殊的 `Set`，用于支持更新对多关系。
+> `Collection` 是一种特殊的 `Set`，用于支持[更新对多关系](#更新对多关系字段)。
 
 ```ts
 @Field({
@@ -168,7 +168,9 @@ const orm = new BerryOrm({
 
 ## 填充
 
-**解析数据并赋值给实体**的过程称为**填充**，**填充**是 Berry Orm 最主要的功能。
+**解析数据、赋值给实体、建立实体间关系**的过程称为**填充**，**填充**是 Berry Orm 最主要的功能。
+
+> 经过了**填充**的实体会被记录以建立实体间的关系，但存储并不是 Berry ORM 的主要功能，Berry ORM 也不开放访问存储的接口，你应该在自己能够管理的地方自行存储你的实体。
 
 ### 填充数据字段
 
@@ -370,3 +372,15 @@ newAddress.owner == user; // false
 user.addresses.clear();
 user.addresses.size; // 0
 ```
+
+## 清空
+
+Berry ORM 会记录填充过的所有实体，并用记录的实体来建立实体间的关系。可以通过 `em.clear()` 来清空记录：
+
+```ts
+orm.em.clear();
+```
+
+---
+
+> 架构借鉴自 [MikroORM](https://github.com/mikro-orm/mikro-orm)。

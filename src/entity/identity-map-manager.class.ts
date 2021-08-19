@@ -22,6 +22,10 @@ export class IdentityMapManager {
     return this.identityMaps.get(type) ?? this.createIdentityMap(type);
   }
 
+  clear() {
+    this.identityMaps.forEach((map) => map.clear());
+  }
+
   private createIdentityMap<Entity extends BaseEntity>(
     type: EntityType<Entity>,
   ) {

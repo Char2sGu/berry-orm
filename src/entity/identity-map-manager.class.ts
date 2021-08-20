@@ -29,7 +29,7 @@ export class IdentityMapManager {
   private createIdentityMap<Entity extends BaseEntity>(
     type: EntityType<Entity>,
   ) {
-    const map = new IdentityMap<Entity>();
+    const map = type.prototype[META].map();
     this.identityMaps.set(type, map);
     return map;
   }

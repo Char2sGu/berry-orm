@@ -21,7 +21,9 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        em = new EntityManager(new IdentityMapManager([TestingEntity]));
+        em = new EntityManager(
+          new IdentityMapManager(new Set([TestingEntity])),
+        );
       });
 
       let entity: TestingEntity;
@@ -94,7 +96,7 @@ describe("EntityManager", () => {
 
       beforeEach(() => {
         em = new EntityManager(
-          new IdentityMapManager([TestingEntity1, TestingEntity2]),
+          new IdentityMapManager(new Set([TestingEntity1, TestingEntity2])),
         );
       });
 
@@ -242,7 +244,9 @@ describe("EntityManager", () => {
 
       beforeEach(() => {
         em = new EntityManager(
-          new IdentityMapManager([TestingEntityChild, TestingEntityParent]),
+          new IdentityMapManager(
+            new Set([TestingEntityChild, TestingEntityParent]),
+          ),
         );
       });
 
@@ -444,7 +448,7 @@ describe("EntityManager", () => {
     let result: TestingEntity;
 
     beforeEach(() => {
-      em = new EntityManager(new IdentityMapManager([TestingEntity]));
+      em = new EntityManager(new IdentityMapManager(new Set([TestingEntity])));
     });
 
     describe("Not Exists", () => {

@@ -34,3 +34,7 @@ departmentTasks.forEach((task) => {
 # 它不是什么？
 
 在后端，*ORM*库大多不仅负责**对象关系映射**，还包括了对数据库查询的包装、对 SQL 语句的优化等等众多额外的功能。但 Berry ORM 仅仅负责**对象关系映射**这一项，它仅仅负责映射对象间的关系。
+
+# 文档
+
+https://thenightmarex.github.io/berry-orm/

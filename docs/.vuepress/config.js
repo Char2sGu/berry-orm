@@ -10,6 +10,7 @@ module.exports = {
     repoLabel: "GitHub",
     docsDir: "docs",
     editLinks: true,
+    displayAllHeaders: true,
     locales: {
       "/en/": {
         selectText: "Languages",

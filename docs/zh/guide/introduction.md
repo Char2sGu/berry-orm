@@ -5,3 +5,7 @@ Berry ORM 是一款为前端打造的对象关系映射库，允许你通过实�
 Berry ORM 使用**类**和**装饰器**来定义实体，在采用了 Berry ORM 的应用中，每一个实体都将会是实体类的一个实例。因此，你可以很方便地使用 `instanceof` 操作符来区分实体类型，也可以在实体类上定义方法、计算属性以更好地遵守**单一职责原则（Single Responsibility Principle）**。
 
 此外，Berry ORM 完全使用 TypeScript 编写，并具有复杂严格的类型以更好地保证类型安全。你将在使用的过程中体会到这些类型所带来的愉快的开发体验。
+
+```sh
+npm i berry-orm
+```

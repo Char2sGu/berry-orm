@@ -34,7 +34,3 @@ departmentTasks.forEach((task) => {
 # What it is not？
 
 On the back-end, most _ORM_ libraries are not only responsible for **Object Relational Mapping**, but also include a variety of additional functions such as wrapping database queries, optimization of SQL statements, and so on. But Berry ORM is only responsible for **Object Relation mapping**, it is only responsible for mapping the relations between objects.
-
-# Documents
-
-The full documents are located at [Wiki](https://github.com/TheNightmareX/berry-orm/wiki).

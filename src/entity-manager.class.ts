@@ -126,9 +126,6 @@ export class EntityManager {
   ) {
     const relationMeta = entity[META].fields.items[field].relation!;
     if (typeof reference == "object") {
-      // TODO: Support this
-      // specifying inverse relations in nested data is not supported
-      delete reference[relationMeta.inverse];
       return this.populate(relationMeta.target(), reference);
     } else {
       return this.retrieve(relationMeta.target(), reference);

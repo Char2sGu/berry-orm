@@ -22,5 +22,8 @@ export const Entity =
   };
 
 interface EntityOptions {
+  /**
+   * Speicify a custom map to store references of this type of entities.
+   */
   map?: () => IdentityMap<AnyEntity>;
 }

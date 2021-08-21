@@ -15,6 +15,12 @@
     "type": "git",
     "url": "git+https://github.com/TheNightmareX/berry-orm.git"
   },
+  "keywords": [
+    "orm",
+    "database",
+    "typescript",
+    "frontend"
+  ],
   "author": {
     "name": "Char2s",
     "email": "Char2s@outlook.com"

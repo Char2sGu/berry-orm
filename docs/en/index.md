@@ -10,7 +10,7 @@ features:
   - title: Lightweight and Universal
     details: Focus on and only focus on Object Relational Mapping, no more, no less, easy to integrate into any framework.
   - title: Easy to Use
-    details: There are not many APIs, invoking just one method is enough to convert the original data into an entity and allow you to enjoy the complete object relations.
+    details: There are not many APIs, invoking just one method is enough to convert the original data into an entity and allow you to enjoy the complete object relations, and the object relations can be updated simply by assigning a new value.
 ---
 
 - Directly resolve the data obtained from the backend to get the entity

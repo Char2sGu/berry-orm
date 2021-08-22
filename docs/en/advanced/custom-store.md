@@ -11,3 +11,7 @@ export class User extends BaseEntity<User, "id"> {
   id!: number;
 }
 ```
+
+::: tip
+The function passed will be invoked when instantiating `BerryOrm`.
+:::

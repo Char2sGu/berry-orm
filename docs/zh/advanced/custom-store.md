@@ -11,3 +11,7 @@ export class User extends BaseEntity<User, "id"> {
   id!: number;
 }
 ```
+
+::: tip
+传入的函数将在实例化 `BerryOrm` 时被调用。
+:::

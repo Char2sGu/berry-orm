@@ -4,31 +4,32 @@ heroText: Berry ORM
 tagline: Object Relational Mapping for front-ends
 actionText: Getting Started →
 actionLink: ./guide/introduction
+features:
+  - title: Strictly Typed
+    details: Enjoy the pleasant development experience brought by the full range of strict typing, and maximize the advantage of TypeScript.
+  - title: Lightweight and Universal
+    details: Focus on and only focus on Object Relational Mapping, no more, no less, easy to integrate into any framework.
+  - title: Easy to Use
+    details: There are not many APIs, invoking just one method is enough to convert the original data into an entity and allow you to enjoy the complete object relations.
 ---
 
-```ts
-const user = orm.em.populate(User, {
-  id: 1,
-  username: "Charles",
-  department: 1,
-  friends: [
-    2,
-    {
-      id: 3,
-      username: "Charles' Friend",
-      department: 1,
-    },
-  ],
-});
-```
-
-```ts
-user instanceof User; // true
-user.department instanceof Department; // true
-user.department.id == 1; // true
-user.department.members.has(user); // true
-user.friends.forEach((friend) => {
-  friend instanceof User; // true
-  friend.friends.has(user); // true
-});
-```
+- Directly resolve the data obtained from the backend to get the entity
+  ```ts
+  const userData = await axios.get("/users/1/");
+  const user = em.populate(User, userData);
+  ```
+- All the entities are instances of their entity classes
+  ```ts
+  user instanceof User;
+  ```
+- Values of relation fields are no longer just a primary key or an array of primary keys
+  ```ts
+  user.profile instanceof Profile;
+  user.friends instanceof Collection;
+  user.friends.forEach((friend) => friend instanceof User);
+  ```
+- Relations are bilateral, either side of the relations can access the other side
+  ```ts
+  user.profile.owner == user;
+  user.friends.forEach((friend) => friend.friends.has(user));
+  ```

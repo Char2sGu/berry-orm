@@ -26,12 +26,11 @@ user.username == "Charles"; // true
 If the value of the entity's **relation fields** are provided, Berry ORM will resolve these values and construct relations on the corresponding fields of both the two entities.
 
 ::: tip
-The type of the **data** used for populating is tailored for the return value of the back-end APIs, any **relation fields** are optional in **data**.
+Any **relation fields** are optional in **data**.
 :::
 
 #### Populating To-One Relation Fields
 
-**对单关系字段**在数据中的表现形式既可以是一个**主键**：
 A **To-One Relation Field** in the data can be represented as either a **primary key**:
 
 ```ts {4}
@@ -48,12 +47,14 @@ or a **nested data object**:
 const user = orm.em.populate(User, {
   id: 1,
   username: "Charles",
-  profile: { id: 1, nickname: "王大锤" },
+  profile: { id: 1, nickname: "Charlies" },
 });
 ```
 
 ::: warning
-If the inverse relation to the parent data object is specified in the nested data object, please ensure that they won't conflict, otherwise it may cause the wrong relations to be constructed. For example:
+If the inverse relation to the parent data object is specified in the nested data object, please ensure that they won't conflict, otherwise it may cause the wrong relations to be constructed.
+
+Here is a wrong example:
 
 ```ts {2,7}
 const user = orm.em.populate(User, {
@@ -61,17 +62,17 @@ const user = orm.em.populate(User, {
   username: "Charles",
   profile: {
     id: 1,
-    nickname: "Nickname",
+    nickname: "Charlies",
     owner: 2,
   },
 });
 ```
 
-In this example, if `profile.owner` is specified, the value must match the existing relations. In the existing relations, the `Profile` belongs to this `User`, but another `User` is specified as its owner in the data of the `Profile`. The relations conflict. To solve this, `profile.owner` should be specified as a value that conforms to the existing relations, such as: `1`; it is better to ignore `profile.owner` in the nested data directly, because the relation between the two has already been determined and there is no need to specify it repeatly.
+In this example, `user.profile` belongs to `user`, but `user.profile.owner` specifies that it belongs to another `User`, the relation conflicts. The correct approach is to specify `user.profile.owner` as a value that conforms to the existing relations, such as `1`; a better approach is to completely ignore `user.profile.owner` in the nested data, because the relation between them has already been determined, and there is no need to specify it repeatly.
 
 :::
 
-Berry ORM will construct **bilateral** relations:
+Berry ORM will construct a **bilateral** relation, which means you can access the other side from either side of the relation:
 
 ```ts {3}
 user.profile instanceof Profile; // true
@@ -83,7 +84,7 @@ This also means that if you want, you can access the value like this:
 XD
 
 ```ts {1}
-user.profile.owner.profile.owner.profile.owner.profile.owner.profile.nickname; // Nickname
+user.profile.owner.profile.owner.profile.owner.profile.owner.profile.nickname; // Charlies
 ```
 
 #### Populating To-Many Relation Fields
@@ -102,7 +103,7 @@ const department = orm.em.populate(Department, {
 Similarly, if an inverse relation to the parent data object is specified in the nested data object, please ensure that they will not conflict.
 :::
 
-Also, a **bilateral** relation will be constructed:
+Berry ORM will also construct a **bilateral** relation for them:
 
 ```ts
 department.members.forEach((user) => {
@@ -137,7 +138,7 @@ user.profile.bio === undefined; // true
 user.profile.nickname === undefined; // true
 ```
 
-Such an entity is in the **unpopulated state**, we can get the population state of the entity through the `[POPULATED]` property of the entity:
+Such entities are in an **unpopulated state**. Any fields of entities in an **unpopulated state** are empty, **except the primary key and a few relation fields**. we can get the **population state** of the entity through its `[POPULATED]` property:
 
 ```ts
 user[POPULATED]; // true

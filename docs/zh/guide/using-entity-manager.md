@@ -26,7 +26,7 @@ user.username == "Charles"; // true
 如果提供了实体的**关系字段**的值，Berry ORM 会解析这些值并在双方相应的字段上建立关系。
 
 ::: tip
-填充所用的**数据**的类型是为后端接口返回值量身定制的——任何**关系字段**在数据中都是可选的。
+任何**关系字段**在数据中都是可选的。
 :::
 
 #### 填充对单关系字段
@@ -52,7 +52,9 @@ const user = orm.em.populate(User, {
 ```
 
 ::: warning
-如果在嵌套数据对象中指定了对于父级数据对象的逆向关系，请务必保证它们不冲突，否则可能导致错误的关系被建立，如：
+如果在嵌套数据对象中指定了对于父级数据对象的逆向关系，请务必保证它们不冲突，否则可能导致错误的关系被建立。
+
+以下是一个错误示例：
 
 ```ts {2,7}
 const user = orm.em.populate(User, {
@@ -66,11 +68,11 @@ const user = orm.em.populate(User, {
 });
 ```
 
-在这个例子中，如果要指定`profile.owner`，则指定的值应该与现有关系相符。现有关系中，该`Profile`是属于该`User`的，而在该`Profile`的数据中又指定另一个`User`作为它的拥有者，两对关系冲突了。应当将`profile.owner`指定为符合现有关系的值，如：`1`；更好的做法是直接在数据中忽略`profile.owner`，因为两者间的关系已经确定了，无需重复指定。
+在这个例子中，`user.profile`是属于`user`的，但是`user.profile.owner`却指定其属于另一个`User`，关系冲突了。正确的做法是将`user.profile.owner`指定为符合现有关系的值，如：`1`；更好的做法是直接在数据中忽略`user.profile.owner`，因为两者间的关系已经确定了，无需重复指定。
 
 :::
 
-Berry ORM 会建立**双向**的关系：
+Berry ORM 会建立**双向**的关系，这意味着你可以从关系的任意一侧访问另一侧：
 
 ```ts {3}
 user.profile instanceof Profile; // true
@@ -98,10 +100,10 @@ const department = orm.em.populate(Department, {
 ```
 
 ::: warning
-同样的，如果在嵌套数据对象种指定了对于父级数据对象的逆向关系，请务必保证它们不会冲突。
+同样的，如果在嵌套数据对象中指定了对于父级数据对象的逆向关系，请务必保证它们不会冲突。
 :::
 
-同样的，**双向**的关系会被建立：
+Berry ORM 同样会为它们建立**双向**的关系：
 
 ```ts
 department.members.forEach((user) => {
@@ -136,7 +138,7 @@ user.profile.bio === undefined; // true
 user.profile.nickname === undefined; // true
 ```
 
-这样的实体处于**未填充状态**，我们可以通过实体的 `[POPULATED]` 属性来获取实体的填充状态：
+这样的实体处于**未填充状态**。**未填充状态**下的实体**除了主键和少数关系字段以外**的任何字段都是空的。我们可以通过实体的 `[POPULATED]` 属性来获取实体的**填充状态**：
 
 ```ts
 user[POPULATED]; // true

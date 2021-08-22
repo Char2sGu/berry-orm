@@ -22,7 +22,6 @@ module.exports = {
             collapsable: false,
             children: [
               "/en/guide/introduction",
-              "/en/guide/why-is-an-orm-needed",
               "/en/guide/defining-entities",
               "/en/guide/constructing-orm",
               "/en/guide/using-entity-manager",
@@ -46,7 +45,6 @@ module.exports = {
             collapsable: false,
             children: [
               "/zh/guide/introduction",
-              "/zh/guide/why-is-an-orm-needed",
               "/zh/guide/defining-entities",
               "/zh/guide/constructing-orm",
               "/zh/guide/using-entity-manager",

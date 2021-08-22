@@ -23,8 +23,6 @@ user2.department.name == "New Name"; // true
 
 ## Updating Relations
 
-**To-One relation fields** and **To-Many relation fields** both support updating any kind of relations.
-
 ### Through To-One Relation Fields
 
 Berry ORM defines accessors on **To-One relation fields** of the entities, so you can also update the bilateral relation by directly assigning values.
@@ -52,7 +50,7 @@ user.profile = undefined;
 
 ### Through To-Many Relation Fields
 
-The values of the **multi-relation fields** are all `Collection` instances. `Collection` is a special `Set` whose methods supports updating bidlateral relations.
+The values of the **multi-relation fields** are all `Collection` instances. `Collection` is a special `Set`, you can update relations easily by invoking the methods of `Collection`.
 
 ```ts {1}
 department.members.add(user);

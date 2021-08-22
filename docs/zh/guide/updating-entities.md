@@ -23,8 +23,6 @@ user2.department.name == "New Name"; // true
 
 ## 更新关系
 
-**对单关系字段**和**对多关系字段**都支持更新任何一种关系。
-
 ### 通过对单关系字段
 
 Berry ORM 在实体的**对单关系字段**上定义了访问器，因此你同样可以通过直接赋值来更新双向的关系。
@@ -33,7 +31,7 @@ Berry ORM 在实体的**对单关系字段**上定义了访问器，因此你同
 user.profile = newProfile;
 ```
 
-Berry ORM 会拆除旧的关系，然后建立新的关系：
+Berry ORM 会先拆除旧的关系，然后再建立新的关系：
 
 ```ts
 oldProfile.owner == user; // false
@@ -52,7 +50,7 @@ user.profile = undefined;
 
 ### 通过对多关系字段
 
-**对多关系字段**的值都是 `Collection`。`Collection`是一种特殊的`Set`，其方法支持直接更新双向关系。
+**对多关系字段**的值都是 `Collection`。`Collection`是一种特殊的`Set`，可以通过调用`Collection`的方法来便捷地更新关系。
 
 ```ts {1}
 department.members.add(user);

@@ -1,10 +1,10 @@
-import { container } from "../container";
 import { EntityManager } from "../entity-manager.class";
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
 import { PrimaryField } from "../field/primary-field.type";
 import { PrimaryFieldAccessor } from "../field/primary.field-accessor";
+import { RelationField } from "../field/relation-field.type";
 import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-accessor";
 import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";
 import { EntityMeta } from "../meta/entity-meta.interface";
@@ -46,16 +46,23 @@ export abstract class BaseEntity<
     const isCollectionField = !!fieldMeta.relation?.multi;
     const isRelationEntityField = !!fieldMeta.relation && !isCollectionField;
 
-    const accessor = container.get(
-      isPrimaryField
-        ? PrimaryFieldAccessor
-        : isCollectionField
-        ? RelationToManyFieldAccessor
-        : isRelationEntityField
-        ? RelationToOneFieldAccessor
-        : CommonFieldAccessor,
-    );
-    accessor.apply(entity.em, entity, field);
+    const accessor = isPrimaryField
+      ? new PrimaryFieldAccessor(this.em, entity, field as Primary)
+      : isCollectionField
+      ? new RelationToManyFieldAccessor(
+          this.em,
+          entity,
+          field as RelationField<Entity>,
+        )
+      : isRelationEntityField
+      ? new RelationToOneFieldAccessor(
+          this.em,
+          entity,
+          field as RelationField<Entity>,
+        )
+      : new CommonFieldAccessor(this.em, entity, field);
+
+    accessor.apply();
 
     if (isCollectionField)
       entity[field] = new Collection(entity.em, entity, field) as any;

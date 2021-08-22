@@ -1,27 +1,19 @@
 import { AnyEntity } from "..";
-import { EntityManager } from "../entity-manager.class";
 import { BaseEntity } from "../entity/base-entity.class";
 import { CommonFieldAccessor } from "./common.field-accessor";
-import { PerformSet } from "./perform-set.interface";
 import { RelationField } from "./relation-field.type";
 
 export class RelationToOneFieldAccessor<
   Entity extends BaseEntity = AnyEntity,
   Field extends RelationField<Entity> = RelationField<Entity>,
 > extends CommonFieldAccessor<Entity, Field> {
-  handleSet(
-    performSet: PerformSet<Entity[Field]>,
-    newValue: Entity[Field],
-    currentValue: Entity[Field],
-    em: EntityManager,
-    entity: Entity,
-    field: Field,
-  ) {
+  handleSet(newValue: Entity[Field]) {
+    const currentValue = this.value;
     // end up recurse
     if (newValue == currentValue) return;
 
-    performSet(newValue);
-    if (newValue) em.constructRelation(entity, field, newValue);
-    else em.destructRelation(entity, field, currentValue);
+    this.value = newValue;
+    if (newValue) this.em.constructRelation(this.entity, this.field, newValue);
+    else this.em.destructRelation(this.entity, this.field, currentValue);
   }
 }

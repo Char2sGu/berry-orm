@@ -1,5 +1,4 @@
 export { BerryOrm } from "./berry-orm.class";
-export { container } from "./container";
 export { EntityManager } from "./entity-manager.class";
 export { AnyEntity } from "./entity/any-entity.type";
 export { BaseEntity } from "./entity/base-entity.class";

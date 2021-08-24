@@ -25,6 +25,6 @@ jobs:
       - name: Installation
         uses: bahmutov/npm-install@v1
         with:
-          install-command: npm install
+          install-command: yarn
       - name: Test
-        run: npm run test
+        run: yarn test

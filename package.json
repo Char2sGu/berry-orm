@@ -11,7 +11,8 @@
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "lint": "eslint --cache \"**/*.ts\"",
-    "prettier:diff": "prettier --list-different \"**/*.ts\""
+    "prettier:diff": "prettier --list-different \"**/*.ts\"",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -40,10 +41,10 @@
     "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.1",
     "jest": "^27.0.6",
+    "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.4",
-    "ts-lib": "0.0.5",
     "ts-node": "^10.1.0",
     "tslib": "^2.3.0",
     "typescript": "^4.3.5",

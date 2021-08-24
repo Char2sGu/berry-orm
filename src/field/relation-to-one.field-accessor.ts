@@ -7,7 +7,7 @@ export class RelationToOneFieldAccessor<
   Entity extends BaseEntity = AnyEntity,
   Field extends RelationField<Entity> = RelationField<Entity>,
 > extends CommonFieldAccessor<Entity, Field> {
-  handleSet(newValue: Entity[Field]) {
+  handleSet(newValue: Entity[Field]): void {
     const currentValue = this.value;
     // end up recurse
     if (newValue == currentValue) return;

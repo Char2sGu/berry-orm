@@ -11,7 +11,7 @@ export class Collection<Entity extends BaseEntity> extends Set<Entity> {
     super();
   }
 
-  add(entity: Entity) {
+  add(entity: Entity): this {
     // end up recursion
     if (!this.has(entity)) {
       super.add(entity);
@@ -20,7 +20,7 @@ export class Collection<Entity extends BaseEntity> extends Set<Entity> {
     return this;
   }
 
-  delete(entity: Entity) {
+  delete(entity: Entity): boolean {
     // end up recursion
     if (this.has(entity)) {
       super.delete(entity);
@@ -30,7 +30,7 @@ export class Collection<Entity extends BaseEntity> extends Set<Entity> {
     return false;
   }
 
-  clear() {
+  clear(): void {
     this.em.clearRelations(this.owner, this.field);
   }
 }

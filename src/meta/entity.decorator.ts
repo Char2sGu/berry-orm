@@ -13,7 +13,7 @@ export const Entity =
     Primary extends PrimaryField<Entity> = PrimaryField<Entity>,
   >(
     type: EntityType<Entity>,
-  ) => {
+  ): void => {
     const meta = (type.prototype[META] =
       type.prototype[META] ?? ({} as EntityMeta<Entity, Primary>));
     meta.type = type;

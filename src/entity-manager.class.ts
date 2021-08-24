@@ -17,7 +17,7 @@ export class EntityManager {
   /**
    * Clear the identity maps.
    */
-  clear() {
+  clear(): void {
     this.identityMapManager.clear();
   }
 
@@ -30,7 +30,7 @@ export class EntityManager {
   populate<
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
-  >(type: EntityType<Entity>, data: EntityData<Entity>) {
+  >(type: EntityType<Entity>, data: EntityData<Entity>): Entity {
     const primaryKey = data[
       type.prototype[META].fields.primary
     ] as Entity[Primary];
@@ -70,7 +70,11 @@ export class EntityManager {
   populateRelationField<
     Entity extends BaseEntity,
     Field extends RelationField<Entity>,
-  >(entity: Entity, field: Field, data: RelationFieldData<Entity, Field>) {
+  >(
+    entity: Entity,
+    field: Field,
+    data: RelationFieldData<Entity, Field>,
+  ): void {
     this.clearRelations(entity, field);
 
     if (!data) return;
@@ -102,7 +106,7 @@ export class EntityManager {
   retrieve<
     Entity extends BaseEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
-  >(type: EntityType<Entity>, primaryKey: Entity[Primary]) {
+  >(type: EntityType<Entity>, primaryKey: Entity[Primary]): Entity {
     const map = this.identityMapManager.get(type);
     let entity = map.get(primaryKey) as Entity | undefined;
     if (!entity) {
@@ -123,7 +127,7 @@ export class EntityManager {
     entity: Entity,
     field: RelationField<Entity>,
     reference: RelationEntityRepresentation,
-  ) {
+  ): AnyEntity {
     const relationMeta = entity[META].fields.items[field].relation!;
     if (typeof reference == "object") {
       return this.populate(relationMeta.target(), reference);
@@ -140,7 +144,7 @@ export class EntityManager {
   clearRelations<Entity extends BaseEntity>(
     entity: Entity,
     field: RelationField<Entity>,
-  ) {
+  ): void {
     this.invokeOnRelationField(
       entity,
       field,
@@ -169,7 +173,7 @@ export class EntityManager {
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,
-  ) {
+  ): void {
     this.invokeOnRelationFieldBilateral(
       entity,
       field,
@@ -190,7 +194,7 @@ export class EntityManager {
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,
-  ) {
+  ): void {
     this.invokeOnRelationFieldBilateral(
       entity,
       field,

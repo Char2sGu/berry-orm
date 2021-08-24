@@ -17,7 +17,7 @@ export class BaseFieldAccessor<
     this.value = entity[field];
   }
 
-  apply() {
+  apply(): void {
     Reflect.defineProperty(this.entity, this.field, {
       configurable: true,
       get: () => this.handleGet(),
@@ -25,11 +25,11 @@ export class BaseFieldAccessor<
     });
   }
 
-  handleGet() {
+  handleGet(): Entity[Field] {
     return this.value;
   }
 
-  handleSet(newValue: Entity[Field]) {
+  handleSet(newValue: Entity[Field]): void {
     this.value = newValue;
   }
 }

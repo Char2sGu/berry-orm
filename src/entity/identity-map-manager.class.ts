@@ -12,12 +12,14 @@ export class IdentityMapManager {
 
   constructor(private registry: Set<EntityType>) {}
 
-  get(type: EntityType<AnyEntity>) {
+  get<Entity extends BaseEntity>(
+    type: EntityType<Entity>,
+  ): IdentityMap<Entity> {
     this.checkType(type);
     return this.identityMaps.get(type) ?? this.createIdentityMap(type);
   }
 
-  clear() {
+  clear(): void {
     this.identityMaps.forEach((map) => map.clear());
   }
 

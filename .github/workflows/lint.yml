@@ -23,4 +23,4 @@ jobs:
       - name: Lint
         run: npm run lint
       - name: Style check with Prettier
-        run: npm run prettier:diff
+        run: npm run format:diff

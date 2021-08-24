@@ -6,12 +6,12 @@
   "scripts": {
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
+    "format:diff": "prettier --list-different \"src/**/*.ts\"",
     "prebuild": "rimraf lib",
     "build": "tsc -b tsconfig.build.json",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "lint": "eslint --cache \"**/*.ts\"",
-    "prettier:diff": "prettier --list-different \"**/*.ts\"",
     "prepare": "husky install"
   },
   "repository": {

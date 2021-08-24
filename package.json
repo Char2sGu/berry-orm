@@ -4,15 +4,15 @@
   "description": "Object Relational Mapping for front-ends.",
   "main": "lib/index.js",
   "scripts": {
+    "prepare": "husky install",
+    "prebuild": "rimraf lib",
+    "build": "tsc -b tsconfig.build.json",
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:diff": "prettier --list-different \"src/**/*.ts\"",
-    "prebuild": "rimraf lib",
-    "build": "tsc -b tsconfig.build.json",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "lint": "eslint --cache \"src/**/*.ts\"",
-    "prepare": "husky install"
+    "lint": "eslint --cache \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",

@@ -11,7 +11,7 @@
     "build": "tsc -b tsconfig.build.json",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "lint": "eslint --cache \"**/*.ts\"",
+    "lint": "eslint --cache \"src/**/*.ts\"",
     "prepare": "husky install"
   },
   "repository": {

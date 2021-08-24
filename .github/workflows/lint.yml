@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  lint:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Installation
+        uses: bahmutov/npm-install@v1
+        with:
+          install-command: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Style check with Prettier
+        run: npm run prettier:diff

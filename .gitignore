@@ -2,3 +2,4 @@
 /lib
 
 /docs/.vuepress/dist
+.eslintcache

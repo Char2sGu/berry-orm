@@ -8,7 +8,7 @@
     "prebuild": "rimraf lib",
     "build": "tsc -b tsconfig.build.json",
     "test": "jest",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"*.js\" \"*.json\"",
     "format:diff": "prettier --list-different \"src/**/*.ts\"",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",

@@ -17,7 +17,9 @@ import { META, POPULATED } from "../symbols";
  * is defined getters so that the metadata can be accessed more conveniently.
  */
 export abstract class BaseEntity<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Entity extends BaseEntity<Entity, Primary> = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Primary extends PrimaryField<Entity> = any,
 > {
   [META]: EntityMeta<Entity, Primary>;
@@ -65,7 +67,11 @@ export abstract class BaseEntity<
     accessor.apply();
 
     if (isCollectionField)
-      entity[field] = new Collection(entity.em, entity, field) as any;
+      entity[field] = new Collection(
+        entity.em,
+        entity,
+        field,
+      ) as unknown as Entity[EntityField<Entity>];
   }
 
   private get asEntity() {

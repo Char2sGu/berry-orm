@@ -19,8 +19,8 @@ jobs:
       - name: Installation
         uses: bahmutov/npm-install@v1
         with:
-          install-command: yarn
+          install-command: npm install
       - name: Lint
-        run: yarn lint
+        run: npm run lint
       - name: Style check with Prettier
-        run: yarn prettier:diff
+        run: npm run prettier:diff

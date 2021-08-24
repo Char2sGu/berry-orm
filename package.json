@@ -57,11 +57,5 @@
     "!__test__",
     "!tsconfig.*",
     "README*.md"
-  ],
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ]
-  }
+  ]
 }

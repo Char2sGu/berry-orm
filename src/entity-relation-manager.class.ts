@@ -1,5 +1,4 @@
 import { AnyEntity } from "./entity/any-entity.type";
-import { BaseEntity } from "./entity/base-entity.class";
 import { Collection } from "./field/collection.class";
 import { EmptyValue } from "./field/empty-value.type";
 import { RelationField } from "./field/relation-field.type";
@@ -11,7 +10,7 @@ export class EntityRelationManager {
    * @param entity
    * @param field
    */
-  clearRelations<Entity extends BaseEntity>(
+  clearRelations<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
   ): void {
@@ -39,7 +38,7 @@ export class EntityRelationManager {
    * @param field
    * @param targetEntity
    */
-  constructRelation<Entity extends BaseEntity>(
+  constructRelation<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,
@@ -60,7 +59,7 @@ export class EntityRelationManager {
    * @param field
    * @param targetEntity
    */
-  destructRelation<Entity extends BaseEntity>(
+  destructRelation<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,

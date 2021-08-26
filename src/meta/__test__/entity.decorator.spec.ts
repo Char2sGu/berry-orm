@@ -4,7 +4,7 @@ import { Entity } from "../entity.decorator";
 
 describe("@Entity()", () => {
   @Entity()
-  class TestingEntity extends BaseEntity {
+  class TestingEntity extends BaseEntity<TestingEntity, "id"> {
     id!: number;
   }
 

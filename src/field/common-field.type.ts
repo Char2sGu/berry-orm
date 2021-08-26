@@ -1,8 +1,8 @@
-import { BaseEntity } from "../entity/base-entity.class";
+import { AnyEntity } from "../entity/any-entity.type";
 import { EntityField } from "./entity-field.type";
 import { RelationField } from "./relation-field.type";
 
-export type CommonField<Entity extends BaseEntity> = Exclude<
+export type CommonField<Entity extends AnyEntity> = Exclude<
   EntityField<Entity>,
   /**
    * Relation fields are not possible to be `string` unless `Entity` is

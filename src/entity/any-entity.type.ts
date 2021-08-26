@@ -1,10 +1,13 @@
 import { BaseEntity } from "..";
+import { PrimaryField } from "../field/primary-field.type";
 
 /**
  * Represent an entity extending the `BaseEntity`.
- *
- * Usually this is done using a generic type, but this type will come to handy
- * in a few cases where generic types are not available.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyEntity = BaseEntity & Record<string, any>;
+export type AnyEntity<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Entity extends AnyEntity<Entity, Primary> = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Primary extends PrimaryField<Entity> = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+> = BaseEntity<Entity, Primary> & Record<string, any>;

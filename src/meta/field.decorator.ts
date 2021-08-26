@@ -1,5 +1,4 @@
-import { AnyEntity } from "..";
-import { BaseEntity } from "../entity/base-entity.class";
+import { AnyEntity } from "../entity/any-entity.type";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
 import { EntityField } from "../field/entity-field.type";
@@ -12,7 +11,7 @@ import { RelationTarget } from "./relation-target.type";
 
 export const Field: FieldDecorator =
   (options?: FieldOptionsPrimary | FieldOptionsRelation) =>
-  <Entity extends BaseEntity, Primary extends PrimaryField<Entity>>(
+  <Entity extends AnyEntity, Primary extends PrimaryField<Entity>>(
     prototype: Entity,
     name: EntityField<Entity>,
   ) => {
@@ -38,22 +37,22 @@ export const Field: FieldDecorator =
   };
 
 interface FieldDecorator {
-  (): <Entity extends BaseEntity>(
+  (): <Entity extends AnyEntity>(
     prototype: Entity,
     name: EntityField<Entity>,
   ) => void;
 
   (options: FieldOptionsPrimary): <
-    Entity extends BaseEntity<Entity, Primary>,
+    Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
   >(
     prototype: Entity,
     name: Primary,
   ) => void;
 
-  <TargetEntity extends BaseEntity>(
+  <TargetEntity extends AnyEntity>(
     options: FieldOptionsRelation<TargetEntity> & { multi: true },
-  ): <Entity extends BaseEntity>(
+  ): <Entity extends AnyEntity>(
     prototype: Entity,
     name: Extract<
       EntityField<Entity>,
@@ -61,9 +60,9 @@ interface FieldDecorator {
     >,
   ) => void;
 
-  <TargetEntity extends BaseEntity>(
+  <TargetEntity extends AnyEntity>(
     options: FieldOptionsRelation<TargetEntity>,
-  ): <Entity extends BaseEntity>(
+  ): <Entity extends AnyEntity>(
     prototype: Entity,
     name: Extract<
       EntityField<Entity>,
@@ -75,7 +74,7 @@ interface FieldDecorator {
 interface FieldOptionsPrimary {
   type: "primary";
 }
-interface FieldOptionsRelation<Entity extends BaseEntity = AnyEntity> {
+interface FieldOptionsRelation<Entity extends AnyEntity = AnyEntity> {
   type: "relation";
   target: RelationTarget<Entity>;
   inverse: RelationField<Entity>;

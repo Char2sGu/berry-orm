@@ -1,6 +1,5 @@
 import { AnyEntity } from ".";
 import { EntityRelationManager } from "./entity-relation-manager.class";
-import { BaseEntity } from "./entity/base-entity.class";
 import { EntityType } from "./entity/entity-type.type";
 import { IdentityMap } from "./identity-map.class";
 
@@ -15,9 +14,7 @@ export class IdentityMapManager {
     private relationManager: EntityRelationManager,
   ) {}
 
-  get<Entity extends BaseEntity>(
-    type: EntityType<Entity>,
-  ): IdentityMap<Entity> {
+  get<Entity extends AnyEntity>(type: EntityType<Entity>): IdentityMap<Entity> {
     this.checkType(type);
     return (
       (this.identityMaps.get(type) as IdentityMap<Entity>) ??
@@ -29,7 +26,7 @@ export class IdentityMapManager {
     this.identityMaps.forEach((map) => map.clear());
   }
 
-  private createIdentityMap<Entity extends BaseEntity>(
+  private createIdentityMap<Entity extends AnyEntity>(
     type: EntityType<Entity>,
   ) {
     const map = new IdentityMap(type, this.relationManager);

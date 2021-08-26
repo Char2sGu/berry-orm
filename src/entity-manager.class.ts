@@ -1,6 +1,5 @@
 import { EntityRelationManager } from "./entity-relation-manager.class";
 import { AnyEntity } from "./entity/any-entity.type";
-import { BaseEntity } from "./entity/base-entity.class";
 import { EntityData } from "./entity/entity-data.type";
 import { EntityType } from "./entity/entity-type.type";
 import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
@@ -22,7 +21,7 @@ export class EntityManager {
    * @returns
    */
   populate<
-    Entity extends BaseEntity<Entity, Primary>,
+    Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
   >(type: EntityType<Entity>, data: EntityData<Entity>): Entity {
     const primaryKey = data[
@@ -62,7 +61,7 @@ export class EntityManager {
    * @returns
    */
   populateRelationField<
-    Entity extends BaseEntity,
+    Entity extends AnyEntity,
     Field extends RelationField<Entity>,
   >(
     entity: Entity,
@@ -94,7 +93,7 @@ export class EntityManager {
    * @param reference
    * @returns
    */
-  resolveRelationEntityRepresentation<Entity extends BaseEntity>(
+  resolveRelationEntityRepresentation<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
     reference: RelationEntityRepresentation,

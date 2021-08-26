@@ -1,10 +1,10 @@
-import { BaseEntity } from "../entity/base-entity.class";
+import { AnyEntity } from "../entity/any-entity.type";
 import { ExtractKeys } from "../utils/extract-keys.type";
 import { Collection } from "./collection.class";
 import { EmptyValue } from "./empty-value.type";
 import { EntityField } from "./entity-field.type";
 
-export type RelationField<Entity extends BaseEntity<Entity>> = Extract<
+export type RelationField<Entity extends AnyEntity> = Extract<
   EntityField<Entity>,
-  ExtractKeys<Entity, BaseEntity | Collection<BaseEntity> | EmptyValue>
+  ExtractKeys<Entity, AnyEntity | Collection<AnyEntity> | EmptyValue>
 >;

@@ -1,8 +1,7 @@
 import { EntityRelationManager } from "../entity-relation-manager.class";
 import { AnyEntity } from "../entity/any-entity.type";
-import { BaseEntity } from "../entity/base-entity.class";
 
-export class Collection<Entity extends BaseEntity> extends Set<Entity> {
+export class Collection<Entity extends AnyEntity> extends Set<Entity> {
   constructor(
     private relationManager: EntityRelationManager,
     private owner: AnyEntity,

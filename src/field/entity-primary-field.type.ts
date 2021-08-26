@@ -1,9 +1,9 @@
-import { BaseEntity } from "../entity/base-entity.class";
+import { AnyEntity } from "../entity/any-entity.type";
 import { PrimaryField } from "./primary-field.type";
 
-export type EntityPrimaryField<Entity extends BaseEntity> =
+export type EntityPrimaryField<Entity extends AnyEntity> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Entity extends BaseEntity<any, infer Primary>
+  Entity extends AnyEntity<any, infer Primary>
     ? Primary extends PrimaryField<Entity>
       ? Primary
       : never

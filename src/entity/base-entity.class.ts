@@ -9,6 +9,7 @@ import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-acc
 import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";
 import { EntityMeta } from "../meta/entity-meta.interface";
 import { META, POPULATED } from "../symbols";
+import { AnyEntity } from "./any-entity.type";
 
 /**
  * The base class of every entity.
@@ -17,10 +18,8 @@ import { META, POPULATED } from "../symbols";
  * is defined getters so that the metadata can be accessed more conveniently.
  */
 export abstract class BaseEntity<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Entity extends BaseEntity<Entity, Primary> = any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Primary extends PrimaryField<Entity> = any,
+  Entity extends AnyEntity<Entity, Primary>,
+  Primary extends PrimaryField<Entity>,
 > {
   [META]: EntityMeta<Entity, Primary>;
 

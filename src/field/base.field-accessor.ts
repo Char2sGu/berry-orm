@@ -1,10 +1,9 @@
 import { AnyEntity } from "..";
 import { EntityRelationManager } from "../entity-relation-manager.class";
-import { BaseEntity } from "../entity/base-entity.class";
 import { EntityField } from "./entity-field.type";
 
 export class BaseFieldAccessor<
-  Entity extends BaseEntity = AnyEntity,
+  Entity extends AnyEntity = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {
   value;

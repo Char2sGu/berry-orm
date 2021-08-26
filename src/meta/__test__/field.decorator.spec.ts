@@ -2,7 +2,8 @@ import { BaseEntity, Collection, Field, FieldMeta, META } from "../..";
 
 describe("@Field()", () => {
   describe("Common", () => {
-    class TestingEntity extends BaseEntity<TestingEntity> {
+    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+      id!: number;
       @Field()
       field!: unknown;
     }
@@ -18,7 +19,7 @@ describe("@Field()", () => {
   });
 
   describe("Primary", () => {
-    class TestingEntity extends BaseEntity<TestingEntity> {
+    class TestingEntity extends BaseEntity<TestingEntity, "field"> {
       @Field({ type: "primary" })
       field!: string;
     }
@@ -43,7 +44,8 @@ describe("@Field()", () => {
       target: () => TestingEntity,
       inverse: "field",
     } as const;
-    class TestingEntity extends BaseEntity<TestingEntity> {
+    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+      id!: number;
       @Field(options)
       field!: TestingEntity;
     }
@@ -64,7 +66,8 @@ describe("@Field()", () => {
       inverse: "field",
       multi: true,
     } as const;
-    class TestingEntity extends BaseEntity<TestingEntity> {
+    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+      id!: number;
       @Field(options)
       field!: Collection<TestingEntity>;
     }

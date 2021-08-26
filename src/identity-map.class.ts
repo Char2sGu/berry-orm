@@ -1,9 +1,9 @@
 import { EntityRelationManager } from "./entity-relation-manager.class";
-import { BaseEntity } from "./entity/base-entity.class";
+import { AnyEntity } from "./entity/any-entity.type";
 import { EntityType } from "./entity/entity-type.type";
 import { EntityPrimaryKey } from "./field/entity-primary-key.type";
 
-export class IdentityMap<Entity extends BaseEntity> extends Map<
+export class IdentityMap<Entity extends AnyEntity> extends Map<
   EntityPrimaryKey<Entity>,
   Entity
 > {

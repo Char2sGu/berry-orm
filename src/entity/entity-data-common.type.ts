@@ -1,7 +1,7 @@
 import { CommonField } from "../field/common-field.type";
-import { BaseEntity } from "./base-entity.class";
+import { AnyEntity } from "./any-entity.type";
 
-export type EntityDataCommon<Entity extends BaseEntity> = Pick<
+export type EntityDataCommon<Entity extends AnyEntity> = Pick<
   Entity,
   CommonField<Entity>
 >;

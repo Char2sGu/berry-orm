@@ -1,7 +1,7 @@
 import { EntityManager } from "../entity-manager.class";
 import { BaseEntity } from "../entity/base-entity.class";
-import { IdentityMapManager } from "../entity/identity-map-manager.class";
 import { Collection } from "../field/collection.class";
+import { IdentityMapManager } from "../identity-map-manager.class";
 import { Entity } from "../meta/entity.decorator";
 import { Field } from "../meta/field.decorator";
 import { POPULATED } from "../symbols";

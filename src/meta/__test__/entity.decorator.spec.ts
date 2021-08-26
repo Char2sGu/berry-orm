@@ -1,5 +1,5 @@
 import { BaseEntity } from "../../entity/base-entity.class";
-import { IdentityMap } from "../../entity/identity-map.class";
+import { IdentityMap } from "../../identity-map.class";
 import { META } from "../../symbols";
 import { Entity } from "../entity.decorator";
 

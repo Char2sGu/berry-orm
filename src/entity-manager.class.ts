@@ -2,13 +2,13 @@ import { AnyEntity } from "./entity/any-entity.type";
 import { BaseEntity } from "./entity/base-entity.class";
 import { EntityData } from "./entity/entity-data.type";
 import { EntityType } from "./entity/entity-type.type";
-import { IdentityMapManager } from "./entity/identity-map-manager.class";
 import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
 import { Collection } from "./field/collection.class";
 import { EmptyValue } from "./field/empty-value.type";
 import { PrimaryField } from "./field/primary-field.type";
 import { RelationFieldData } from "./field/relation-field-data.type";
 import { RelationField } from "./field/relation-field.type";
+import { IdentityMapManager } from "./identity-map-manager.class";
 import { META, POPULATED } from "./symbols";
 
 export class EntityManager {

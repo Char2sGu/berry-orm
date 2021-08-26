@@ -1,8 +1,8 @@
-import { AnyEntity } from "..";
-import { META } from "../symbols";
-import { BaseEntity } from "./base-entity.class";
-import { EntityType } from "./entity-type.type";
+import { AnyEntity } from ".";
+import { BaseEntity } from "./entity/base-entity.class";
+import { EntityType } from "./entity/entity-type.type";
 import { IdentityMap } from "./identity-map.class";
+import { META } from "./symbols";
 
 export class IdentityMapManager {
   private identityMaps = new Map<

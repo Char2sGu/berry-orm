@@ -1,8 +1,8 @@
 import { AnyEntity } from "../entity/any-entity.type";
 import { BaseEntity } from "../entity/base-entity.class";
 import { EntityType } from "../entity/entity-type.type";
-import { IdentityMap } from "../entity/identity-map.class";
 import { PrimaryField } from "../field/primary-field.type";
+import { IdentityMap } from "../identity-map.class";
 import { META } from "../symbols";
 import { EntityMeta } from "./entity-meta.interface";
 

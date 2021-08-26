@@ -31,7 +31,7 @@ export class IdentityMapManager {
     return map;
   }
 
-  private checkType(type: EntityType<AnyEntity>) {
+  private checkType(type: EntityType) {
     if (!this.registry.has(type))
       throw new Error(`${type.name} is not a known entity type`);
   }

@@ -8,7 +8,13 @@ import { Field } from "../meta/field.decorator";
 import { POPULATED } from "../symbols";
 
 describe("EntityManager", () => {
+  let relationManager: EntityRelationManager;
+  let identityMapManager: IdentityMapManager;
   let entityManager: EntityManager;
+
+  beforeEach(() => {
+    relationManager = new EntityRelationManager();
+  });
 
   describe(".commit()", () => {
     describe("Values", () => {
@@ -22,10 +28,11 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        entityManager = new EntityManager(
-          new IdentityMapManager(new Set([TestingEntity])),
-          new EntityRelationManager(),
+        identityMapManager = new IdentityMapManager(
+          new Set([TestingEntity]),
+          relationManager,
         );
+        entityManager = new EntityManager(identityMapManager, relationManager);
       });
 
       let entity: TestingEntity;
@@ -97,10 +104,11 @@ describe("EntityManager", () => {
       let result: TestingEntity1;
 
       beforeEach(() => {
-        entityManager = new EntityManager(
-          new IdentityMapManager(new Set([TestingEntity1, TestingEntity2])),
-          new EntityRelationManager(),
+        identityMapManager = new IdentityMapManager(
+          new Set([TestingEntity1, TestingEntity2]),
+          relationManager,
         );
+        entityManager = new EntityManager(identityMapManager, relationManager);
       });
 
       describe("Foreign Keys", () => {
@@ -149,7 +157,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = entityManager.retrieve(TestingEntity2, 1);
+              const previous = identityMapManager.get(TestingEntity2).get(1);
               expect(previous.entity1).toBeUndefined();
             });
           });
@@ -216,7 +224,7 @@ describe("EntityManager", () => {
           });
 
           it("should destruct the previous relation", () => {
-            const previous = entityManager.retrieve(TestingEntity2, 1);
+            const previous = identityMapManager.get(TestingEntity2).get(1);
             expect(previous.entity1).toBeUndefined();
           });
         });
@@ -252,12 +260,11 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        entityManager = new EntityManager(
-          new IdentityMapManager(
-            new Set([TestingEntityChild, TestingEntityParent]),
-          ),
-          new EntityRelationManager(),
+        identityMapManager = new IdentityMapManager(
+          new Set([TestingEntityChild, TestingEntityParent]),
+          relationManager,
         );
+        entityManager = new EntityManager(identityMapManager, relationManager);
       });
 
       describe("Foreign Keys", () => {
@@ -303,7 +310,9 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the relation", () => {
-              const previous = entityManager.retrieve(TestingEntityChild, 1);
+              const previous = identityMapManager
+                .get(TestingEntityChild)
+                .get(1);
               expect(previous.parent).toBeUndefined();
             });
           });
@@ -346,7 +355,9 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = entityManager.retrieve(TestingEntityParent, 1);
+              const previous = identityMapManager
+                .get(TestingEntityParent)
+                .get(1);
               expect(previous.children.size).toBe(0);
             });
           });
@@ -397,7 +408,9 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = entityManager.retrieve(TestingEntityChild, 1);
+              const previous = identityMapManager
+                .get(TestingEntityChild)
+                .get(1);
               expect(previous.parent).toBeUndefined();
             });
           });
@@ -440,79 +453,13 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the relation", () => {
-              const previous = entityManager.retrieve(TestingEntityParent, 1);
+              const previous = identityMapManager
+                .get(TestingEntityParent)
+                .get(1);
               expect(previous.children.size).toBe(0);
             });
           });
         });
-      });
-    });
-  });
-
-  describe(".retrieve()", () => {
-    @Entity()
-    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-      @Field({ type: "primary" })
-      id!: number;
-
-      @Field({
-        type: "relation",
-        target: () => TestingEntity,
-        inverse: "relations",
-        multi: true,
-      })
-      relations!: Collection<TestingEntity>;
-    }
-
-    let result: TestingEntity;
-
-    beforeEach(() => {
-      entityManager = new EntityManager(
-        new IdentityMapManager(new Set([TestingEntity])),
-        new EntityRelationManager(),
-      );
-    });
-
-    describe("Not Exists", () => {
-      beforeEach(() => {
-        result = entityManager.retrieve(TestingEntity, 1);
-      });
-
-      it("should return an instance", () => {
-        expect(result).toBeInstanceOf(TestingEntity);
-      });
-
-      it("should assign to the priamry key field", () => {
-        expect(result.id).toBe(1);
-      });
-
-      it("should initialize collection fields", () => {
-        expect(result.relations).toBeDefined();
-        expect(result.relations).toBeInstanceOf(Collection);
-      });
-
-      it("should forbid updating collection fields", () => {
-        expect(() => {
-          result.relations = Object.create(Collection.prototype);
-        }).toThrowError();
-      });
-
-      it("should forbid updating the priamry key field", () => {
-        expect(() => {
-          result.id = 2;
-        }).toThrowError();
-      });
-    });
-
-    describe("Exists", () => {
-      let entity: TestingEntity;
-      beforeEach(() => {
-        entity = entityManager.populate(TestingEntity, { id: 1 });
-        result = entityManager.retrieve(TestingEntity, 1);
-      });
-
-      it("should return the existed entity", () => {
-        expect(result).toBe(entity);
       });
     });
   });

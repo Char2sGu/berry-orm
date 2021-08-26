@@ -28,7 +28,7 @@ export class EntityManager {
     const primaryKey = data[
       type.prototype[META].fields.primary
     ] as Entity[Primary];
-    const entity = this.retrieve(type, primaryKey);
+    const entity = this.identityMapManager.get(type).get(primaryKey);
 
     for (const k in entity[META].fields.items) {
       const field = k as keyof typeof data;
@@ -88,29 +88,6 @@ export class EntityManager {
   }
 
   /**
-   * Get the reference to the target entity.
-   *
-   * Return the entity from the identity map if it exists, otherwise create an
-   * unpopulated one in the identity map and return it.
-   *
-   * @param type
-   * @param primaryKey
-   * @returns
-   */
-  retrieve<
-    Entity extends BaseEntity<Entity, Primary>,
-    Primary extends PrimaryField<Entity>,
-  >(type: EntityType<Entity>, primaryKey: Entity[Primary]): Entity {
-    const map = this.identityMapManager.get(type);
-    let entity = map.get(primaryKey) as Entity | undefined;
-    if (!entity) {
-      entity = new type(this.relationManager, primaryKey);
-      map.set(primaryKey, entity);
-    }
-    return entity;
-  }
-
-  /**
    * Get the target relation entity from a primary key or a data object.
    * @param entity
    * @param field
@@ -126,7 +103,7 @@ export class EntityManager {
     if (typeof reference == "object") {
       return this.populate(relationMeta.target(), reference);
     } else {
-      return this.retrieve(relationMeta.target(), reference);
+      return this.identityMapManager.get(relationMeta.target()).get(reference);
     }
   }
 }

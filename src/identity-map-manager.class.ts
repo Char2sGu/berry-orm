@@ -1,8 +1,8 @@
 import { AnyEntity } from ".";
+import { EntityRelationManager } from "./entity-relation-manager.class";
 import { BaseEntity } from "./entity/base-entity.class";
 import { EntityType } from "./entity/entity-type.type";
 import { IdentityMap } from "./identity-map.class";
-import { META } from "./symbols";
 
 export class IdentityMapManager {
   private identityMaps = new Map<
@@ -10,13 +10,19 @@ export class IdentityMapManager {
     IdentityMap<AnyEntity>
   >();
 
-  constructor(private registry: Set<EntityType>) {}
+  constructor(
+    private registry: Set<EntityType>,
+    private relationManager: EntityRelationManager,
+  ) {}
 
   get<Entity extends BaseEntity>(
     type: EntityType<Entity>,
   ): IdentityMap<Entity> {
     this.checkType(type);
-    return this.identityMaps.get(type) ?? this.createIdentityMap(type);
+    return (
+      (this.identityMaps.get(type) as IdentityMap<Entity>) ??
+      this.createIdentityMap(type)
+    );
   }
 
   clear(): void {
@@ -26,7 +32,7 @@ export class IdentityMapManager {
   private createIdentityMap<Entity extends BaseEntity>(
     type: EntityType<Entity>,
   ) {
-    const map = type.prototype[META].map();
+    const map = new IdentityMap(type, this.relationManager);
     this.identityMaps.set(type, map);
     return map;
   }

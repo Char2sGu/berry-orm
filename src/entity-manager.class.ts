@@ -13,14 +13,6 @@ import { META, POPULATED } from "./symbols";
 
 export class EntityManager {
   constructor(private identityMapManager: IdentityMapManager) {}
-
-  /**
-   * Clear the identity maps.
-   */
-  clear(): void {
-    this.identityMapManager.clear();
-  }
-
   /**
    * Populate the entity using the data.
    * @param type

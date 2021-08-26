@@ -5,12 +5,13 @@ import { IdentityMapManager } from "./entity/identity-map-manager.class";
 import { META } from "./symbols";
 
 export class BerryOrm {
+  readonly imm;
   readonly em;
 
   constructor(options: { entities: EntityType<AnyEntity>[] }) {
     const registry = this.inspect(new Set(options.entities));
-    const identityMapManager = new IdentityMapManager(registry);
-    this.em = new EntityManager(identityMapManager);
+    this.imm = new IdentityMapManager(registry);
+    this.em = new EntityManager(this.imm);
   }
 
   /**

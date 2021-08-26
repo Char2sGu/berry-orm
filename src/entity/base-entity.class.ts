@@ -1,4 +1,4 @@
-import { EntityManager } from "../entity-manager.class";
+import { EntityRelationManager } from "../entity-relation-manager.class";
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
@@ -30,7 +30,10 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
-  constructor(private em: EntityManager, primaryKey: Entity[Primary]) {
+  constructor(
+    private relationManager: EntityRelationManager,
+    primaryKey: Entity[Primary],
+  ) {
     Object.keys(this[META].fields.items).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );
@@ -49,26 +52,26 @@ export abstract class BaseEntity<
     const isRelationEntityField = !!fieldMeta.relation && !isCollectionField;
 
     const accessor = isPrimaryField
-      ? new PrimaryFieldAccessor(this.em, entity, field as Primary)
+      ? new PrimaryFieldAccessor(this.relationManager, entity, field as Primary)
       : isCollectionField
       ? new RelationToManyFieldAccessor(
-          this.em,
+          this.relationManager,
           entity,
           field as RelationField<Entity>,
         )
       : isRelationEntityField
       ? new RelationToOneFieldAccessor(
-          this.em,
+          this.relationManager,
           entity,
           field as RelationField<Entity>,
         )
-      : new CommonFieldAccessor(this.em, entity, field);
+      : new CommonFieldAccessor(this.relationManager, entity, field);
 
     accessor.apply();
 
     if (isCollectionField)
       entity[field] = new Collection(
-        entity.em,
+        entity.relationManager,
         entity,
         field,
       ) as unknown as Entity[EntityField<Entity>];

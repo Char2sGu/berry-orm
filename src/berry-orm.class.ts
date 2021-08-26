@@ -1,17 +1,20 @@
 import { AnyEntity } from ".";
 import { EntityManager } from "./entity-manager.class";
+import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity/entity-type.type";
 import { IdentityMapManager } from "./identity-map-manager.class";
 import { META } from "./symbols";
 
 export class BerryOrm {
   readonly imm;
+  readonly erm;
   readonly em;
 
   constructor(options: { entities: EntityType<AnyEntity>[] }) {
     const registry = this.inspect(new Set(options.entities));
     this.imm = new IdentityMapManager(registry);
-    this.em = new EntityManager(this.imm);
+    this.erm = new EntityRelationManager();
+    this.em = new EntityManager(this.imm, this.erm);
   }
 
   /**

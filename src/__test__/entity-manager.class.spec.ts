@@ -1,4 +1,5 @@
 import { EntityManager } from "../entity-manager.class";
+import { EntityRelationManager } from "../entity-relation-manager.class";
 import { BaseEntity } from "../entity/base-entity.class";
 import { Collection } from "../field/collection.class";
 import { IdentityMapManager } from "../identity-map-manager.class";
@@ -7,7 +8,7 @@ import { Field } from "../meta/field.decorator";
 import { POPULATED } from "../symbols";
 
 describe("EntityManager", () => {
-  let em: EntityManager;
+  let entityManager: EntityManager;
 
   describe(".commit()", () => {
     describe("Values", () => {
@@ -21,8 +22,9 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        em = new EntityManager(
+        entityManager = new EntityManager(
           new IdentityMapManager(new Set([TestingEntity])),
+          new EntityRelationManager(),
         );
       });
 
@@ -30,7 +32,7 @@ describe("EntityManager", () => {
 
       describe("Create", () => {
         beforeEach(() => {
-          entity = em.populate(TestingEntity, {
+          entity = entityManager.populate(TestingEntity, {
             id: 1,
             field1: "",
           });
@@ -48,11 +50,11 @@ describe("EntityManager", () => {
 
       describe("Update", () => {
         beforeEach(() => {
-          entity = em.populate(TestingEntity, {
+          entity = entityManager.populate(TestingEntity, {
             id: 1,
             field1: "",
           });
-          em.populate(TestingEntity, {
+          entityManager.populate(TestingEntity, {
             id: 1,
             field1: "updated",
           });
@@ -95,15 +97,16 @@ describe("EntityManager", () => {
       let result: TestingEntity1;
 
       beforeEach(() => {
-        em = new EntityManager(
+        entityManager = new EntityManager(
           new IdentityMapManager(new Set([TestingEntity1, TestingEntity2])),
+          new EntityRelationManager(),
         );
       });
 
       describe("Foreign Keys", () => {
         describe("Create", () => {
           beforeEach(() => {
-            result = em.populate(TestingEntity1, {
+            result = entityManager.populate(TestingEntity1, {
               id: 1,
               entity2: 1,
             });
@@ -130,11 +133,11 @@ describe("EntityManager", () => {
         describe("Update", () => {
           describe("Change", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntity1, {
+              result = entityManager.populate(TestingEntity1, {
                 id: 1,
                 entity2: 1,
               });
-              em.populate(TestingEntity1, {
+              entityManager.populate(TestingEntity1, {
                 id: 1,
                 entity2: 2,
               });
@@ -146,7 +149,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = em.retrieve(TestingEntity2, 1);
+              const previous = entityManager.retrieve(TestingEntity2, 1);
               expect(previous.entity1).toBeUndefined();
             });
           });
@@ -157,8 +160,11 @@ describe("EntityManager", () => {
             ${undefined}
           `("Remove: $value", ({ value }) => {
             beforeEach(() => {
-              result = em.populate(TestingEntity1, { id: 1, entity2: 1 });
-              em.populate(TestingEntity1, { id: 1, entity2: value });
+              result = entityManager.populate(TestingEntity1, {
+                id: 1,
+                entity2: 1,
+              });
+              entityManager.populate(TestingEntity1, { id: 1, entity2: value });
             });
 
             it("should destruct the relation", () => {
@@ -171,7 +177,7 @@ describe("EntityManager", () => {
       describe("Nested Data", () => {
         describe("Create", () => {
           beforeEach(() => {
-            result = em.populate(TestingEntity1, {
+            result = entityManager.populate(TestingEntity1, {
               id: 1,
               entity2: { id: 1 },
             });
@@ -197,8 +203,11 @@ describe("EntityManager", () => {
 
         describe("Update", () => {
           beforeEach(() => {
-            result = em.populate(TestingEntity1, { id: 1, entity2: 1 });
-            em.populate(TestingEntity1, { id: 1, entity2: 2 });
+            result = entityManager.populate(TestingEntity1, {
+              id: 1,
+              entity2: 1,
+            });
+            entityManager.populate(TestingEntity1, { id: 1, entity2: 2 });
           });
 
           it("should construct the new relation", () => {
@@ -207,7 +216,7 @@ describe("EntityManager", () => {
           });
 
           it("should destruct the previous relation", () => {
-            const previous = em.retrieve(TestingEntity2, 1);
+            const previous = entityManager.retrieve(TestingEntity2, 1);
             expect(previous.entity1).toBeUndefined();
           });
         });
@@ -243,10 +252,11 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        em = new EntityManager(
+        entityManager = new EntityManager(
           new IdentityMapManager(
             new Set([TestingEntityChild, TestingEntityParent]),
           ),
+          new EntityRelationManager(),
         );
       });
 
@@ -256,7 +266,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityParent, {
+              result = entityManager.populate(TestingEntityParent, {
                 id: 1,
                 children: [1],
               });
@@ -275,11 +285,14 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityParent, {
+              result = entityManager.populate(TestingEntityParent, {
                 id: 1,
                 children: [1],
               });
-              em.populate(TestingEntityParent, { id: 1, children: [2] });
+              entityManager.populate(TestingEntityParent, {
+                id: 1,
+                children: [2],
+              });
             });
 
             it("should construct the relation", () => {
@@ -290,7 +303,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the relation", () => {
-              const previous = em.retrieve(TestingEntityChild, 1);
+              const previous = entityManager.retrieve(TestingEntityChild, 1);
               expect(previous.parent).toBeUndefined();
             });
           });
@@ -301,7 +314,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityChild, {
+              result = entityManager.populate(TestingEntityChild, {
                 id: 1,
                 parent: 1,
               });
@@ -320,8 +333,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityChild, { id: 1, parent: 1 });
-              em.populate(TestingEntityChild, { id: 1, parent: 2 });
+              result = entityManager.populate(TestingEntityChild, {
+                id: 1,
+                parent: 1,
+              });
+              entityManager.populate(TestingEntityChild, { id: 1, parent: 2 });
             });
 
             it("should construct the relation", () => {
@@ -330,7 +346,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = em.retrieve(TestingEntityParent, 1);
+              const previous = entityManager.retrieve(TestingEntityParent, 1);
               expect(previous.children.size).toBe(0);
             });
           });
@@ -343,7 +359,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityParent, {
+              result = entityManager.populate(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 1 }],
               });
@@ -364,11 +380,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityParent, {
+              result = entityManager.populate(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 1 }],
               });
-              em.populate(TestingEntityParent, {
+              entityManager.populate(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 2 }],
               });
@@ -381,7 +397,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = em.retrieve(TestingEntityChild, 1);
+              const previous = entityManager.retrieve(TestingEntityChild, 1);
               expect(previous.parent).toBeUndefined();
             });
           });
@@ -392,7 +408,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityChild, {
+              result = entityManager.populate(TestingEntityChild, {
                 id: 1,
                 parent: { id: 1 },
               });
@@ -411,8 +427,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = em.populate(TestingEntityChild, { id: 1, parent: 1 });
-              em.populate(TestingEntityChild, { id: 1, parent: 2 });
+              result = entityManager.populate(TestingEntityChild, {
+                id: 1,
+                parent: 1,
+              });
+              entityManager.populate(TestingEntityChild, { id: 1, parent: 2 });
             });
 
             it("should construct the relation", () => {
@@ -421,7 +440,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the relation", () => {
-              const previous = em.retrieve(TestingEntityParent, 1);
+              const previous = entityManager.retrieve(TestingEntityParent, 1);
               expect(previous.children.size).toBe(0);
             });
           });
@@ -448,12 +467,15 @@ describe("EntityManager", () => {
     let result: TestingEntity;
 
     beforeEach(() => {
-      em = new EntityManager(new IdentityMapManager(new Set([TestingEntity])));
+      entityManager = new EntityManager(
+        new IdentityMapManager(new Set([TestingEntity])),
+        new EntityRelationManager(),
+      );
     });
 
     describe("Not Exists", () => {
       beforeEach(() => {
-        result = em.retrieve(TestingEntity, 1);
+        result = entityManager.retrieve(TestingEntity, 1);
       });
 
       it("should return an instance", () => {
@@ -485,8 +507,8 @@ describe("EntityManager", () => {
     describe("Exists", () => {
       let entity: TestingEntity;
       beforeEach(() => {
-        entity = em.populate(TestingEntity, { id: 1 });
-        result = em.retrieve(TestingEntity, 1);
+        entity = entityManager.populate(TestingEntity, { id: 1 });
+        result = entityManager.retrieve(TestingEntity, 1);
       });
 
       it("should return the existed entity", () => {

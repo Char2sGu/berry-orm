@@ -1,5 +1,5 @@
 import { AnyEntity } from "..";
-import { EntityManager } from "../entity-manager.class";
+import { EntityRelationManager } from "../entity-relation-manager.class";
 import { BaseEntity } from "../entity/base-entity.class";
 import { EntityField } from "./entity-field.type";
 
@@ -10,7 +10,7 @@ export class BaseFieldAccessor<
   value;
 
   constructor(
-    protected em: EntityManager,
+    protected relationManager: EntityRelationManager,
     protected entity: Entity,
     protected field: Field,
   ) {

@@ -1,4 +1,3 @@
-import { EntityRelationManager } from "../entity-relation-manager.class";
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
@@ -10,6 +9,7 @@ import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-acces
 import { EntityMeta } from "../meta/entity-meta.interface";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
+import { EntityType } from "./entity-type.type";
 
 // It's not possible to use Active Record mode in Berry ORM because type
 // circular reference will happen and cause compile error.
@@ -32,10 +32,12 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
+  private relationManager;
+
   constructor(
-    private relationManager: EntityRelationManager,
-    primaryKey: Entity[Primary],
+    ...[relationManager, primaryKey]: ConstructorParameters<EntityType<Entity>>
   ) {
+    this.relationManager = relationManager;
     Object.keys(this[META].fields.items).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );

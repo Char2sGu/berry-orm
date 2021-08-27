@@ -9,6 +9,7 @@ import { ExtractKeys } from "../utils/extract-keys.type";
 import { EntityMetaField } from "./entity-meta-field.class";
 import { EntityMetaRelation } from "./entity-meta-relation.class";
 import { EntityMeta } from "./entity-meta.class";
+import { EntityMetaError } from "./entity-meta.error";
 import { RelationTarget } from "./relation-target.type";
 
 export const Field: FieldDecorator =
@@ -21,16 +22,38 @@ export const Field: FieldDecorator =
       prototype[META] ?? new EntityMeta(prototype));
 
     const fieldMeta = new EntityMetaField(name);
+
+    if (meta.fields[name])
+      throw new EntityMetaError({
+        type: meta.type,
+        field: name,
+        message: "The field cannot be registered for more than once",
+      });
     meta.fields[name] = fieldMeta;
 
-    if (options?.type == "relation")
+    if (options?.type == "relation") {
+      if (fieldMeta.relation)
+        throw new EntityMetaError({
+          type: meta.type,
+          field: name,
+          message: "Relations cannot be overritten",
+        });
       fieldMeta.relation = new EntityMetaRelation(
         options.target,
         options.inverse,
         options.multi,
       );
+    }
 
-    if (options?.type == "primary") meta.primary = name as Primary;
+    if (options?.type == "primary") {
+      if (meta.primary)
+        throw new EntityMetaError({
+          type: meta.type,
+          field: name,
+          message: "The primary field cannot be registered for more than once",
+        });
+      meta.primary = name as Primary;
+    }
   };
 
 interface FieldDecorator {

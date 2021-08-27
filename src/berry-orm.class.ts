@@ -1,8 +1,8 @@
 import { AnyEntity } from ".";
-import { EntityManager } from "./entity-manager.class";
-import { EntityRelationManager } from "./entity-relation-manager.class";
+import { EntityManager } from "./entity/entity-manager.class";
+import { EntityRelationManager } from "./entity/entity-relation-manager.class";
 import { EntityType } from "./entity/entity-type.type";
-import { IdentityMapManager } from "./identity-map-manager.class";
+import { IdentityMapManager } from "./entity/identity-map-manager.class";
 import { META } from "./symbols";
 
 export class BerryOrm {

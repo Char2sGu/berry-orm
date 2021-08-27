@@ -1,5 +1,5 @@
-import { EntityRelationManager } from "../entity-relation-manager.class";
 import { AnyEntity } from "../entity/any-entity.type";
+import { EntityRelationManager } from "../entity/entity-relation-manager.class";
 
 export class Collection<Entity extends AnyEntity> extends Set<Entity> {
   constructor(

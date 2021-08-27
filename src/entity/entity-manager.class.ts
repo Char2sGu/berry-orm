@@ -1,13 +1,13 @@
+import { PrimaryField } from "../field/primary-field.type";
+import { RelationFieldData } from "../field/relation-field-data.type";
+import { RelationField } from "../field/relation-field.type";
+import { META, POPULATED } from "../symbols";
+import { AnyEntity } from "./any-entity.type";
+import { EntityData } from "./entity-data.type";
 import { EntityRelationManager } from "./entity-relation-manager.class";
-import { AnyEntity } from "./entity/any-entity.type";
-import { EntityData } from "./entity/entity-data.type";
-import { EntityType } from "./entity/entity-type.type";
-import { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
-import { PrimaryField } from "./field/primary-field.type";
-import { RelationFieldData } from "./field/relation-field-data.type";
-import { RelationField } from "./field/relation-field.type";
+import { EntityType } from "./entity-type.type";
 import { IdentityMapManager } from "./identity-map-manager.class";
-import { META, POPULATED } from "./symbols";
+import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 
 export class EntityManager {
   constructor(

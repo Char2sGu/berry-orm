@@ -1,5 +1,5 @@
 import { AnyEntity } from "..";
-import { EntityRelationManager } from "../entity-relation-manager.class";
+import { EntityRelationManager } from "../entity/entity-relation-manager.class";
 import { EntityField } from "./entity-field.type";
 
 export class BaseFieldAccessor<

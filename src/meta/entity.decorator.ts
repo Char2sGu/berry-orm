@@ -2,7 +2,7 @@ import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.type";
 import { PrimaryField } from "../field/primary-field.type";
 import { META } from "../symbols";
-import { EntityMeta } from "./entity-meta.class";
+import { EntityMetaError } from "./entity-meta.error";
 
 export const Entity =
   () =>
@@ -12,6 +12,9 @@ export const Entity =
   >(
     type: EntityType<Entity>,
   ): void => {
-    type.prototype[META] =
-      type.prototype[META] ?? new EntityMeta(type.prototype);
+    if (!type.prototype[META])
+      throw new EntityMetaError({
+        type,
+        message: "Must have at least one field",
+      });
   };

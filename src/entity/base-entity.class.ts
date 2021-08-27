@@ -11,6 +11,9 @@ import { EntityMeta } from "../meta/entity-meta.interface";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 
+// It's not possible to use Active Record mode in Berry ORM because type
+// circular reference will happen and cause compile error.
+
 /**
  * The base class of every entity.
  *

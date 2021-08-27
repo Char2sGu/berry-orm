@@ -1,4 +1,4 @@
-import { BaseEntity, Collection, Field, FieldMeta, META } from "../..";
+import { BaseEntity, Collection, EntityMetaField, Field, META } from "../..";
 
 describe("@Field()", () => {
   describe("Common", () => {
@@ -11,7 +11,7 @@ describe("@Field()", () => {
     it("should define the meta", () => {
       const fields = TestingEntity.prototype[META].fields.items;
       expect(fields).toBeDefined();
-      expect(fields.field).toEqual<FieldMeta>({
+      expect(fields.field).toEqual<EntityMetaField>({
         name: "field",
         relation: null,
       });
@@ -27,7 +27,7 @@ describe("@Field()", () => {
     it("should define the field meta", () => {
       const fields = TestingEntity.prototype[META].fields.items;
       expect(fields).toBeDefined();
-      expect(fields.field).toEqual<FieldMeta>({
+      expect(fields.field).toEqual<EntityMetaField>({
         name: "field",
         relation: null,
       });

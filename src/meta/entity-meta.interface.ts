@@ -2,7 +2,7 @@ import { AnyEntity } from "..";
 import { EntityType } from "../entity/entity-type.type";
 import { EntityField } from "../field/entity-field.type";
 import { PrimaryField } from "../field/primary-field.type";
-import { FieldMeta } from "./field-meta.interface";
+import { EntityMetaField } from "./entity-meta-field.interface";
 
 export interface EntityMeta<
   Entity extends AnyEntity = AnyEntity,
@@ -10,7 +10,7 @@ export interface EntityMeta<
 > {
   type: EntityType<Entity>;
   fields: {
-    items: Record<EntityField<Entity>, FieldMeta<Entity>>;
+    items: Record<EntityField<Entity>, EntityMetaField<Entity>>;
     primary: Primary;
   };
 }

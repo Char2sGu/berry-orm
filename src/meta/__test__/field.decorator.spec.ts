@@ -9,11 +9,11 @@ describe("@Field()", () => {
     }
 
     it("should define the meta", () => {
-      const fields = TestingEntity.prototype[META].fields.items;
+      const fields = TestingEntity.prototype[META].fields;
       expect(fields).toBeDefined();
       expect(fields.field).toEqual<EntityMetaField>({
         name: "field",
-        relation: null,
+        relation: undefined,
       });
     });
   });
@@ -25,16 +25,16 @@ describe("@Field()", () => {
     }
 
     it("should define the field meta", () => {
-      const fields = TestingEntity.prototype[META].fields.items;
+      const fields = TestingEntity.prototype[META].fields;
       expect(fields).toBeDefined();
       expect(fields.field).toEqual<EntityMetaField>({
         name: "field",
-        relation: null,
+        relation: undefined,
       });
     });
 
     it("should define the primary meta", () => {
-      expect(TestingEntity.prototype[META].fields.primary).toBe("field");
+      expect(TestingEntity.prototype[META].primary).toBe("field");
     });
   });
 
@@ -51,7 +51,7 @@ describe("@Field()", () => {
     }
 
     it("should define the meta", () => {
-      const fields = TestingEntity.prototype[META].fields.items;
+      const fields = TestingEntity.prototype[META].fields;
       expect(fields).toBeDefined();
       expect(fields.field).toBeDefined();
       const { type, ...value } = { ...options, multi: false };
@@ -73,7 +73,7 @@ describe("@Field()", () => {
     }
 
     it("should define the meta", () => {
-      const fields = TestingEntity.prototype[META].fields.items;
+      const fields = TestingEntity.prototype[META].fields;
       expect(fields).toBeDefined();
       expect(fields.field).toBeDefined();
       const { type, ...value } = options;

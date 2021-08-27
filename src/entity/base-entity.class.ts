@@ -6,7 +6,7 @@ import { PrimaryFieldAccessor } from "../field/primary.field-accessor";
 import { RelationField } from "../field/relation-field.type";
 import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-accessor";
 import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";
-import { EntityMeta } from "../meta/entity-meta.interface";
+import { EntityMeta } from "../meta/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityType } from "./entity-type.type";
@@ -38,22 +38,20 @@ export abstract class BaseEntity<
     ...[relationManager, primaryKey]: ConstructorParameters<EntityType<Entity>>
   ) {
     this.relationManager = relationManager;
-    Object.keys(this[META].fields.items).forEach((field) =>
+    Object.keys(this[META].fields).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );
     const entity = this.asEntity;
-    entity[entity[META].fields.primary] = primaryKey;
+    entity[entity[META].primary] = primaryKey;
   }
 
   private initField(field: EntityField<Entity>) {
     const entity = this.asEntity;
 
-    const fieldsMeta = entity[META].fields;
-    const fieldMeta = fieldsMeta.items[field];
-
-    const isPrimaryField = fieldsMeta.primary == field;
-    const isCollectionField = !!fieldMeta.relation?.multi;
-    const isRelationEntityField = !!fieldMeta.relation && !isCollectionField;
+    const isPrimaryField = entity[META].primary == field;
+    const isCollectionField = !!entity[META].fields[field].relation?.multi;
+    const isRelationEntityField =
+      !!entity[META].fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
       ? new PrimaryFieldAccessor(this.relationManager, entity, field as Primary)

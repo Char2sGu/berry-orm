@@ -6,7 +6,9 @@ import { PrimaryField } from "../field/primary-field.type";
 import { RelationField } from "../field/relation-field.type";
 import { META } from "../symbols";
 import { ExtractKeys } from "../utils/extract-keys.type";
-import { EntityMeta } from "./entity-meta.interface";
+import { EntityMetaField } from "./entity-meta-field.class";
+import { EntityMetaRelation } from "./entity-meta-relation.class";
+import { EntityMeta } from "./entity-meta.class";
 import { RelationTarget } from "./relation-target.type";
 
 export const Field: FieldDecorator =
@@ -16,24 +18,19 @@ export const Field: FieldDecorator =
     name: EntityField<Entity>,
   ) => {
     const meta = (prototype[META] =
-      prototype[META] ??
-      ({
-        fields: { items: {} },
-      } as EntityMeta<Entity, Primary>));
+      prototype[META] ?? new EntityMeta(prototype));
 
-    meta.fields.items[name] = {
-      name,
-      relation:
-        options?.type == "relation"
-          ? {
-              target: options.target,
-              inverse: options.inverse,
-              multi: options.multi ?? false,
-            }
-          : null,
-    };
+    const fieldMeta = new EntityMetaField(name);
+    meta.fields[name] = fieldMeta;
 
-    if (options?.type == "primary") meta.fields.primary = name as Primary;
+    if (options?.type == "relation")
+      fieldMeta.relation = new EntityMetaRelation(
+        options.target,
+        options.inverse,
+        options.multi,
+      );
+
+    if (options?.type == "primary") meta.primary = name as Primary;
   };
 
 interface FieldDecorator {

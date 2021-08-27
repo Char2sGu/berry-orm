@@ -27,8 +27,8 @@ export class BerryOrm {
         throw new EntityMetaError({ type, message: "Must be decorated" });
     });
     registry.forEach((type) => {
-      type.prototype[META].inspect();
-      Object.values(type.prototype[META].fields).forEach((meta) => {
+      type.prototype[META]!.inspect();
+      Object.values(type.prototype[META]!.fields).forEach((meta) => {
         if (!meta.relation) return;
         if (!registry.has(meta.relation.target()))
           throw new EntityMetaError({

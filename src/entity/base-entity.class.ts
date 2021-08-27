@@ -24,7 +24,8 @@ export abstract class BaseEntity<
   Entity extends AnyEntity<Entity, Primary>,
   Primary extends PrimaryField<Entity>,
 > {
-  [META]: EntityMeta<Entity, Primary>;
+  // optional, because the entity may not have a decorator applied
+  [META]?: EntityMeta<Entity, Primary>;
 
   /**
    * Indicates that the **data** fields (**relation** fields not included) of
@@ -38,20 +39,20 @@ export abstract class BaseEntity<
     ...[relationManager, primaryKey]: ConstructorParameters<EntityType<Entity>>
   ) {
     this.relationManager = relationManager;
-    Object.keys(this[META].fields).forEach((field) =>
+    Object.keys(this[META]!.fields).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );
     const entity = this.asEntity;
-    entity[entity[META].primary] = primaryKey;
+    entity[this[META]!.primary] = primaryKey;
   }
 
   private initField(field: EntityField<Entity>) {
     const entity = this.asEntity;
 
-    const isPrimaryField = entity[META].primary == field;
-    const isCollectionField = !!entity[META].fields[field].relation?.multi;
+    const isPrimaryField = this[META]!.primary == field;
+    const isCollectionField = !!this[META]!.fields[field].relation?.multi;
     const isRelationEntityField =
-      !!entity[META].fields[field].relation && !isCollectionField;
+      !!this[META]!.fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
       ? new PrimaryFieldAccessor(this.relationManager, entity, field as Primary)

@@ -24,17 +24,17 @@ export class EntityManager {
     Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
   >(type: EntityType<Entity>, data: EntityData<Entity>): Entity {
-    const primaryKey = data[type.prototype[META].primary] as Entity[Primary];
+    const primaryKey = data[type.prototype[META]!.primary] as Entity[Primary];
     const entity = this.identityMapManager.get(type).get(primaryKey);
 
-    for (const k in entity[META].fields) {
+    for (const k in entity[META]!.fields) {
       const field = k as keyof typeof data;
       const fieldData = data[field];
 
       if (!(field in data)) continue;
-      if (field == entity[META].primary) continue;
+      if (field == entity[META]!.primary) continue;
 
-      const relationMeta = entity[META].fields[field].relation;
+      const relationMeta = entity[META]!.fields[field].relation;
       if (!relationMeta) {
         entity[field as keyof Entity] =
           fieldData as unknown as Entity[keyof Entity];
@@ -70,7 +70,7 @@ export class EntityManager {
 
     if (!data) return;
 
-    const relationMeta = entity[META].fields[field].relation!;
+    const relationMeta = entity[META]!.fields[field].relation!;
     const representations = (
       relationMeta.multi ? data : [data]
     ) as RelationEntityRepresentation[];
@@ -96,7 +96,7 @@ export class EntityManager {
     field: RelationField<Entity>,
     reference: RelationEntityRepresentation,
   ): AnyEntity {
-    const relationMeta = entity[META].fields[field].relation!;
+    const relationMeta = entity[META]!.fields[field].relation!;
     if (typeof reference == "object") {
       return this.populate(relationMeta.target(), reference);
     } else {

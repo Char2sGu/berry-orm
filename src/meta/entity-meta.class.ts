@@ -35,7 +35,7 @@ export class EntityMeta<
       const meta = this.fields[field];
       if (meta.relation) {
         const inverseMeta =
-          meta.relation.target().prototype[META].fields[meta.relation.inverse];
+          meta.relation.target().prototype[META]!.fields[meta.relation.inverse];
         if (!inverseMeta.relation)
           throw new EntityMetaError({
             type: this.type,

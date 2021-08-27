@@ -1,83 +1,26 @@
-import { BaseEntity, Collection, EntityMetaField, Field, META } from "../..";
+import { BaseEntity } from "../..";
+import { EntityType } from "../../entity/entity-type.type";
+import { META } from "../../symbols";
+import { EntityMetaField } from "../entity-meta-field.class";
+import { EntityMeta } from "../entity-meta.class";
+import { Field } from "../field.decorator";
 
 describe("@Field()", () => {
-  describe("Common", () => {
-    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-      id!: number;
-      @Field()
-      field!: unknown;
-    }
+  let cls: EntityType;
 
-    it("should define the meta", () => {
-      const fields = TestingEntity.prototype[META]!.fields;
-      expect(fields).toBeDefined();
-      expect(fields.field).toEqual<EntityMetaField>({
-        name: "field",
-        relation: undefined,
-      });
-    });
+  beforeEach(() => {
+    cls = class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+      id!: number;
+    };
+    Field()(cls.prototype, "id");
   });
 
-  describe("Primary", () => {
-    class TestingEntity extends BaseEntity<TestingEntity, "field"> {
-      @Field({ type: "primary" })
-      field!: string;
-    }
-
-    it("should define the field meta", () => {
-      const fields = TestingEntity.prototype[META]!.fields;
-      expect(fields).toBeDefined();
-      expect(fields.field).toEqual<EntityMetaField>({
-        name: "field",
-        relation: undefined,
-      });
-    });
-
-    it("should define the primary meta", () => {
-      expect(TestingEntity.prototype[META]!.primary).toBe("field");
-    });
+  it("should define the metadata of the entity", () => {
+    expect(cls.prototype[META]).toBeInstanceOf(EntityMeta);
   });
 
-  describe("Relation: One", () => {
-    const options = {
-      type: "relation",
-      target: () => TestingEntity,
-      inverse: "field",
-    } as const;
-    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-      id!: number;
-      @Field(options)
-      field!: TestingEntity;
-    }
-
-    it("should define the meta", () => {
-      const fields = TestingEntity.prototype[META]!.fields;
-      expect(fields).toBeDefined();
-      expect(fields.field).toBeDefined();
-      const { type, ...value } = { ...options, multi: false };
-      expect(fields.field.relation).toEqual(value);
-    });
-  });
-
-  describe("Relation: Many", () => {
-    const options = {
-      type: "relation",
-      target: () => TestingEntity,
-      inverse: "field",
-      multi: true,
-    } as const;
-    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-      id!: number;
-      @Field(options)
-      field!: Collection<TestingEntity>;
-    }
-
-    it("should define the meta", () => {
-      const fields = TestingEntity.prototype[META]!.fields;
-      expect(fields).toBeDefined();
-      expect(fields.field).toBeDefined();
-      const { type, ...value } = options;
-      expect(fields.field.relation).toEqual(value);
-    });
+  it("should define the metadata of the field", () => {
+    const meta = cls.prototype[META]?.fields.id;
+    expect(meta).toBeInstanceOf(EntityMetaField);
   });
 });

@@ -1,6 +1,8 @@
 import { Collection } from "../../field/collection.class";
 import { Entity } from "../../meta/entity.decorator";
 import { Field } from "../../meta/field.decorator";
+import { Primary } from "../../meta/primary.decorator";
+import { Relation } from "../../meta/relation.decorator";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
 import { EntityManager } from "../entity-manager.class";
@@ -20,7 +22,8 @@ describe("EntityManager", () => {
     describe("Values", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-        @Field({ type: "primary" })
+        @Primary()
+        @Field()
         id!: number;
 
         @Field()
@@ -77,27 +80,28 @@ describe("EntityManager", () => {
     describe("Relations: One", () => {
       @Entity()
       class TestingEntity1 extends BaseEntity<TestingEntity1, "id"> {
-        @Field({ type: "primary" })
+        @Field()
         id!: number;
 
-        @Field({
-          type: "relation",
+        @Relation({
           target: () => TestingEntity2,
           inverse: "entity1",
         })
+        @Field()
         entity2!: TestingEntity2;
       }
 
       @Entity()
       class TestingEntity2 extends BaseEntity<TestingEntity2, "id"> {
-        @Field({ type: "primary" })
+        @Primary()
+        @Field()
         id!: number;
 
-        @Field({
-          type: "relation",
+        @Relation({
           target: () => TestingEntity1,
           inverse: "entity2",
         })
+        @Field()
         entity1!: TestingEntity1;
       }
 
@@ -234,28 +238,30 @@ describe("EntityManager", () => {
     describe("Relations: Many", () => {
       @Entity()
       class TestingEntityParent extends BaseEntity<TestingEntityParent, "id"> {
-        @Field({ type: "primary" })
+        @Primary()
+        @Field()
         id!: number;
 
-        @Field({
-          type: "relation",
+        @Relation({
           target: () => TestingEntityChild,
           inverse: "parent",
           multi: true,
         })
+        @Field()
         children!: Collection<TestingEntityChild>;
       }
 
       @Entity()
       class TestingEntityChild extends BaseEntity<TestingEntityChild, "id"> {
-        @Field({ type: "primary" })
+        @Primary()
+        @Field()
         id!: number;
 
-        @Field({
-          type: "relation",
+        @Relation({
           target: () => TestingEntityParent,
           inverse: "children",
         })
+        @Field()
         parent!: TestingEntityParent;
       }
 

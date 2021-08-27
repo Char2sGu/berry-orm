@@ -25,7 +25,6 @@ export { EntityMetaRelation } from "./meta/entity-meta-relation.class";
 export { EntityMeta } from "./meta/entity-meta.class";
 export { Entity } from "./meta/entity.decorator";
 export { Field } from "./meta/field.decorator";
-export { RelationTarget } from "./meta/relation-target.type";
 export { META, POPULATED } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";

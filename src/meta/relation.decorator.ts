@@ -1,4 +1,5 @@
 import { AnyEntity } from "../entity/any-entity.type";
+import { EntityType } from "../entity/entity-type.type";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
 import { EntityField } from "../field/entity-field.type";
@@ -8,11 +9,10 @@ import { ExtractKeys } from "../utils/extract-keys.type";
 import { EntityMetaRelation } from "./entity-meta-relation.class";
 import { EntityMeta } from "./entity-meta.class";
 import { EntityMetaError } from "./entity-meta.error";
-import { RelationTarget } from "./relation-target.type";
 
 export const Relation =
   <TargetEntity extends AnyEntity, Multi extends boolean = false>(options: {
-    target: RelationTarget<TargetEntity>;
+    target: () => EntityType<TargetEntity>;
     inverse: RelationField<TargetEntity>;
     multi?: Multi;
   }) =>

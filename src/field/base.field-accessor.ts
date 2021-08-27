@@ -1,34 +1,25 @@
 import { AnyEntity } from "..";
 import { EntityRelationManager } from "../entity/entity-relation-manager.class";
+import { BaseAccessor } from "../utils/base.accessor";
 import { EntityField } from "./entity-field.type";
 
 export class BaseFieldAccessor<
   Entity extends AnyEntity = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
-> {
-  value;
-
+> extends BaseAccessor<Entity, Field> {
   constructor(
     protected relationManager: EntityRelationManager,
-    protected entity: Entity,
-    protected field: Field,
+    entity: Entity,
+    field: Field,
   ) {
-    this.value = entity[field];
+    super(entity, field);
   }
 
-  apply(): void {
-    Reflect.defineProperty(this.entity, this.field, {
-      configurable: true,
-      get: () => this.handleGet(),
-      set: (v) => this.handleSet(v),
-    });
+  get entity(): Entity {
+    return this.object;
   }
 
-  handleGet(): Entity[Field] {
-    return this.value;
-  }
-
-  handleSet(newValue: Entity[Field]): void {
-    this.value = newValue;
+  get field(): Field {
+    return this.key;
   }
 }

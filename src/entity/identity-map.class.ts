@@ -8,8 +8,8 @@ export class IdentityMap<Entity extends AnyEntity> extends Map<
   Entity
 > {
   constructor(
-    private type: EntityType<Entity>,
-    private relationManager: EntityRelationManager,
+    private readonly type: EntityType<Entity>,
+    readonly relationManager: EntityRelationManager,
   ) {
     super();
   }

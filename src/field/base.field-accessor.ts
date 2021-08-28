@@ -8,7 +8,7 @@ export class BaseFieldAccessor<
   Field extends EntityField<Entity> = EntityField<Entity>,
 > extends BaseAccessor<Entity, Field> {
   constructor(
-    protected relationManager: EntityRelationManager,
+    protected readonly relationManager: EntityRelationManager,
     entity: Entity,
     field: Field,
   ) {

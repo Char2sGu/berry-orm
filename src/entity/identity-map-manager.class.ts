@@ -4,14 +4,14 @@ import { EntityType } from "./entity-type.type";
 import { IdentityMap } from "./identity-map.class";
 
 export class IdentityMapManager {
-  private identityMaps = new Map<
+  private readonly identityMaps = new Map<
     EntityType<AnyEntity>,
     IdentityMap<AnyEntity>
   >();
 
   constructor(
-    private registry: Set<EntityType>,
-    private relationManager: EntityRelationManager,
+    private readonly registry: Set<EntityType>,
+    private readonly relationManager: EntityRelationManager,
   ) {}
 
   get<Entity extends AnyEntity>(type: EntityType<Entity>): IdentityMap<Entity> {

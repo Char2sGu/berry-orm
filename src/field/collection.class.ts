@@ -3,9 +3,9 @@ import { EntityRelationManager } from "../entity/entity-relation-manager.class";
 
 export class Collection<Entity extends AnyEntity> extends Set<Entity> {
   constructor(
-    private relationManager: EntityRelationManager,
-    private owner: AnyEntity,
-    private field: string,
+    private readonly relationManager: EntityRelationManager,
+    private readonly owner: AnyEntity,
+    private readonly field: string,
   ) {
     super();
   }

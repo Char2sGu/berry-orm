@@ -33,7 +33,7 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
-  private relationManager;
+  private readonly relationManager;
 
   constructor(
     ...[relationManager, primaryKey]: ConstructorParameters<EntityType<Entity>>

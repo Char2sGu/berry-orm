@@ -5,7 +5,7 @@ export class BaseAccessor<
 > {
   value;
 
-  constructor(protected object: Obj, protected key: Key) {
+  constructor(protected readonly object: Obj, protected readonly key: Key) {
     this.value = object[key];
   }
 

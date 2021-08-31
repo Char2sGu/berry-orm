@@ -14,6 +14,15 @@ import { EntityType } from "./entity-type.interface";
 // It's not possible to use Active Record mode in Berry ORM because type
 // circular reference will happen and cause compile error.
 
+// It's also impossible to implement a `@Serializer()` decorator, because
+// the serializer type should be accessible in other part of this lib to infer
+// the data type properly, which is impossible in decorators.
+// By the way, defining a static property `serializers` will not be implemented
+// because this will make type inference much more difficult because the
+// auto-inference supports only one level, and this will also make the style
+// become messy because we used both static properties and decorators to define
+// metadata for fields.
+
 /**
  * The base class of every entity.
  *
@@ -24,7 +33,12 @@ export abstract class BaseEntity<
   Entity extends AnyEntity<Entity, Primary>,
   Primary extends PrimaryField<Entity>,
 > {
-  // optional, because the entity may not have a decorator applied
+  /**
+   * Definition metadata of this entity type.
+   *
+   * It is marked as _optional_ because it only exists when there are at least
+   * one decorator applied.
+   */
   [META]?: EntityMeta<Entity, Primary>;
 
   /**

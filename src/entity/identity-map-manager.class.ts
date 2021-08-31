@@ -1,6 +1,6 @@
 import { AnyEntity } from "..";
 import { EntityRelationManager } from "./entity-relation-manager.class";
-import { EntityType } from "./entity-type.type";
+import { EntityType } from "./entity-type.interface";
 import { IdentityMap } from "./identity-map.class";
 
 export class IdentityMapManager {

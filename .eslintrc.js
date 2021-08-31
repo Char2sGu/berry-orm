@@ -19,5 +19,6 @@ module.exports = {
       { argsIgnorePattern: "^_", ignoreRestSiblings: true },
     ],
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-explicit-any": ["error", { ignoreRestArgs: true }],
   },
 };

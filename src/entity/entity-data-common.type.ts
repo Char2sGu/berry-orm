@@ -2,7 +2,7 @@ import { CommonField } from "../field/common-field.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
 import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";
 import { SerializerMap } from "../serializer/serializer-map.type";
-import { SerializerType } from "../serializer/serializer-type.type";
+import { SerializerType } from "../serializer/serializer-type.interface";
 import { AnyEntity } from "./any-entity.type";
 
 export type EntityDataCommon<

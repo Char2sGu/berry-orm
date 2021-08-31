@@ -9,7 +9,7 @@ import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityData } from "./entity-data.type";
 import { EntityRelationManager } from "./entity-relation-manager.class";
-import { EntityType } from "./entity-type.type";
+import { EntityType } from "./entity-type.interface";
 import { IdentityMapManager } from "./identity-map-manager.class";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { Scalar } from "./scalar.type";
-import { SerializerType } from "./serializer-type.type";
+import { SerializerType } from "./serializer-type.interface";
 
 export abstract class AbstractSerializer<
   Internal = unknown,

@@ -28,4 +28,4 @@ export { Field } from "./meta/field.decorator";
 export { META, POPULATED } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";
-export { Type } from "./utils/type.type";
+export { Type } from "./utils/type.interface";

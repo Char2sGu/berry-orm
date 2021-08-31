@@ -1,7 +1,7 @@
 import { AnyEntity } from ".";
 import { EntityManager } from "./entity/entity-manager.class";
 import { EntityRelationManager } from "./entity/entity-relation-manager.class";
-import { EntityType } from "./entity/entity-type.type";
+import { EntityType } from "./entity/entity-type.interface";
 import { IdentityMapManager } from "./entity/identity-map-manager.class";
 import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";

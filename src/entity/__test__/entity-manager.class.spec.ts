@@ -3,6 +3,7 @@ import { Entity } from "../../meta/entity.decorator";
 import { Field } from "../../meta/field.decorator";
 import { Primary } from "../../meta/primary.decorator";
 import { Relation } from "../../meta/relation.decorator";
+import { DateSerializer } from "../../serializer/date.serializer";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
 import { EntityManager } from "../entity-manager.class";
@@ -18,7 +19,7 @@ describe("EntityManager", () => {
     relationManager = new EntityRelationManager();
   });
 
-  describe(".commit()", () => {
+  describe(".populate()", () => {
     describe("Values", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
@@ -27,7 +28,7 @@ describe("EntityManager", () => {
         id!: number;
 
         @Field()
-        field1!: string;
+        field1!: Date;
       }
 
       beforeEach(() => {
@@ -40,40 +41,15 @@ describe("EntityManager", () => {
 
       let entity: TestingEntity;
 
-      describe("Create", () => {
-        beforeEach(() => {
-          entity = entityManager.populate(TestingEntity, {
-            id: 1,
-            field1: "",
-          });
-        });
-
-        it("should return an instance", () => {
-          expect(entity).toBeInstanceOf(TestingEntity);
-        });
-
-        it("should assign the values to the instance", () => {
-          expect(entity.id).toBe(1);
-          expect(entity.field1).toBe("");
-        });
-      });
-
-      describe("Update", () => {
-        beforeEach(() => {
-          entity = entityManager.populate(TestingEntity, {
-            id: 1,
-            field1: "",
-          });
-          entityManager.populate(TestingEntity, {
-            id: 1,
-            field1: "updated",
-          });
-        });
-
-        it("should update the values", () => {
-          expect(entity.id).toBe(1);
-          expect(entity.field1).toBe("updated");
-        });
+      it.each`
+        populate
+        ${() => entityManager.populate(TestingEntity, { id: 1, field1: new Date() })}
+        ${() => entityManager.populate(TestingEntity, { id: 1, field1: new Date().toISOString() }, { field1: DateSerializer })}
+      `("should populate the fields", ({ populate }) => {
+        entity = populate();
+        expect(entity.id).toBe(1);
+        expect(entity.field1).toBeInstanceOf(Date);
+        expect(entity.field1).not.toBeNaN();
       });
     });
 

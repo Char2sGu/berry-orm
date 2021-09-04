@@ -27,6 +27,7 @@ export class EntityManager {
     private readonly identityMapManager: IdentityMapManager,
     private readonly relationManager: EntityRelationManager,
   ) {}
+
   /**
    * Populate the entity using the data.
    * @param type

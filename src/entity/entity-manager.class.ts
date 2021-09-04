@@ -1,17 +1,26 @@
+import { Collection } from "../field/collection.class";
 import { CommonField } from "../field/common-field.type";
+import { EntityField } from "../field/entity-field.type";
+import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { PrimaryField } from "../field/primary-field.type";
+import { PrimaryKey } from "../field/primary-key.type";
 import { RelationFieldData } from "../field/relation-field-data.type";
 import { RelationField } from "../field/relation-field.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
+import { NestedSerializerMapEmpty } from "../serializer/nested-serializer-map-empty.type";
+import { NestedSerializerMap } from "../serializer/nested-serializer-map.type";
 import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";
 import { SerializerMap } from "../serializer/serializer-map.type";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
+import { EntityDataExported } from "./entity-data-exported.type";
 import { EntityData } from "./entity-data.type";
 import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity-type.interface";
 import { IdentityMapManager } from "./identity-map-manager.class";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
+import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
+import { RelationExpansions } from "./relation-expansions.type";
 
 export class EntityManager {
   constructor(
@@ -123,5 +132,85 @@ export class EntityManager {
     } else {
       return this.identityMapManager.get(relationMeta.target()).get(reference);
     }
+  }
+
+  /**
+   * Export data from the entity.
+   * @param entity
+   * @param serializers
+   * @param expand
+   */
+  export<
+    Entity extends AnyEntity,
+    Expansions extends RelationExpansions<Entity> = RelationExpansionsEmpty<Entity>,
+    Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
+  >(
+    entity: Entity,
+    expansions?: Expansions,
+    serializers?: Serializers,
+  ): EntityDataExported<Entity, Serializers, Expansions> {
+    if (!entity[POPULATED])
+      throw new Error("Unpopulated entities cannot be exported");
+
+    const data: Partial<EntityDataExported<Entity, Serializers, Expansions>> =
+      {};
+    const meta = entity[META]!;
+    for (const k in meta.fields) {
+      const f = k as EntityField<Entity>;
+      if (!meta.fields[f].relation) {
+        const field = f as CommonField<Entity>;
+        const serializerType = serializers?.[field];
+        if (!serializerType) {
+          data[field] = entity[field];
+        } else {
+          const serializer = new serializerType!(this.relationManager);
+          const value = serializer.serialize(entity[field]);
+          data[field] = value as typeof data[typeof field];
+        }
+      } else {
+        const field = f as RelationField<Entity>;
+        const relationMeta = meta.fields[field].relation!;
+        if (!expansions?.[field]) {
+          const getPrimaryKey = <Entity extends AnyEntity>(
+            entity: Entity,
+          ): EntityPrimaryKey<Entity> => entity[entity[META]!.primary];
+
+          if (!relationMeta.multi) {
+            data[field] = getPrimaryKey(entity[field] as AnyEntity);
+          } else {
+            const collection = entity[field] as Collection<AnyEntity>;
+            const primarykeys: PrimaryKey[] = [];
+            collection.forEach((relationEntity) => {
+              primarykeys.push(getPrimaryKey(relationEntity));
+            });
+          }
+        } else {
+          const exportNested = (entity: AnyEntity) => {
+            const nestExpansions = expansions?.[field];
+            const nestSerializers = serializers?.[field];
+            return this.export(
+              entity,
+              typeof nestExpansions == "object" ? nestExpansions : undefined,
+              nestSerializers,
+            );
+          };
+
+          if (!relationMeta.multi) {
+            data[field] = exportNested(
+              entity[field] as AnyEntity,
+            ) as typeof data[typeof field];
+          } else {
+            const collection = entity[field] as Collection<AnyEntity>;
+            const dataList: EntityData<AnyEntity>[] = [];
+            collection.forEach((relationEntity) => {
+              dataList.push(exportNested(relationEntity));
+            });
+            data[field] = dataList as typeof data[typeof field];
+          }
+        }
+      }
+    }
+
+    return data as EntityDataExported<Entity, Serializers, Expansions>;
   }
 }

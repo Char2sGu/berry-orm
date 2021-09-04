@@ -6,8 +6,10 @@ import { Relation } from "../../meta/relation.decorator";
 import { DateSerializer } from "../../serializer/date.serializer";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
+import { EntityData } from "../entity-data.type";
 import { EntityManager } from "../entity-manager.class";
 import { EntityRelationManager } from "../entity-relation-manager.class";
+import { EntityType } from "../entity-type.interface";
 import { IdentityMapManager } from "../identity-map-manager.class";
 
 describe("EntityManager", () => {
@@ -20,7 +22,7 @@ describe("EntityManager", () => {
   });
 
   describe(".populate()", () => {
-    describe("Values", () => {
+    describe("Scalars", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
         @Primary()
@@ -32,11 +34,7 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        identityMapManager = new IdentityMapManager(
-          new Set([TestingEntity]),
-          relationManager,
-        );
-        entityManager = new EntityManager(identityMapManager, relationManager);
+        prepare([TestingEntity]);
       });
 
       let entity: TestingEntity;
@@ -84,11 +82,7 @@ describe("EntityManager", () => {
       let result: TestingEntity1;
 
       beforeEach(() => {
-        identityMapManager = new IdentityMapManager(
-          new Set([TestingEntity1, TestingEntity2]),
-          relationManager,
-        );
-        entityManager = new EntityManager(identityMapManager, relationManager);
+        prepare([TestingEntity1, TestingEntity2]);
       });
 
       describe("Foreign Keys", () => {
@@ -242,11 +236,7 @@ describe("EntityManager", () => {
       }
 
       beforeEach(() => {
-        identityMapManager = new IdentityMapManager(
-          new Set([TestingEntityChild, TestingEntityParent]),
-          relationManager,
-        );
-        entityManager = new EntityManager(identityMapManager, relationManager);
+        prepare([TestingEntityChild, TestingEntityParent]);
       });
 
       describe("Foreign Keys", () => {
@@ -445,4 +435,108 @@ describe("EntityManager", () => {
       });
     });
   });
+
+  describe(".export()", () => {
+    it("should return an object equal to the data when there are only scalars in the entity", () => {
+      @Entity()
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        @Primary() @Field() id!: number;
+        @Field() field!: string;
+      }
+      prepare([TestingEntity]);
+      const originalData: EntityData<TestingEntity> = { id: 1, field: "a" };
+      const entity = entityManager.populate(TestingEntity, originalData);
+      const exportedData = entityManager.export(entity);
+      expect(exportedData).toEqual(originalData);
+    });
+
+    it("should apply the serializers when serialziers are specified", () => {
+      @Entity()
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        @Primary() @Field() id!: number;
+        @Field() date!: Date;
+      }
+      prepare([TestingEntity]);
+      const date = new Date();
+      const entity = entityManager.populate(TestingEntity, { id: 1, date });
+      const data = entityManager.export(entity, undefined, {
+        date: DateSerializer,
+      });
+      expect(typeof data.date == "string").toBe(true);
+      expect(data.date).toBe(date.toISOString());
+    });
+
+    it("should expand the relations when expansions are specified as a to-one field", () => {
+      @Entity()
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        @Primary() @Field() id!: number;
+        @Relation({ target: () => TestingEntity, inverse: "field" })
+        @Field()
+        field!: TestingEntity;
+      }
+      prepare([TestingEntity]);
+      const entity = entityManager.populate(TestingEntity, {
+        id: 1,
+        field: { id: 2 },
+      });
+      const data = entityManager.export(entity, { field: true }, undefined);
+      expect(typeof data.field == "object").toBe(true);
+    });
+
+    it("should expand the relations when expansions are specified as a to-many field", () => {
+      @Entity()
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        @Primary() @Field() id!: number;
+        @Relation({
+          target: () => TestingEntity,
+          inverse: "field",
+          multi: true,
+        })
+        @Field()
+        field!: Collection<TestingEntity>;
+      }
+      prepare([TestingEntity]);
+      const entity = entityManager.populate(TestingEntity, {
+        id: 1,
+        field: [{ id: 2 }],
+      });
+      const data = entityManager.export(entity, { field: true }, undefined);
+      expect(data.field).toBeInstanceOf(Array);
+      expect(data.field[0].id).toBe(2);
+    });
+
+    it("should apply the nested serializers when the specified serializers are nested", () => {
+      @Entity()
+      class TestingEntity extends BaseEntity<TestingEntity, "id"> {
+        @Primary() @Field() id!: number;
+        @Relation({ target: () => TestingEntity, inverse: "field1" })
+        @Field()
+        field1!: TestingEntity;
+        @Field()
+        field2!: Date;
+      }
+      prepare([TestingEntity]);
+      const entity = entityManager.populate(TestingEntity, {
+        id: 1,
+        field2: new Date(),
+        field1: { id: 2, field2: new Date() },
+      });
+      const data = entityManager.export(
+        entity,
+        { field1: true },
+        { field1: { field2: DateSerializer } },
+      );
+      expect(typeof data.field1 == "object").toBe(true);
+      expect(data.field2).toBeInstanceOf(Date);
+      expect(typeof data.field1.field2 == "string").toBe(true);
+    });
+  });
+
+  function prepare(entities: EntityType[]) {
+    identityMapManager = new IdentityMapManager(
+      new Set(entities),
+      relationManager,
+    );
+    entityManager = new EntityManager(identityMapManager, relationManager);
+  }
 });

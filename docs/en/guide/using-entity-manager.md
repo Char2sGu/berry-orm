@@ -1,12 +1,14 @@
 # Using EntityManager
 
+The `EntityManager` instance is provided on the `.em` property of `BerryOrm` instances. `EntityManager` is the most commonly used `Manager` for manipulating entities.
+
 ## Populating Entities
 
-The process of **resolving data and assigning values to the fields of the corresponding entities** is called **populating**. **Populating** is the core feature of Berry ORM.
+**The process of parsing the original data to update the data of the corresponding entity** is called **_populating_**. Populating is one of the core features of Berry ORM.
 
-### Populating the Primary Key and Data
+### Populating non-relation fields
 
-The data used for **populating** must specify values of the **primary key field** and all the **data fields** of the entity.
+The original data used for populating **must specify a value for each non-relation field**.
 
 ```ts
 const user = orm.em.populate(User, {
@@ -16,18 +18,14 @@ const user = orm.em.populate(User, {
 ```
 
 ```ts
-user instanceof User; // true
-user.id == 1; // true
-user.username == "Charles"; // true
+user instanceof User;
+user.id == 1;
+user.username == "Charles";
 ```
 
-### Populating Relations
+### Populating Relation Fields
 
-If the value of the entity's **relation fields** are provided, Berry ORM will resolve these values and construct relations on the corresponding fields of both the two entities.
-
-::: tip
-Any **relation fields** are optional in **data**.
-:::
+Any **relation field** is optional in the original data, because usually the original data of one side of the relation does not specify all the relations, and some relations need to be specified in the original data on the other side.
 
 #### Populating To-One Relation Fields
 
@@ -52,6 +50,7 @@ const user = orm.em.populate(User, {
 ```
 
 ::: warning
+
 If the inverse relation to the parent data object is specified in the nested data object, please ensure that they won't conflict, otherwise it may cause the wrong relations to be constructed.
 
 Here is a wrong example:
@@ -75,16 +74,16 @@ In this example, `user.profile` belongs to `user`, but `user.profile.owner` spec
 Berry ORM will construct a **bilateral** relation, which means you can access the other side from either side of the relation:
 
 ```ts {3}
-user.profile instanceof Profile; // true
-user.profile.id == 1; // true
-user.profile.owner == user; // true
+user.profile instanceof Profile;
+user.profile.id == 1;
+user.profile.owner == user;
 ```
 
 This also means that if you want, you can access the value like this:  
 XD
 
 ```ts {1}
-user.profile.owner.profile.owner.profile.owner.profile.owner.profile.nickname; // Charlies
+user.profile.owner.profile.owner.profile.owner.profile.owner.profile.nickname;
 ```
 
 #### Populating To-Many Relation Fields
@@ -100,14 +99,16 @@ const department = orm.em.populate(Department, {
 ```
 
 ::: warning
+
 Similarly, if an inverse relation to the parent data object is specified in the nested data object, please ensure that they will not conflict.
+
 :::
 
-Berry ORM will also construct a **bilateral** relation for them:
+Berry ORM will construct a **bilateral** relation for them as well:
 
 ```ts
 department.members.forEach((user) => {
-  user.department == department; // true
+  user.department == department;
 });
 ```
 
@@ -127,29 +128,31 @@ The following expressions still hold:
 
 ```ts
 user.profile instanceof Profile;
-user.profile.id == 999999; // true
-user.profile.owner == user; // true
+user.profile.id == 999999;
+user.profile.owner == user;
 ```
 
 But if we take a closer look at `user.profile`, we will find that the value of any other field is empty (the value is `undefined` or an empty `Collection`):
 
 ```ts
-user.profile.bio === undefined; // true
-user.profile.nickname === undefined; // true
+user.profile.bio === undefined;
+user.profile.nickname === undefined;
 ```
 
 Such entities are in an **unpopulated state**. Any fields of entities in an **unpopulated state** are empty, **except the primary key and a few relation fields**. we can get the **population state** of the entity through its `[POPULATED]` property:
 
 ```ts
-user[POPULATED]; // true
-user.profile[POPULATED]; // false
+user[POPULATED] == true;
+user.profile[POPULATED] == false;
 ```
 
 ::: tip
+
 `POPULATED` is a `symbol`.
+
 :::
 
-The only way to mark an entity as **populated** is to invoke `orm.em.popuate()` to populate the entity:
+The **only way** to mark an entity as **populated** is to invoke `orm.em.popuate()` to populate the entity:
 
 ```ts
 orm.em.popuate(Profile, {
@@ -160,54 +163,79 @@ orm.em.popuate(Profile, {
 ```
 
 ```ts
-user.profile[POPULATED]; // true
+user.profile[POPULATED] == true;
 ```
-
-## Retriving Entities
-
-`orm.em.retrieve()` will return an entity with the specified primary key, but the entity may be either **populated** or **unpopulated**.
-
-::: tip
-Berry ORM is a library that focuses on only Object Relational Mapping. Please store the entities in a place that you manage. Don't dependent on the internal store of Berry ORM. `orm.em.retrieve()` should be rarely used.
-:::
-
-```ts {4}
-const user = orm.em.retrieve(User, 12345678);
-user instanceof User; // true
-user.id == 12345678; // true
-user[POPULATED]; // false
-```
-
-For the same parameters, `orm.em.retrieve()` will always return a same reference.
-
-```ts
-orm.em.retrieve(User, 987654) == orm.em.retrieve(User, 987654); // true
-```
-
-## Clearing the Internal Store
-
-When encountering a situation like a user logged out, we may need to clear the internal store to ensure that the user-specific data will not be leaked unexpectedly.
-
-```ts
-orm.em.clear();
-```
-
-The previous entities will not be affected, but the future **populating** operations will no longer refer to the previous entities, but will create a new **unpopulated** entity.
-
-::: danger
-Please be sure to clear the entity stores you manage too to completely remove all the previous entities, otherwise, it can easily lead to confusing and unexpected behaviors.
-:::
 
 ## Populating a Relation Field Separately
 
 `orm.em.populateRelationField()` will separately populate the specified relation field of the entity, the data type is the same as before. This **will not** change the **population state** of the entity.
 
-```ts {2}
-user.department.id == 1; // true
-orm.em.populateRelationField(user, "department", 2);
-user.department.id == 2; // true
+```ts
+orm.em.populateRelationField(user, "friends", [1, 2, 3, 4]);
 ```
 
 ::: tip
-Try to avoid populating relation fields separately. If you want to update the relation, please directly [update the relations](./updating-entities.html#updating-relations) through the entity.
+
+In most cases, you can [update relations](./updating-entities.html#updating-relations) directly through entity fields.
+
+:::
+
+## Exporting Entities
+
+`.export()` allows you to **_export_** the data of an **entity** as an **plain ordinary object**. Exporting is another core feature of Berry ORM.
+
+### Exporting Non-relation Fields
+
+The value of the non-relation fields will be directly assigned to the data object.
+
+```ts
+const data = orm.em.export(user);
+```
+
+```ts
+data.id == user.id;
+data.username == user.username;
+```
+
+### Exporting Relation Fields
+
+Relations will be exported as primary keys by default:
+
+```ts
+const data = orm.em.export(user);
+```
+
+```ts
+typeof data.profile == "number";
+data.friends instanceof Array;
+data.friends.forEach((friend) => typeof friend == "number");
+```
+
+You can use the second parameter to control which relations need to be expanded (nesting is supported):
+
+```ts {2,3}
+const data = orm.em.export(user, {
+  profile: true,
+  friends: { profile: true },
+});
+```
+
+```ts
+typeof data.profile == "object";
+data.friends.forEach((friend) => {
+  typeof friend == "object";
+  typeof friend.profile == "object";
+});
+```
+
+::: tip
+
+The return type will be automatically updated based on the expanded relations.
+
+:::
+
+::: warning
+
+If the relation entity you are trying to expand is in [unpopulated state](#population-state-of-entities), Berry ORM will throw an error.
+
 :::

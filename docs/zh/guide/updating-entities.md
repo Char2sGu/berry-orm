@@ -1,6 +1,6 @@
 # 更新实体
 
-`BerryOrm` 实例会在内部维护一个存储，通过类型和主键来保存一切涉及到的实体的引用。因此，对于任何位置的实体，只要类型和主键相同，它们便都严格相等（`===`），换句话说，它们其实都是同一个对象。
+`BerryOrm` 实例会在内部维护一个引用存储来通过类型和主键来保存一切涉及到的实体的引用。因此，对于任何位置的实体，只要类型和主键相同，Berry ORM 会保证它们都相等（`==`），换句话说，它们是同一个对象。
 
 ```ts {7}
 user1.department instanceof Department;
@@ -9,7 +9,7 @@ user1.department.id == 1;
 user2.department instanceof Department;
 user2.department.id == 1;
 
-user1.department === user2.department; // true
+user1.department == user2.department;
 ```
 
 ## 更新数据
@@ -18,7 +18,10 @@ user1.department === user2.department; // true
 
 ```ts
 user1.department.name = "New Name";
-user2.department.name == "New Name"; // true
+```
+
+```ts
+user2.department.name == "New Name";
 ```
 
 ## 更新关系
@@ -34,12 +37,14 @@ user.profile = newProfile;
 Berry ORM 会先拆除旧的关系，然后再建立新的关系：
 
 ```ts
-oldProfile.owner == user; // false
-newProfile.owner == user; // true
+oldProfile.owner != user;
+newProfile.owner == user;
 ```
 
 ::: danger
+
 在拆除旧的关系到建立新的关系期间，`user.profile`的值可能会短暂地被赋值为`undefined`。
+
 :::
 
 你也可以将其赋值为 `undefined` 来手动拆除关系。
@@ -54,16 +59,25 @@ user.profile = undefined;
 
 ```ts {1}
 department.members.add(user);
-user.department == department; // true
+```
+
+```ts
+user.department == department;
 ```
 
 ```ts {1}
 department.members.delete(user);
-user.department === undefined; // true
+```
+
+```ts
+user.department === undefined;
 ```
 
 ```ts {1}
 department.members.clear();
-department.members.size == 0; // true
-user.department === undefined; // true
+```
+
+```ts
+department.members.size == 0;
+user.department === undefined;
 ```

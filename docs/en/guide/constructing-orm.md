@@ -2,8 +2,6 @@
 
 The `BerryOrm` instance is the top-level instance of Berry ORM.
 
-To construct this instance, you need to pass in all the **entity classes** used. If one type of entity has relations with other types of entities, the entity classes of these types of entities must be either **all** passed in or **all not** passed in.
-
 ```ts
 // src/orm.ts
 export const orm = new BerryOrm({
@@ -11,8 +9,10 @@ export const orm = new BerryOrm({
 });
 ```
 
-There is an `EntityManager` instance provided at the `.em` property of the `BerryOrm` instance. In your application, most operations on entities will be done by the `EntityManager` instance.
+If one type of entity has relations with other types of entities, the entity classes of these types of entities must be either **all** passed in or **all not** passed in.
+
+This instance exposes several `Manager` instances on its properties, of which the most commonly used is the `EntityManager` instance exposed on `.em`.
 
 ::: tip
-In the process of constructing the `BerryOrm` instance, the entity classes passed in will be inspected to help you minimize the possibility of runtime errors.
+The constructor of `BerryOrm` will check whether the entity classes are all legal, to help you minimize bugs in the runtime of your application.
 :::

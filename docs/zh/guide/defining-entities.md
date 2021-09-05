@@ -2,7 +2,7 @@
 
 一个 **_实体_** 代表着数据库里的一条记录。可以简单地认为，一个实体就是指一个具有 ID 的对象。
 
-Berry ORM 通过类和装饰器来描述实体的数据结构。
+Berry ORM 通过类和装饰器来描述实体的数据结构。这些装饰器都具有严格的类型，这意味着当你错误地应用装饰器时，TypeScript 编译器会抛出一个错误。
 
 ## 定义实体类
 
@@ -82,7 +82,7 @@ Berry ORM 并不需要知道这个关系到底是 _OneToOne_ 还是 _ManyToOne_�
 profile?: Profile;
 ```
 
-`inverse` 的值是一个关系另一侧的实体的字段名，该字段指向这一侧的实体。
+`inverse` 的值是一个位于关系另一侧实体上的字段名，该字段指向这一侧的实体。
 
 ```ts {4,6}
 // class Profile
@@ -107,7 +107,7 @@ owner?: User;
 
 ::: tip
 
-`Collection` 是一种特殊的 `Set`，用于支持[通过对多关系字段更新关系](./updating-entities.html#通过对多关系字段)。
+`Collection` 是一种特殊的 `Set`，用于支持[通过对多关系字段更新关系](./updating-entities.html#通过对多关系字段)。Berry ORM 会自动为你实例化 `Collection`。
 
 :::
 

@@ -1,6 +1,6 @@
 # 使用 IdentityMapManager
 
-`IdentityMapManager` 实例由 `BerryOrm` 实例的 `.imm` 属性提供。`IdentityMapManager` 负责管理每一种实体的 `IdentityMap`，`IdentityMap` 负责保存所有该种类实体的引用。
+`IdentityMapManager` 实例由 `BerryOrm` 实例的 `.imm` 属性提供。`IdentityMapManager` 负责管理每一种实体的 `IdentityMap`，而 `IdentityMap` 负责保存该种实体所有实例的引用。
 
 ## 清空引用存储
 

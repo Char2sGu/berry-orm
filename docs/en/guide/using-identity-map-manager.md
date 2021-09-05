@@ -1,6 +1,6 @@
 # Using IdentityMapManager
 
-The `IdentityMapManager` instance is provided on the `.imm` property of `BerryOrm` instances. The `IdentityMapManager` is responsible for managing the `IdentityMap` of each type of entity, and the `IdentityMap` is responsible for storing all references of that type of entity.
+The `IdentityMapManager` instance is provided on the `.imm` property of `BerryOrm` instances. The `IdentityMapManager` is responsible for managing the `IdentityMap` of each type of entity, and the `IdentityMap` is responsible for storing all references of instances of that entity type.
 
 ## Clearing Reference Store
 

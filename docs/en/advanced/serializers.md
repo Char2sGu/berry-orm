@@ -58,7 +58,7 @@ The return type of `.export()` will be automatically updated based on the serial
 It is only needed to inherit `AbstractSerializer` and implement its abstract methods to create a serializer. `AbstractSerializer` requires two generic type parameters, the first is the type of the value of the target field in the entity, and the second is the type of the representation of the target field in the data.
 
 ```ts
-class StringNumberSerializer extends AbstractSerializer<number, string> {
+export class StringNumberSerializer extends AbstractSerializer<number, string> {
   serialize(value: number) {
     return String(value);
   }

@@ -79,11 +79,17 @@ user.profile.id == 1;
 user.profile.owner == user;
 ```
 
-This also means that if you want, you can access the value like this:  
-XD
+~~This also means that if you want, you can access the value like this:~~
 
-```ts {1}
-user.profile.owner.profile.owner.profile.owner.profile.owner.profile.nickname;
+```ts
+user.profile.owner.profile.owner.profile.owner.profile.owner.profile.owner
+  .profile.owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .owner.profile.owner.profile.owner.profile.owner.profile.owner.profile.owner
+  .profile.owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .owner.profile.owner.profile.owner.profile.owner.profile.owner.profile.owner
+  .profile.owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .nickname;
 ```
 
 #### Populating To-Many Relation Fields
@@ -220,7 +226,7 @@ const data = orm.em.export(user, {
 });
 ```
 
-```ts
+```ts {1,3,4}
 typeof data.profile == "object";
 data.friends.forEach((friend) => {
   typeof friend == "object";

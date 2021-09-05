@@ -58,7 +58,7 @@ typeof data.joinedAt == "string";
 只需要继承 `AbstractSerializer` 并实现其抽象方法即可创建一个序列化器。 `AbstractSerializer` 需要两个泛型参数，第一个是目标字段在实体中的值的类型，第二个是目标字段在数据中的表现形式的类型。
 
 ```ts
-class StringNumberSerializer extends AbstractSerializer<number, string> {
+export class StringNumberSerializer extends AbstractSerializer<number, string> {
   serialize(value: number) {
     return String(value);
   }

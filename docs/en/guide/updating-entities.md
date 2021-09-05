@@ -62,6 +62,7 @@ department.members.add(user);
 ```
 
 ```ts
+department.members.has(user) == true;
 user.department == department;
 ```
 
@@ -70,6 +71,7 @@ department.members.delete(user);
 ```
 
 ```ts
+department.members.has(user) == false;
 user.department === undefined;
 ```
 

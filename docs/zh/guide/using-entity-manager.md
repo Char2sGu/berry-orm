@@ -79,11 +79,17 @@ user.profile.id == 1;
 user.profile.owner == user;
 ```
 
-这也意味着如果你愿意，你可以这样访问：  
-XD
+~~这也意味着如果你愿意，你可以这样访问：~~
 
-```ts {1}
-user.profile.owner.profile.owner.profile.owner.profile.owner.profile.nickname;
+```ts
+user.profile.owner.profile.owner.profile.owner.profile.owner.profile.owner
+  .profile.owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .owner.profile.owner.profile.owner.profile.owner.profile.owner.profile.owner
+  .profile.owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .owner.profile.owner.profile.owner.profile.owner.profile.owner.profile.owner
+  .profile.owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .owner.profile.owner.profile.owner.profile.owner.profile.owner.profile
+  .nickname;
 ```
 
 #### 填充对多关系字段
@@ -220,7 +226,7 @@ const data = orm.em.export(user, {
 });
 ```
 
-```ts
+```ts {1,3,4}
 typeof data.profile == "object";
 data.friends.forEach((friend) => {
   typeof friend == "object";

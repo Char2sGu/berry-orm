@@ -2,7 +2,7 @@
 
 An **_entity_** represents a record in the database. You can simply think of an entity as an object with an ID.
 
-Berry ORM uses classes and decorators to describe the data structure of entities.
+Berry ORM uses classes and decorators to describe the data structure of entities. All the decorators are strictly typed, which means that the TypeScript compiler will throw an error if you applied the decorators incorrectly.
 
 ## Defining Entity Classes
 
@@ -106,7 +106,9 @@ owner?: User;
 **_To-many relationship fields_** represent _ManyToOne_ or _ManyToMany_ relations, and their types must be assignable to `Collection`.
 
 ::: tip
-`Collection` is a special `Set`, used to support [updating relations through to-many relation fields](./updating-entities.html#through-to-many-relation-fields).
+
+`Collection` is a special `Set`, used to support [updating relations through to-many relation fields](./updating-entities.html#through-to-many-relation-fields). Berry ORM will automatically instantiate `Collection` for you.
+
 :::
 
 ```ts {4}

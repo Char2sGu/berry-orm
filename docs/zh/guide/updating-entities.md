@@ -43,7 +43,7 @@ newProfile.owner == user;
 
 ::: danger
 
-在拆除旧的关系到建立新的关系期间，`user.profile`的值可能会短暂地被赋值为`undefined`。
+在拆除旧的关系到建立新的关系期间，`user.profile` 的值可能会短暂地被赋值为 `undefined`。
 
 :::
 
@@ -55,13 +55,14 @@ user.profile = undefined;
 
 ### 通过对多关系字段
 
-**对多关系字段**的值都是 `Collection`。`Collection`是一种特殊的`Set`，可以通过调用`Collection`的方法来便捷地更新关系。
+**对多关系字段**的值都是 `Collection` 实例。`Collection` 是一种特殊的 `Set`，可以通过调用 `Collection` 的方法来便捷地更新关系。
 
 ```ts {1}
 department.members.add(user);
 ```
 
 ```ts
+department.members.has(user) == true;
 user.department == department;
 ```
 
@@ -70,6 +71,7 @@ department.members.delete(user);
 ```
 
 ```ts
+department.members.has(user) == false;
 user.department === undefined;
 ```
 

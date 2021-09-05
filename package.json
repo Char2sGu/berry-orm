@@ -1,6 +1,6 @@
 {
   "name": "berry-orm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Object Relational Mapping for front-ends.",
   "main": "lib/index.js",
   "scripts": {
@@ -54,8 +54,8 @@
   "files": [
     "src",
     "lib",
-    "!__test__",
-    "!tsconfig.*",
+    "!**/__test__",
+    "!**/tsconfig.*",
     "README*.md"
   ]
 }

@@ -2,38 +2,21 @@
 
 [中文](./README_zh.md)
 
-Object Relational Mapping for front-ends.
+Object Relational Mapping library built for the front-end, focusing on and **only** focusing on Object Relational Mapping. In other words, it is a library used to convert between **ordinary data objects** and **entities**.
 
-# What it solves？
+Berry ORM attaches great importance to types, and all features have very strict type support to maximize the advantages of TypeScript.
 
-Usually, the front-end will not process the data obtained from the back-end, but directly uses these plain objects. In large-scale applications, this can easily lead to extremely complex and messy relation processing code. Berry ORM allows you to access relation objects directly through attributes to avoid the boring relation-processing code.
+Berry ORM is very different from the common ORM libraries in back-ends. The back-end ORM library are usually complete data management solutions, and Object Relational Mapping is only a part of their features. But Berry ORM abides by its duty and is only responsible for mapping the relations between objects, because the data source of front-ends is usually a back-end API or IndexedDB, and there are already countless mature solutions for these data sources, and you can combine the best options to manage Your data.
 
-Let's take an extreme example:
-
-When using Berry ORM, you can **directly access the relation objects through the attributes**:
-
-```ts
-user.department.tasks.forEach((task) => {
-  console.log(task.creator.username);
-});
+```sh
+npm i berry-orm
 ```
 
-While when Berry ORM is not used, you must obtain the relation objects manually according the primary keys:
+# When？
 
-```ts
-const userDepartment = departmentMap[user.department];
-const departmentTasks = Object.values(taskMap).filter(
-  (task) => task.department == userDepartment.id,
-);
-departmentTasks.forEach((task) => {
-  const taskCreator = userMap[task.creator];
-  console.log(taskCreator.username);
-});
-```
-
-# What it is not？
-
-On the back-end, most _ORM_ libraries are not only responsible for **Object Relational Mapping**, but also include a variety of additional functions such as wrapping database queries, optimization of SQL statements, and so on. But Berry ORM is only responsible for **Object Relation mapping**, it is only responsible for mapping the relations between objects.
+- When you need to centrally store the data obtained from the back-end interface
+- When using IndexedDB to store data in front-ends
+- Anytime you want to access object relations more conveniently!
 
 # Documents
 

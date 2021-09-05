@@ -2,38 +2,21 @@
 
 [English](./README.md)
 
-为前端打造的纯粹的对象关系映射
+为前端打造的对象关系映射，专注于且**仅**专注于对象关系映射。换句话说，这是一个用来实现**原始数据对象**和**实体**之间互相转换的一个库。
 
-# 它解决了什么？
+Berry ORM 非常注重类型，所有的特性都具有非常严格的类型支持，以最大化地发挥 TypeScript 的优势。
 
-通常，前端不会对从后端获取到的数据进行很多处理，而是会直接使用这些朴素对象（Plain Object）。在大型的应用中，这很容易导致**关系处理**变得异常复杂而凌乱。而 Berry ORM 可以让你**直接通过属性来访问关系对象**，省去无聊的手动关系处理过程。
+Berry ORM 与后端常见的 ORM 库有很大的不同。后端的 ORM 库通常是一套完整的数据管理方案，映射对象间的关系只是其中的一部分功能。但 Berry ORM 恪守本分，仅仅负责映射对象间的关系，因为前端源通常是后端接口或 IndexedDB，而对于这些数据源已经存在无数成熟的解决方案了，你可以组合出最佳的选择来管理你的数据。
 
-让我们来举一个极端一点的例子：
-
-当使用 Berry ORM 时，可以**直接通过属性来访问关系对象**：
-
-```ts
-user.department.tasks.forEach((task) => {
-  console.log(task.creator.username);
-});
+```sh
+npm i berry-orm
 ```
 
-当不使用 Berry ORM 时，关系通常由主键来表示，需要凭借主键手动获取关系对象：
+# 什么时候需要？
 
-```ts
-const userDepartment = departmentMap[user.department];
-const departmentTasks = Object.values(taskMap).filter(
-  (task) => task.department == userDepartment.id,
-);
-departmentTasks.forEach((task) => {
-  const taskCreator = userMap[task.creator];
-  console.log(taskCreator.username);
-});
-```
-
-# 它不是什么？
-
-在后端，*ORM*库大多不仅负责**对象关系映射**，还包括了对数据库查询的包装、对 SQL 语句的优化等等众多额外的功能。但 Berry ORM 仅仅负责**对象关系映射**这一项，它仅仅负责映射对象间的关系。
+- 需要集中存储从后端接口获取的数据时
+- 使用 IndexedDB 在前端存储数据时
+- 想要更方便地访问对象关系的任何时候！
 
 # 文档
 

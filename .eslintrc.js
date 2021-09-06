@@ -7,6 +7,7 @@ module.exports = {
     node: true,
   },
   parser: "@typescript-eslint/parser",
+  plugins: ["simple-import-sort"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -20,5 +21,7 @@ module.exports = {
     ],
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": ["error", { ignoreRestArgs: true }],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
   },
 };

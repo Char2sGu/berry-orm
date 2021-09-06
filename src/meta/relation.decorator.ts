@@ -6,9 +6,9 @@ import { EntityField } from "../field/entity-field.type";
 import { RelationField } from "../field/relation-field.type";
 import { META } from "../symbols";
 import { ExtractKeys } from "../utils/extract-keys.type";
-import { EntityMetaRelation } from "./entity-meta-relation.class";
 import { EntityMeta } from "./entity-meta.class";
 import { EntityMetaError } from "./entity-meta.error";
+import { EntityMetaRelation } from "./entity-meta-relation.class";
 
 export const Relation =
   <TargetEntity extends AnyEntity, Multi extends boolean = false>(options: {

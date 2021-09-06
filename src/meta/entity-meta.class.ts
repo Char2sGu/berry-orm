@@ -3,8 +3,8 @@ import { EntityType } from "../entity/entity-type.interface";
 import { EntityField } from "../field/entity-field.type";
 import { EntityPrimaryField } from "../field/entity-primary-field.type";
 import { META } from "../symbols";
-import { EntityMetaField } from "./entity-meta-field.class";
 import { EntityMetaError } from "./entity-meta.error";
+import { EntityMetaField } from "./entity-meta-field.class";
 
 export class EntityMeta<
   Entity extends AnyEntity = AnyEntity,

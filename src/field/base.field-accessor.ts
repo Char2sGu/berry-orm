@@ -1,4 +1,4 @@
-import { AnyEntity } from "..";
+import { AnyEntity } from "../entity/any-entity.type";
 import { EntityRelationManager } from "../entity/entity-relation-manager.class";
 import { BaseAccessor } from "../utils/base.accessor";
 import { EntityField } from "./entity-field.type";

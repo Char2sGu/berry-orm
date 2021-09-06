@@ -1,8 +1,8 @@
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
-import { PrimaryField } from "../field/primary-field.type";
 import { PrimaryFieldAccessor } from "../field/primary.field-accessor";
+import { PrimaryField } from "../field/primary-field.type";
 import { RelationField } from "../field/relation-field.type";
 import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-accessor";
 import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";

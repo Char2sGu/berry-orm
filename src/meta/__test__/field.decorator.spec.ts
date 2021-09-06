@@ -1,8 +1,8 @@
 import { BaseEntity } from "../..";
 import { EntityType } from "../../entity/entity-type.interface";
 import { META } from "../../symbols";
-import { EntityMetaField } from "../entity-meta-field.class";
 import { EntityMeta } from "../entity-meta.class";
+import { EntityMetaField } from "../entity-meta-field.class";
 import { Field } from "../field.decorator";
 
 describe("@Field()", () => {

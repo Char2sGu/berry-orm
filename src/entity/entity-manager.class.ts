@@ -4,23 +4,23 @@ import { EntityField } from "../field/entity-field.type";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { PrimaryField } from "../field/primary-field.type";
 import { PrimaryKey } from "../field/primary-key.type";
-import { RelationFieldData } from "../field/relation-field-data.type";
 import { RelationField } from "../field/relation-field.type";
+import { RelationFieldData } from "../field/relation-field-data.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
-import { NestedSerializerMapEmpty } from "../serializer/nested-serializer-map-empty.type";
 import { NestedSerializerMap } from "../serializer/nested-serializer-map.type";
-import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";
+import { NestedSerializerMapEmpty } from "../serializer/nested-serializer-map-empty.type";
 import { SerializerMap } from "../serializer/serializer-map.type";
+import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
-import { EntityDataExported } from "./entity-data-exported.type";
 import { EntityData } from "./entity-data.type";
+import { EntityDataExported } from "./entity-data-exported.type";
 import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity-type.interface";
 import { IdentityMapManager } from "./identity-map-manager.class";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
-import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 import { RelationExpansions } from "./relation-expansions.type";
+import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 
 export class EntityManager {
   constructor(

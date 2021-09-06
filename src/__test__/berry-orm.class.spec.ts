@@ -1,7 +1,7 @@
-import { BerryOrm } from "..";
+import { BerryOrm } from "../berry-orm.class";
 import { BaseEntity } from "../entity/base-entity.class";
-import { EntityMetaError } from "../meta/entity-meta.error";
 import { Entity } from "../meta/entity.decorator";
+import { EntityMetaError } from "../meta/entity-meta.error";
 import { Field } from "../meta/field.decorator";
 import { Primary } from "../meta/primary.decorator";
 import { Relation } from "../meta/relation.decorator";

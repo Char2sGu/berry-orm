@@ -1,4 +1,4 @@
-import { AnyEntity } from "..";
+import { AnyEntity } from "../entity/any-entity.type";
 import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity-type.interface";
 import { IdentityMap } from "./identity-map.class";

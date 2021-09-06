@@ -1,5 +1,5 @@
-import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";
 import { SerializerMap } from "../serializer/serializer-map.type";
+import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";
 import { AnyEntity } from "./any-entity.type";
 import { EntityDataCommon } from "./entity-data-common.type";
 import { EntityDataRelation } from "./entity-data-relation.type";

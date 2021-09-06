@@ -1,5 +1,5 @@
-import { BaseEntity } from "..";
 import { PrimaryField } from "../field/primary-field.type";
+import { BaseEntity } from "./base-entity.class";
 
 /**
  * Represent an entity extending the `BaseEntity`.

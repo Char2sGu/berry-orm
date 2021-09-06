@@ -3,12 +3,12 @@ import { CommonField } from "../field/common-field.type";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { RelationField } from "../field/relation-field.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
-import { NestedSerializerMapEmpty } from "../serializer/nested-serializer-map-empty.type";
 import { NestedSerializerMap } from "../serializer/nested-serializer-map.type";
+import { NestedSerializerMapEmpty } from "../serializer/nested-serializer-map-empty.type";
 import { SerializerType } from "../serializer/serializer-type.interface";
 import { AnyEntity } from "./any-entity.type";
-import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 import { RelationExpansions } from "./relation-expansions.type";
+import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 
 export type EntityDataExported<
   Entity extends AnyEntity,

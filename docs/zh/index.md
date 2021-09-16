@@ -1,81 +1,96 @@
 ---
 home: true
 heroText: Berry ORM
-tagline: 为前端打造的对象关系映射库
+tagline: 用于 Node.js 和浏览器的严格类型的轻量级对象关系映射器。
 actionText: 快速上手 →
 actionLink: ./guide/introduction
 features:
   - title: 类型严格
     details: 享受极致严格的类型所带来的愉快的开发体验，最大化发挥TypeScript的作用。
   - title: 轻量通用
-    details: 专注且仅专注于对象关系映射，一点不多一点不少，轻松整合到任何框架。
-  - title: 简单易学
-    details: 通过简单的赋值和一个简单的API即可全方面地管理对象关系。
+    details: 仅仅是对象关系映射，没有任何多余的功能，可在任何场景下使用。
+  - title: 简单易用
+    details: 通过简单的赋值和调用即可完全控制对象关系。
 ---
 
-- 使用原始数据填充实体
-  ```ts
-  const user = orm.em.populate(User, {
+## 实体定义
+
+```ts {6,10,14,19,24,28}
+@Entity()
+export class User extends BaseEntity<User, "id"> {
+  // 主键字段
+  @Primary()
+  @Field()
+  id!: number;
+
+  // 数据字段
+  @Field()
+  firstName!: string;
+
+  // 数据字段
+  @Field()
+  lastName!: string;
+
+  // 对单关系字段
+  @Relation({ target: () => Profile, inverse: "owner" })
+  @Field()
+  profile?: Profile;
+
+  // 对多关系字段
+  @Relation({ target: () => User, inverse: "friends", multi: true })
+  @Field()
+  friends!: Collection<User>;
+
+  // 数据字段
+  @Field()
+  joinedAt!: Date;
+
+  // 自定义访问器
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  // 自定义方法
+  capitalize() {
+    this.firstName.toUpperCase();
+    this.lastName.toUpperCase();
+  }
+}
+```
+
+## 数据到实体
+
+```ts
+const user = orm.em.populate(
+  User,
+  {
     id: 1,
+    firstName: "Gu",
+    lastName: "Charles",
     profile: 1,
-    friends: [2, { id: 3, profile: 3 }],
-  });
-  ```
-  ```ts
-  user instanceof User;
-  ```
-- 主键将会被映射到到实际的实体
-  ```ts
-  user.profile instanceof Profile;
-  user.friends.forEach((friend) => friend instanceof User);
-  ```
-- 关系是双向的，任意一边都可以访问另一边
-  ```ts
-  user.profile.owner == user;
-  user.friends.forEach((friend) => friend.friends.has(user));
-  ```
-- 直接通过实体的关系字段更新关系
-  - 对单关系：简单赋值
-    ```ts
-    user.profile = newProfile;
-    ```
-    ```ts
-    user.profile == newProfile;
-    newProfile.owner == user;
-    ```
-  - 对多关系：调用方法
-    ```ts
-    user.friends.add(newFriend);
-    ```
-    ```ts
-    user.friends.has(newFriend);
-    newFriend.friends.has(user);
-    ```
-- 在任何地方具有同一主键的同种实体都是同一个对象
-  ```ts
-  userA.department.id == userB.department.id;
-  userA.department == userB.department;
-  ```
-- 可以访问未填充状态实体的部分字段
-  ```ts
-  const userWithUnpopulatedProfile = orm.em.populate(User, {
-    id: 1,
-    profile: 123456789,
-  });
-  ```
-  ```ts
-  userWithUnpopulatedProfile[POPULATED] == true;
-  userWithUnpopulatedProfile.profile[POPULATED] == false;
-  userWithUnpopulatedProfile.profile instanceof Profile;
-  userWithUnpopulatedProfile.profile.id == 123456789;
-  userWithUnpopulatedProfile.profile.owner == userWithUnpopulatedProfile;
-  ```
-- 将实体数据重新导出为普通对象
-  ```ts
-  orm.em.export(user);
-  ```
-  ```ts
-  user.constructor == Object;
-  typeof user.profile == "number";
-  user.friends.forEach((friend) => typeof friend == "number");
-  ```
+    friends: [
+      2, // 外键
+      { id: 3 /* , ... */ }, // 嵌套的数据对象
+    ],
+    joinedAt: new Date().toISOString(), // 由于应用了 `DateSerializer`，`string` 和 `Date` 都可以接受
+  },
+  {
+    joinedAt: DateSerializer, // 为字段 "joinedAt" 支持更灵活的输入值
+  },
+);
+```
+
+## 实体到数据
+
+```ts
+const data = orm.em.export(
+  user,
+  {
+    profile: true, // 将 `.profile` 导出为一个嵌套对象
+    friends: { profile: true }, // 支持嵌套
+  },
+  {
+    joinedAt: DateSerializer, // 使 `user.joinAt` 被导出为 `string`，而不是 `Date`
+  },
+);
+```

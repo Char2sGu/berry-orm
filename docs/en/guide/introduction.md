@@ -17,4 +17,4 @@ It is important to note that Berry ORM is not the same concept as a traditional 
 - When using relational state management in a web application
 - When keeping large amounts of relational data in IndexedDB
 - When storing relational data in simple files like "data.json"
-- Whenever you don't use a database but need to manage relational data
+- Any time you don't use a database but need to manage relational data

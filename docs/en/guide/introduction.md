@@ -1,11 +1,20 @@
 # Introduction
 
-Berry ORM is an Object Relational Mapping library built for front-ends. She focuses on and **only** focuses on Object Relational Mapping. In other words, Berry ORM is a library used to convert between **ordinary data objects** and **entities**.
-
-Berry ORM attaches great importance to types, and all features have very strict type support to maximize the advantages of TypeScript.
-
-You must understand that the Berry ORM is very different from the common ORM libraries in back-ends. The back-end ORM library are usually complete data management solutions, and Object Relational Mapping is only a part of their features. But Berry ORM abides by its duty and is only responsible for mapping the relations between objects, because the data source of front-ends is usually a back-end API or IndexedDB, and there are already countless mature solutions for these data sources, and you can combine the best options to manage Your data.
+Berry ORM is a lightweight object-relational mapper for Node.js and the browser.
 
 ```sh
 npm i berry-orm
 ```
+
+Berry ORM allows you transform between plain data objects and entities by defining entity classes. An entity is an instance of the entity class, which allows you to easily access and update bilateral relations. You can also transform an entity back into a plain data object.
+
+Strict typing is a key focus of Berry ORM, therefore, all the features have advanced type support to maximize the benefits of TypeScript.
+
+It is important to note that Berry ORM is not the same concept as a traditional ORM. The latter is usually a complete data management solution that includes additional features such as a database layer, where the object-relational mapper is only a coupled part, while the former is a generic object-relational mapper that is only responsible for mapping relations and you can freely combine it with other data management solutions.
+
+# Scenarios
+
+- When using relational state management in a web application
+- When keeping large amounts of relational data in IndexedDB
+- When storing relational data in simple files like "data.json"
+- Whenever you don't use a database but need to manage relational data

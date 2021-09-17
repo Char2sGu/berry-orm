@@ -1,7 +1,7 @@
 ---
 home: true
 heroText: Berry ORM
-tagline: Strictly typed lightweight object-relational mapper for Node.js and browsers.
+tagline: Lightweight object-relational mapper for Node.js and the browser.
 actionText: Getting Started →
 actionLink: ./guide/introduction
 features:

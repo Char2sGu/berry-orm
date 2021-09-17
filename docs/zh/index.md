@@ -1,7 +1,7 @@
 ---
 home: true
 heroText: Berry ORM
-tagline: 用于 Node.js 和浏览器的严格类型的轻量级对象关系映射器。
+tagline: 用于 Node.js 和浏览器的轻量级对象关系映射器。
 actionText: 快速上手 →
 actionLink: ./guide/introduction
 features:

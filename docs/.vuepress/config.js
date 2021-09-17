@@ -38,7 +38,7 @@ module.exports = {
       },
       "/zh/": {
         selectText: "语言",
-        lable: "简体中文",
+        label: "简体中文",
         lastUpdated: "最后更新",
         sidebar: [
           {

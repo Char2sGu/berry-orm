@@ -21,6 +21,7 @@ export { CommonFieldAccessor } from "./field/field-accessors/common-field.access
 export { PrimaryFieldAccessor } from "./field/field-accessors/primary-field.accessor";
 export { RelationFieldToManyAccessor } from "./field/field-accessors/relation-field-to-many.accessor";
 export { RelationFieldToOneAccessor } from "./field/field-accessors/relation-field-to-one.accessor";
+export { RelationFieldData } from "./field/field-data/relation-field-data.type";
 export { CommonField } from "./field/field-names/common-field.type";
 export { EntityField } from "./field/field-names/entity-field.type";
 export { PrimaryField } from "./field/field-names/primary-field.type";
@@ -28,7 +29,6 @@ export { RelationField } from "./field/field-names/relation-field.type";
 export { Collection } from "./field/field-values/collection.class";
 export { EmptyValue } from "./field/field-values/empty-value.type";
 export { PrimaryKey } from "./field/field-values/primary-key.type";
-export { RelationFieldData } from "./field/field-values/relation-field-data.type";
 export { Entity } from "./meta/meta-decorators/entity.decorator";
 export { Field } from "./meta/meta-decorators/field.decorator";
 export { Primary } from "./meta/meta-decorators/primary.decorator";

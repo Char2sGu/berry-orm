@@ -1,8 +1,8 @@
 import { AnyEntity } from "../../entity/any-entity.type";
 import { RelationEntityRepresentation } from "../../entity/relation-entity-representation.type";
 import { RelationField } from "../field-names/relation-field.type";
-import { Collection } from "./collection.class";
-import { EmptyValue } from "./empty-value.type";
+import { Collection } from "../field-values/collection.class";
+import { EmptyValue } from "../field-values/empty-value.type";
 
 export type RelationFieldData<
   Entity extends AnyEntity = AnyEntity,

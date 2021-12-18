@@ -2,9 +2,10 @@ import { SerializerMap } from "../../serializer/serializer-map/serializer-map.ty
 import { SerializerMapEmpty } from "../../serializer/serializer-map/serializer-map-empty.type";
 import { AnyEntity } from "../any-entity.type";
 import { EntityDataCommon } from "./entity-data-common.type";
-import { EntityDataRelation } from "./entity-data-relation.type";
+import { EntityDataRelational } from "./entity-data-relational.type";
 
 export type EntityData<
   Entity extends AnyEntity,
   Serializers extends SerializerMap<Entity> = SerializerMapEmpty<Entity>,
-> = EntityDataCommon<Entity, Serializers> & Partial<EntityDataRelation<Entity>>;
+> = EntityDataCommon<Entity, Serializers> &
+  Partial<EntityDataRelational<Entity>>;

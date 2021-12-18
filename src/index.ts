@@ -4,7 +4,7 @@ export { BaseEntity } from "./entity/base-entity.class";
 export { EntityData } from "./entity/entity-data/entity-data.type";
 export { EntityDataCommon } from "./entity/entity-data/entity-data-common.type";
 export { EntityDataExported } from "./entity/entity-data/entity-data-exported.type";
-export { EntityDataRelation } from "./entity/entity-data/entity-data-relation.type";
+export { EntityDataRelational } from "./entity/entity-data/entity-data-relational.type";
 export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-field-value.type";
 export { EntityType } from "./entity/entity-type.interface";
 export { EntityPrimaryField } from "./field/entity-primary-field.type";

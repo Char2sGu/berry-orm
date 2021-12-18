@@ -20,8 +20,11 @@ import { SerializerMapEmpty } from "../serializer/serializer-map/serializer-map-
 import { META, POPULATED } from "../symbols";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
+import { IdentityMap } from "./identity-map.class";
 
 export class EntityManager {
+  readonly map = new IdentityMap(this.orm);
+
   constructor(private orm: BerryOrm) {}
 
   /**
@@ -40,7 +43,7 @@ export class EntityManager {
     serializers?: Serializers,
   ): Entity {
     const primaryKey = data[type.prototype[META]!.primary] as Entity[Primary];
-    const entity = this.orm.imm.get(type).get(primaryKey);
+    const entity = this.map.get(type, primaryKey);
 
     for (const k in entity[META]!.fields) {
       const field = k as CommonField<Entity> | RelationField<Entity>;
@@ -125,7 +128,7 @@ export class EntityManager {
     if (typeof representation == "object") {
       return this.populate(relationMeta.target(), representation);
     } else {
-      return this.orm.imm.get(relationMeta.target()).get(representation);
+      return this.map.get(relationMeta.target(), representation);
     }
   }
 

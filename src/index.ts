@@ -27,7 +27,6 @@ export { EntityManager } from "./managers/entity-manager.class";
 export { EntityManagerExportExpansions } from "./managers/entity-manager-export-expansions.type";
 export { EntityManagerExportExpansionsEmpty } from "./managers/entity-manager-export-expansions-empty.type";
 export { IdentityMap } from "./managers/identity-map.class";
-export { IdentityMapManager } from "./managers/identity-map-manager.class";
 export { RelationManager } from "./managers/relation-manager.class";
 export { Entity } from "./meta/meta-decorators/entity.decorator";
 export { Field } from "./meta/meta-decorators/field.decorator";

@@ -17,7 +17,6 @@ export { RelationExpansionsEmpty } from "./entity/relation-expansions-empty.type
 export { CommonFieldAccessor } from "./field/accessors/common-field.accessor";
 export { FieldAccessor } from "./field/accessors/field.accessor";
 export { PrimaryFieldAccessor } from "./field/accessors/primary-field.accessor";
-export { PropertyAccessor } from "./field/accessors/property.accessor";
 export { RelationFieldToManyAccessor } from "./field/accessors/relation-field-to-many.accessor";
 export { RelationFieldToOneAccessor } from "./field/accessors/relation-field-to-one.accessor";
 export { Collection } from "./field/collection.class";

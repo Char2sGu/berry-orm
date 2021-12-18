@@ -1,21 +1,32 @@
 import { BerryOrm } from "../../berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityField } from "../entity-field.type";
-import { PropertyAccessor } from "./property.accessor";
 
 export class FieldAccessor<
   Entity extends AnyEntity = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
-> extends PropertyAccessor<Entity, Field> {
-  constructor(protected orm: BerryOrm, entity: Entity, field: Field) {
-    super(entity, field);
+> {
+  value = this.entity[this.field];
+
+  constructor(
+    protected orm: BerryOrm,
+    readonly entity: Entity,
+    readonly field: Field,
+  ) {}
+
+  apply(): void {
+    Reflect.defineProperty(this.entity, this.field, {
+      configurable: true,
+      get: () => this.handleGet(),
+      set: (v) => this.handleSet(v),
+    });
   }
 
-  get entity(): Entity {
-    return this.object;
+  handleGet(): Entity[Field] {
+    return this.value;
   }
 
-  get field(): Field {
-    return this.key;
+  handleSet(newValue: Entity[Field]): void {
+    this.value = newValue;
   }
 }

@@ -10,13 +10,10 @@ export class EntityMeta<
   Entity extends AnyEntity = AnyEntity,
   Primary extends EntityPrimaryField<Entity> = EntityPrimaryField<Entity>,
 > {
-  type;
   primary!: Primary;
   fields = {} as Record<EntityField<Entity>, EntityMetaField<Entity>>;
 
-  constructor(prototype: Entity) {
-    this.type = prototype.constructor as EntityType<Entity>;
-  }
+  constructor(readonly type: EntityType<Entity>) {}
 
   /**
    *

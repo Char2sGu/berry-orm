@@ -1,7 +1,7 @@
 import { AnyEntity } from "../entity/any-entity.type";
+import { EntityType } from "../entity/entity-type.type";
 import { EntityPrimaryField } from "../field/entity-primary-field.type";
 import { META } from "../symbols";
-import { EntityMeta } from "./entity-meta.class";
 import { EntityMetaError } from "./entity-meta.error";
 
 export const Primary =
@@ -13,7 +13,7 @@ export const Primary =
     const meta = prototype[META];
     if (!meta?.fields[field])
       throw new EntityMetaError({
-        type: new EntityMeta(prototype).type,
+        type: prototype.constructor as EntityType<Entity>,
         field,
         message: "@Field() must be applied before @Primary()",
       });

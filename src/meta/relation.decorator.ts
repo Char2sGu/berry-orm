@@ -31,7 +31,7 @@ export const Relation =
     const meta = prototype[META] as EntityMeta<Entity> | undefined;
     if (!meta?.fields[field])
       throw new EntityMetaError({
-        type: new EntityMeta(prototype).type,
+        type: prototype.constructor as EntityType<Entity>,
         field,
         message: "@Field() must be applied before @Relation()",
       });

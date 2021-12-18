@@ -21,7 +21,7 @@ describe("@Entity()", () => {
   });
 
   it("should pass when there are metadata defined", () => {
-    cls.prototype[META] = new EntityMeta(cls.prototype);
+    cls.prototype[META] = new EntityMeta(cls);
     expect(() => {
       Entity()(cls);
     }).not.toThrowError();

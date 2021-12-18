@@ -1,4 +1,5 @@
 import { AnyEntity } from "../entity/any-entity.type";
+import { EntityType } from "../entity/entity-type.type";
 import { EntityField } from "../field/entity-field.type";
 import { META } from "../symbols";
 import { EntityMeta } from "./entity-meta.class";
@@ -12,7 +13,8 @@ export const Field =
     field: EntityField<Entity>,
   ): void => {
     const meta = (prototype[META] =
-      prototype[META] ?? new EntityMeta(prototype));
+      prototype[META] ??
+      new EntityMeta(prototype.constructor as EntityType<Entity>));
 
     const fieldMeta = new EntityMetaField(field);
 

@@ -7,7 +7,7 @@ import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 
 export class BerryOrm {
-  static create(options: { entities: EntityType<AnyEntity>[] }): BerryOrm {
+  static create(options: BerryOrmOptions): BerryOrm {
     const registry = this.inspect(new Set(options.entities));
     return new BerryOrm(registry);
   }
@@ -53,3 +53,7 @@ export class BerryOrm {
 }
 
 type EntityRegistry = Set<EntityType>;
+
+interface BerryOrmOptions {
+  entities: EntityType<AnyEntity>[];
+}

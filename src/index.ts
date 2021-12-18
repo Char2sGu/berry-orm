@@ -9,7 +9,7 @@ export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-fiel
 export { EntityType } from "./entity/entity-type.interface";
 export { EntityPrimaryField } from "./field/entity-primary-field.type";
 export { EntityPrimaryKey } from "./field/entity-primary-key.type";
-export { BaseFieldAccessor as FieldAccessor } from "./field/field-accessors/base-field.accessor";
+export { BaseFieldAccessor } from "./field/field-accessors/base-field.accessor";
 export { CommonFieldAccessor } from "./field/field-accessors/common-field.accessor";
 export { PrimaryFieldAccessor } from "./field/field-accessors/primary-field.accessor";
 export { RelationFieldToManyAccessor } from "./field/field-accessors/relation-field-to-many.accessor";

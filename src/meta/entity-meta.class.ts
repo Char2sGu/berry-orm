@@ -10,7 +10,7 @@ export class EntityMeta<
   Entity extends AnyEntity = AnyEntity,
   Primary extends EntityPrimaryField<Entity> = EntityPrimaryField<Entity>,
 > {
-  readonly type;
+  type;
   primary!: Primary;
   fields = {} as Record<EntityField<Entity>, EntityMetaField<Entity>>;
 

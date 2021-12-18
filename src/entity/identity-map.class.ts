@@ -7,10 +7,7 @@ export class IdentityMap<Entity extends AnyEntity> extends Map<
   EntityPrimaryKey<Entity>,
   Entity
 > {
-  constructor(
-    private orm: BerryOrm,
-    private readonly type: EntityType<Entity>,
-  ) {
+  constructor(private orm: BerryOrm, private type: EntityType<Entity>) {
     super();
   }
 

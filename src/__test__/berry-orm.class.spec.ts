@@ -7,7 +7,7 @@ import { Primary } from "../meta/meta-decorators/primary.decorator";
 import { Relation } from "../meta/meta-decorators/relation.decorator";
 
 describe("BerryOrm", () => {
-  describe("static .inspect()", () => {
+  describe("new", () => {
     it("should instantiate correctly in the simplest case", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
@@ -15,7 +15,7 @@ describe("BerryOrm", () => {
         @Field()
         id!: number;
       }
-      BerryOrm.inspect(new Set([TestingEntity]));
+      new BerryOrm({ entities: [TestingEntity] });
     });
 
     it("should throw when relation entity is not registered", () => {
@@ -42,7 +42,7 @@ describe("BerryOrm", () => {
       }
 
       expect(() => {
-        BerryOrm.inspect(new Set([TestingEntity1]));
+        new BerryOrm({ entities: [TestingEntity1] });
       }).toThrowError(EntityMetaError);
     });
 
@@ -51,7 +51,7 @@ describe("BerryOrm", () => {
         id!: number;
       }
       expect(() => {
-        BerryOrm.inspect(new Set([TestingEntity]));
+        new BerryOrm({ entities: [TestingEntity] });
       }).toThrowError(EntityMetaError);
     });
   });

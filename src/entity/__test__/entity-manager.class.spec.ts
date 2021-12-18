@@ -518,6 +518,6 @@ describe("EntityManager", () => {
   });
 
   function prepare(entities: EntityType[]) {
-    orm = BerryOrm.create({ entities });
+    orm = new BerryOrm({ entities });
   }
 });

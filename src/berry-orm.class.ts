@@ -6,15 +6,20 @@ import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 
 export class BerryOrm {
-  static create(options: BerryOrmOptions): BerryOrm {
-    const registry = this.inspect(new Set(options.entities));
-    return new BerryOrm(registry);
+  readonly registry: EntityRegistry;
+  readonly em: EntityManager;
+  readonly rm: RelationManager;
+
+  constructor(options: BerryOrmOptions) {
+    this.registry = this.inspect(new Set(options.entities));
+    this.em = new EntityManager(this);
+    this.rm = new RelationManager(this);
   }
 
   /**
    * Check whether the entity registry can work correctly.
    */
-  static inspect<Registry extends EntityRegistry>(
+  private inspect<Registry extends EntityRegistry>(
     registry: Registry,
   ): Registry {
     registry.forEach((type) => {
@@ -34,14 +39,6 @@ export class BerryOrm {
       });
     });
     return registry;
-  }
-
-  readonly em: EntityManager;
-  readonly rm: RelationManager;
-
-  private constructor(readonly registry: EntityRegistry) {
-    this.em = new EntityManager(this);
-    this.rm = new RelationManager(this);
   }
 }
 

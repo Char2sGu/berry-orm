@@ -1,5 +1,5 @@
 import { AnyEntity } from "../entity/any-entity.type";
-import { EntityType } from "../entity/entity-type.interface";
+import { EntityType } from "../entity/entity-type.type";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
 import { EntityField } from "../field/entity-field.type";

@@ -1,4 +1,4 @@
-import { EntityType } from "../entity/entity-type.interface";
+import { EntityType } from "../entity/entity-type.type";
 
 export class EntityMetaError extends Error {
   constructor({

@@ -1,5 +1,5 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { RelationField } from "../relation-field.type";
+import { RelationField } from "../field-types/relation-field.type";
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class RelationFieldToOneAccessor<

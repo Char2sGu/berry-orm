@@ -1,5 +1,5 @@
 import { AnyEntity } from "../entity/any-entity.type";
-import { PrimaryField } from "./primary-field.type";
+import { PrimaryField } from "./field-types/primary-field.type";
 
 export type EntityPrimaryField<Entity extends AnyEntity> =
   Entity extends AnyEntity<any, infer Primary>

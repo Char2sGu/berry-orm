@@ -1,5 +1,5 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { CommonField } from "../common-field.type";
+import { CommonField } from "../field-types/common-field.type";
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class CommonFieldAccessor<

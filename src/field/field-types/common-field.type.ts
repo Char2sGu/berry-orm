@@ -1,5 +1,5 @@
-import { AnyEntity } from "../entity/any-entity.type";
-import { EntityField } from "./entity-field.type";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { EntityField } from "../entity-field.type";
 import { RelationField } from "./relation-field.type";
 
 export type CommonField<Entity extends AnyEntity> = Exclude<

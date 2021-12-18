@@ -1,11 +1,10 @@
+import { PrimaryField, RelationField } from "..";
 import { BerryOrm } from "../berry-orm.class";
 import { Collection } from "../field/collection.class";
-import { CommonField } from "../field/common-field.type";
 import { EntityField } from "../field/entity-field.type";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
-import { PrimaryField } from "../field/primary-field.type";
+import { CommonField } from "../field/field-types/common-field.type";
 import { PrimaryKey } from "../field/primary-key.type";
-import { RelationField } from "../field/relation-field.type";
 import { RelationFieldData } from "../field/relation-field-data.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
 import { NestedSerializerMap } from "../serializer/nested-serializer-map.type";

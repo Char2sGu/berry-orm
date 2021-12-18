@@ -1,5 +1,5 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { PrimaryField } from "../primary-field.type";
+import { PrimaryField } from "../field-types/primary-field.type";
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class PrimaryFieldAccessor<

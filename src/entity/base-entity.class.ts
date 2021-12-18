@@ -1,12 +1,11 @@
+import { PrimaryField, RelationField } from "..";
 import { CommonFieldAccessor } from "../field/accessors/common-field.accessor";
 import { PrimaryFieldAccessor } from "../field/accessors/primary-field.accessor";
 import { RelationFieldToManyAccessor } from "../field/accessors/relation-field-to-many.accessor";
 import { RelationFieldToOneAccessor } from "../field/accessors/relation-field-to-one.accessor";
 import { Collection } from "../field/collection.class";
-import { CommonField } from "../field/common-field.type";
 import { EntityField } from "../field/entity-field.type";
-import { PrimaryField } from "../field/primary-field.type";
-import { RelationField } from "../field/relation-field.type";
+import { CommonField } from "../field/field-types/common-field.type";
 import { EntityMeta } from "../meta/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";

@@ -1,5 +1,5 @@
 import { AnyEntity } from "../entity/any-entity.type";
-import { CommonField } from "../field/common-field.type";
+import { CommonField } from "../field/field-types/common-field.type";
 import { AbstractSerializer } from "./abstract.serializer";
 import { SerializerType } from "./serializer-type.type";
 

@@ -3,7 +3,7 @@ import { EntityType } from "../entity/entity-type.type";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
 import { EntityField } from "../field/entity-field.type";
-import { RelationField } from "../field/relation-field.type";
+import { RelationField } from "../field/field-types/relation-field.type";
 import { META } from "../symbols";
 import { ExtractKeys } from "../utils/extract-keys.type";
 import { EntityMeta } from "./entity-meta.class";

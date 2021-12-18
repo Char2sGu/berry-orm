@@ -1,4 +1,4 @@
-import { RelationField } from "../field/relation-field.type";
+import { RelationField } from "../field/field-types/relation-field.type";
 import { RelationFieldData } from "../field/relation-field-data.type";
 import { AnyEntity } from "./any-entity.type";
 

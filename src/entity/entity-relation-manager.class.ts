@@ -1,7 +1,7 @@
 import { BerryOrm } from "../berry-orm.class";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
-import { RelationField } from "../field/relation-field.type";
+import { RelationField } from "../field/field-types/relation-field.type";
 import { META } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 

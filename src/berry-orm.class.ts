@@ -46,6 +46,10 @@ export class BerryOrm {
     this.imm = new IdentityMapManager(registry, this.erm);
     this.em = new EntityManager(this.imm, this.erm);
   }
+
+  fork(): BerryOrm {
+    return new BerryOrm(this.registry);
+  }
 }
 
 type EntityRegistry = Set<EntityType>;

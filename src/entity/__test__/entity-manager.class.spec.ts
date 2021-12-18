@@ -1,9 +1,9 @@
 import { BerryOrm } from "../../berry-orm.class";
 import { Collection } from "../../field/field-values/collection.class";
-import { Entity } from "../../meta/entity.decorator";
-import { Field } from "../../meta/field.decorator";
-import { Primary } from "../../meta/primary.decorator";
-import { Relation } from "../../meta/relation.decorator";
+import { Entity } from "../../meta/meta-decorators/entity.decorator";
+import { Field } from "../../meta/meta-decorators/field.decorator";
+import { Primary } from "../../meta/meta-decorators/primary.decorator";
+import { Relation } from "../../meta/meta-decorators/relation.decorator";
 import { DateSerializer } from "../../serializer/built-in/date.serializer";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";

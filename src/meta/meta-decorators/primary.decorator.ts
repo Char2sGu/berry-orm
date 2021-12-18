@@ -1,8 +1,8 @@
-import { AnyEntity } from "../entity/any-entity.type";
-import { EntityType } from "../entity/entity-type.type";
-import { EntityPrimaryField } from "../field/entity-primary-field.type";
-import { META } from "../symbols";
-import { EntityMetaError } from "./entity-meta.error";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { EntityType } from "../../entity/entity-type.type";
+import { EntityPrimaryField } from "../../field/entity-primary-field.type";
+import { META } from "../../symbols";
+import { EntityMetaError } from "../entity-meta.error";
 
 export const Primary =
   () =>

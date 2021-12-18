@@ -1,10 +1,10 @@
 import { BerryOrm } from "../berry-orm.class";
 import { BaseEntity } from "../entity/base-entity.class";
-import { Entity } from "../meta/entity.decorator";
 import { EntityMetaError } from "../meta/entity-meta.error";
-import { Field } from "../meta/field.decorator";
-import { Primary } from "../meta/primary.decorator";
-import { Relation } from "../meta/relation.decorator";
+import { Entity } from "../meta/meta-decorators/entity.decorator";
+import { Field } from "../meta/meta-decorators/field.decorator";
+import { Primary } from "../meta/meta-decorators/primary.decorator";
+import { Relation } from "../meta/meta-decorators/relation.decorator";
 
 describe("BerryOrm", () => {
   describe("static .inspect()", () => {

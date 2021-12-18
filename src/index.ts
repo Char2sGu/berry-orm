@@ -11,7 +11,6 @@ export { EntityRelationManager } from "./entity/entity-relation-manager.class";
 export { EntityType } from "./entity/entity-type.type";
 export { IdentityMap } from "./entity/identity-map.class";
 export { IdentityMapManager } from "./entity/identity-map-manager.class";
-export { RelationEntityRepresentation } from "./entity/relation-entity-representation.type";
 export { RelationExpansions } from "./entity/relation-expansions.type";
 export { RelationExpansionsEmpty } from "./entity/relation-expansions-empty.type";
 export { EntityPrimaryField } from "./field/entity-primary-field.type";
@@ -22,6 +21,7 @@ export { PrimaryFieldAccessor } from "./field/field-accessors/primary-field.acce
 export { RelationFieldToManyAccessor } from "./field/field-accessors/relation-field-to-many.accessor";
 export { RelationFieldToOneAccessor } from "./field/field-accessors/relation-field-to-one.accessor";
 export { RelationFieldData } from "./field/field-data/relation-field-data.type";
+export { RelationFieldValueRepresentation } from "./field/field-data/relation-field-value-representation.type";
 export { CommonField } from "./field/field-names/common-field.type";
 export { EntityField } from "./field/field-names/entity-field.type";
 export { PrimaryField } from "./field/field-names/primary-field.type";

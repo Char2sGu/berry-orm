@@ -1,9 +1,11 @@
-import { PrimaryField, RelationField } from "..";
+import { PrimaryField } from "..";
 import { BerryOrm } from "../berry-orm.class";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { RelationFieldData } from "../field/field-data/relation-field-data.type";
+import { RelationFieldValueRepresentation } from "../field/field-data/relation-field-value-representation.type";
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
+import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
@@ -16,7 +18,6 @@ import { AnyEntity } from "./any-entity.type";
 import { EntityData } from "./entity-data/entity-data.type";
 import { EntityDataExported } from "./entity-data/entity-data-exported.type";
 import { EntityType } from "./entity-type.type";
-import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationExpansions } from "./relation-expansions.type";
 import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 
@@ -97,9 +98,9 @@ export class EntityManager {
     const relationMeta = entity[META]!.fields[field].relation!;
     const representations = (
       relationMeta.multi ? data : [data]
-    ) as RelationEntityRepresentation[];
+    ) as RelationFieldValueRepresentation[];
     representations.forEach((data) => {
-      const targetEntity = this.resolveRelationEntityRepresentation(
+      const targetEntity = this.resolveRelationRepresentation(
         entity,
         field,
         data,
@@ -112,19 +113,19 @@ export class EntityManager {
    * Get the target relation entity from a primary key or a data object.
    * @param entity
    * @param field
-   * @param reference
+   * @param representation
    * @returns
    */
-  resolveRelationEntityRepresentation<Entity extends AnyEntity>(
+  resolveRelationRepresentation<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
-    reference: RelationEntityRepresentation,
+    representation: RelationFieldValueRepresentation,
   ): AnyEntity {
     const relationMeta = entity[META]!.fields[field].relation!;
-    if (typeof reference == "object") {
-      return this.populate(relationMeta.target(), reference);
+    if (typeof representation == "object") {
+      return this.populate(relationMeta.target(), representation);
     } else {
-      return this.orm.imm.get(relationMeta.target()).get(reference);
+      return this.orm.imm.get(relationMeta.target()).get(representation);
     }
   }
 

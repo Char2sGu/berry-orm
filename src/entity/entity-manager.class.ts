@@ -13,8 +13,8 @@ import { SerializerMap } from "../serializer/serializer-map/serializer-map.type"
 import { SerializerMapEmpty } from "../serializer/serializer-map/serializer-map-empty.type";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
-import { EntityData } from "./entity-data.type";
-import { EntityDataExported } from "./entity-data-exported.type";
+import { EntityData } from "./entity-data/entity-data.type";
+import { EntityDataExported } from "./entity-data/entity-data-exported.type";
 import { EntityType } from "./entity-type.type";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationExpansions } from "./relation-expansions.type";

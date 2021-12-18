@@ -1,10 +1,10 @@
 export { BerryOrm } from "./berry-orm.class";
 export { AnyEntity } from "./entity/any-entity.type";
 export { BaseEntity } from "./entity/base-entity.class";
-export { EntityData } from "./entity/entity-data.type";
-export { EntityDataCommon } from "./entity/entity-data-common.type";
-export { EntityDataExported } from "./entity/entity-data-exported.type";
-export { EntityDataRelation } from "./entity/entity-data-relation.type";
+export { EntityData } from "./entity/entity-data/entity-data.type";
+export { EntityDataCommon } from "./entity/entity-data/entity-data-common.type";
+export { EntityDataExported } from "./entity/entity-data/entity-data-exported.type";
+export { EntityDataRelation } from "./entity/entity-data/entity-data-relation.type";
 export { EntityManager } from "./entity/entity-manager.class";
 export { EntityOfRelation } from "./entity/entity-of-relation.type";
 export { EntityRelationManager } from "./entity/entity-relation-manager.class";

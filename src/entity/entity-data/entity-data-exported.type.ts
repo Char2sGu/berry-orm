@@ -1,14 +1,14 @@
-import { EntityPrimaryKey } from "../field/entity-primary-key.type";
-import { CommonField } from "../field/field-names/common-field.type";
-import { RelationField } from "../field/field-names/relation-field.type";
-import { Collection } from "../field/field-values/collection.class";
-import { AbstractSerializer } from "../serializer/abstract.serializer";
-import { NestedSerializerMap } from "../serializer/serializer-map/nested-serializer-map.type";
-import { NestedSerializerMapEmpty } from "../serializer/serializer-map/nested-serializer-map-empty.type";
-import { SerializerType } from "../serializer/serializer-type.type";
-import { AnyEntity } from "./any-entity.type";
-import { RelationExpansions } from "./relation-expansions.type";
-import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
+import { EntityPrimaryKey } from "../../field/entity-primary-key.type";
+import { CommonField } from "../../field/field-names/common-field.type";
+import { RelationField } from "../../field/field-names/relation-field.type";
+import { Collection } from "../../field/field-values/collection.class";
+import { AbstractSerializer } from "../../serializer/abstract.serializer";
+import { NestedSerializerMap } from "../../serializer/serializer-map/nested-serializer-map.type";
+import { NestedSerializerMapEmpty } from "../../serializer/serializer-map/nested-serializer-map-empty.type";
+import { SerializerType } from "../../serializer/serializer-type.type";
+import { AnyEntity } from "../any-entity.type";
+import { RelationExpansions } from "../relation-expansions.type";
+import { RelationExpansionsEmpty } from "../relation-expansions-empty.type";
 
 export type EntityDataExported<
   Entity extends AnyEntity,

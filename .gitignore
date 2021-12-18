@@ -3,3 +3,5 @@
 
 /docs/.vuepress/dist
 .eslintcache
+
+/.vscode/settings.json

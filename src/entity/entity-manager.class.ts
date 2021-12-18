@@ -1,8 +1,8 @@
 import { PrimaryField, RelationField } from "..";
 import { BerryOrm } from "../berry-orm.class";
-import { EntityField } from "../field/entity-field.type";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
-import { CommonField } from "../field/field-types/common-field.type";
+import { CommonField } from "../field/field-names/common-field.type";
+import { EntityField } from "../field/field-names/entity-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { RelationFieldData } from "../field/field-values/relation-field-data.type";

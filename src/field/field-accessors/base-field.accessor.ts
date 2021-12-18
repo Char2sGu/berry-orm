@@ -1,6 +1,6 @@
 import { BerryOrm } from "../../berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
-import { EntityField } from "../entity-field.type";
+import { EntityField } from "../field-names/entity-field.type";
 
 export class BaseFieldAccessor<
   Entity extends AnyEntity = AnyEntity,

@@ -1,7 +1,7 @@
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.type";
-import { EntityField } from "../field/entity-field.type";
-import { RelationField } from "../field/field-types/relation-field.type";
+import { EntityField } from "../field/field-names/entity-field.type";
+import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { EmptyValue } from "../field/field-values/empty-value.type";
 import { META } from "../symbols";

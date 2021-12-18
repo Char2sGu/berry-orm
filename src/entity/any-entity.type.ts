@@ -1,4 +1,4 @@
-import { PrimaryField } from "../field/field-types/primary-field.type";
+import { PrimaryField } from "../field/field-names/primary-field.type";
 import { BaseEntity } from "./base-entity.class";
 
 /**

@@ -1,5 +1,5 @@
-import { AnyEntity } from "../entity/any-entity.type";
-import { ExcludeKeys } from "../utils/exclude-keys.type";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { ExcludeKeys } from "../../utils/exclude-keys.type";
 
 export type EntityField<Entity extends AnyEntity> = string &
   // We are excluding Functions here, so it's fine to be generic

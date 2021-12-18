@@ -1,6 +1,6 @@
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.type";
-import { EntityField } from "../field/entity-field.type";
+import { EntityField } from "../field/field-names/entity-field.type";
 import { META } from "../symbols";
 import { EntityMeta } from "./entity-meta.class";
 import { EntityMetaError } from "./entity-meta.error";

@@ -1,5 +1,5 @@
 import { BerryOrm } from "../berry-orm.class";
-import { RelationField } from "../field/field-types/relation-field.type";
+import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { EmptyValue } from "../field/field-values/empty-value.type";
 import { META } from "../symbols";

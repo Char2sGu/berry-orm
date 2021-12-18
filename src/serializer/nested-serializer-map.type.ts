@@ -1,6 +1,6 @@
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityOfRelation } from "../entity/entity-of-relation.type";
-import { RelationField } from "../field/field-types/relation-field.type";
+import { RelationField } from "../field/field-names/relation-field.type";
 import { SerializerMap } from "./serializer-map.type";
 
 export type NestedSerializerMap<Entity extends AnyEntity> =

@@ -1,4 +1,4 @@
-import { CommonField } from "../field/field-types/common-field.type";
+import { CommonField } from "../field/field-names/common-field.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
 import { SerializerMap } from "../serializer/serializer-map.type";
 import { SerializerMapEmpty } from "../serializer/serializer-map-empty.type";

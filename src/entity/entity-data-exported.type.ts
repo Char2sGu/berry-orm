@@ -1,6 +1,6 @@
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
-import { CommonField } from "../field/field-types/common-field.type";
-import { RelationField } from "../field/field-types/relation-field.type";
+import { CommonField } from "../field/field-names/common-field.type";
+import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
 import { NestedSerializerMap } from "../serializer/nested-serializer-map.type";

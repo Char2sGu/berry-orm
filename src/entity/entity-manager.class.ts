@@ -173,9 +173,9 @@ export class EntityManager {
             data[field] = getPrimaryKey(entity[field] as AnyEntity);
           } else {
             const collection = entity[field] as Collection<AnyEntity>;
-            const primarykeys: PrimaryKey[] = [];
+            const primaryKeys: PrimaryKey[] = [];
             collection.forEach((relationEntity) => {
-              primarykeys.push(getPrimaryKey(relationEntity));
+              primaryKeys.push(getPrimaryKey(relationEntity));
             });
           }
         } else {

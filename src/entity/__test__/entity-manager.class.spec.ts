@@ -435,7 +435,7 @@ describe("EntityManager", () => {
       expect(exportedData).toEqual(originalData);
     });
 
-    it("should apply the serializers when serialziers are specified", () => {
+    it("should apply the serializers when serializers are specified", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
         @Primary() @Field() id!: number;

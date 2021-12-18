@@ -19,7 +19,7 @@ module.exports = {
       { argsIgnorePattern: "^_", ignoreRestSiblings: true },
     ],
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": ["error", { ignoreRestArgs: true }],
+    "@typescript-eslint/no-explicit-any": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
   },

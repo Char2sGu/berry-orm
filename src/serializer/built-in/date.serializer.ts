@@ -1,4 +1,4 @@
-import { AbstractSerializer } from "./abstract.serializer";
+import { AbstractSerializer } from "../abstract.serializer";
 
 export class DateSerializer extends AbstractSerializer<Date, string> {
   serialize(value: Date): string {

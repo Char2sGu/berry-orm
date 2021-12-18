@@ -27,10 +27,6 @@ export class EntityManager {
 
   constructor(private orm: BerryOrm) {}
 
-  fork(): EntityManager {
-    return new EntityManager(this.orm);
-  }
-
   /**
    * Populate the entity using the data.
    * @param type

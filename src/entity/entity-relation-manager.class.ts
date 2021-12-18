@@ -16,7 +16,7 @@ export class EntityRelationManager {
   clearRelations<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
-  ): void {
+  ): this {
     this.invokeOnRelationField(
       entity,
       field,
@@ -32,6 +32,7 @@ export class EntityRelationManager {
         return relationEntities;
       },
     );
+    return this;
   }
 
   /**
@@ -45,7 +46,7 @@ export class EntityRelationManager {
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,
-  ): void {
+  ): this {
     this.invokeOnRelationFieldBilateral(
       entity,
       field,
@@ -53,6 +54,7 @@ export class EntityRelationManager {
       (targetEntity) => targetEntity,
       (targetEntity, entities) => entities.add(targetEntity),
     );
+    return this;
   }
 
   /**
@@ -66,7 +68,7 @@ export class EntityRelationManager {
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,
-  ): void {
+  ): this {
     this.invokeOnRelationFieldBilateral(
       entity,
       field,
@@ -77,6 +79,7 @@ export class EntityRelationManager {
         return entities;
       },
     );
+    return this;
   }
 
   /**
@@ -116,6 +119,7 @@ export class EntityRelationManager {
     const relationMeta = entity[META]!.fields[field].relation!;
     wrappedInvoke(entity, field, targetEntity);
     wrappedInvoke(targetEntity, relationMeta.inverse, entity);
+    return this;
   }
 
   /**
@@ -143,5 +147,6 @@ export class EntityRelationManager {
       const processed = onToOne(relationEntity);
       entity[field] = processed;
     }
+    return this;
   }
 }

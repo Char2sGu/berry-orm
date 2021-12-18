@@ -7,13 +7,13 @@ import { NestedSerializerMap } from "../../serializer/serializer-map/nested-seri
 import { NestedSerializerMapEmpty } from "../../serializer/serializer-map/nested-serializer-map-empty.type";
 import { SerializerType } from "../../serializer/serializer-type.interface";
 import { AnyEntity } from "../any-entity.type";
-import { RelationExpansions } from "../relation-expansions.type";
-import { RelationExpansionsEmpty } from "../relation-expansions-empty.type";
+import { EntityManagerExportExpansions } from "../entity-manager-export-expansions.type";
+import { EntityManagerExportExpansionsEmpty } from "../entity-manager-export-expansions-empty.type";
 
 export type EntityDataExported<
   Entity extends AnyEntity,
   Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
-  Expansions extends RelationExpansions<Entity> = RelationExpansionsEmpty<Entity>,
+  Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
 > = {
   [Field in CommonField<Entity>]: Serializers[Field] extends SerializerType<
     AbstractSerializer<Entity[Field], infer Value>
@@ -53,6 +53,6 @@ type NestedSerializerMapUniformed<
 type RelationExpansionsUniformed<
   Entity extends AnyEntity,
   Value,
-> = Value extends RelationExpansions<Entity>
+> = Value extends EntityManagerExportExpansions<Entity>
   ? Value
-  : RelationExpansionsEmpty<Entity>;
+  : EntityManagerExportExpansionsEmpty<Entity>;

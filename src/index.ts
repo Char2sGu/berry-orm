@@ -7,12 +7,12 @@ export { EntityDataExported } from "./entity/entity-data/entity-data-exported.ty
 export { EntityDataRelation } from "./entity/entity-data/entity-data-relation.type";
 export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-field-value.type";
 export { EntityManager } from "./entity/entity-manager.class";
+export { EntityManagerExportExpansions } from "./entity/entity-manager-export-expansions.type";
+export { EntityManagerExportExpansionsEmpty } from "./entity/entity-manager-export-expansions-empty.type";
 export { EntityRelationManager } from "./entity/entity-relation-manager.class";
 export { EntityType } from "./entity/entity-type.interface";
 export { IdentityMap } from "./entity/identity-map.class";
 export { IdentityMapManager } from "./entity/identity-map-manager.class";
-export { RelationExpansions } from "./entity/relation-expansions.type";
-export { RelationExpansionsEmpty } from "./entity/relation-expansions-empty.type";
 export { EntityPrimaryField } from "./field/entity-primary-field.type";
 export { EntityPrimaryKey } from "./field/entity-primary-key.type";
 export { BaseFieldAccessor as FieldAccessor } from "./field/field-accessors/base-field.accessor";

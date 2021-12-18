@@ -17,9 +17,9 @@ import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityData } from "./entity-data/entity-data.type";
 import { EntityDataExported } from "./entity-data/entity-data-exported.type";
+import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
+import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
 import { EntityType } from "./entity-type.interface";
-import { RelationExpansions } from "./relation-expansions.type";
-import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 
 export class EntityManager {
   constructor(private orm: BerryOrm) {}
@@ -137,7 +137,7 @@ export class EntityManager {
    */
   export<
     Entity extends AnyEntity,
-    Expansions extends RelationExpansions<Entity> = RelationExpansionsEmpty<Entity>,
+    Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
     Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
   >(
     entity: Entity,

@@ -1,12 +1,12 @@
-import { BerryOrm } from "../berry-orm.class";
-import { AnyEntity } from "../entity/any-entity.type";
-import { BaseAccessor } from "../utils/base.accessor";
-import { EntityField } from "./entity-field.type";
+import { BerryOrm } from "../../berry-orm.class";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { EntityField } from "../entity-field.type";
+import { PropertyAccessor } from "./property.accessor";
 
-export class BaseFieldAccessor<
+export class FieldAccessor<
   Entity extends AnyEntity = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
-> extends BaseAccessor<Entity, Field> {
+> extends PropertyAccessor<Entity, Field> {
   constructor(protected orm: BerryOrm, entity: Entity, field: Field) {
     super(entity, field);
   }

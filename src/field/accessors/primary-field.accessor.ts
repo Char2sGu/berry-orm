@@ -1,6 +1,6 @@
-import { AnyEntity } from "../entity/any-entity.type";
-import { CommonFieldAccessor } from "./common.field-accessor";
-import { PrimaryField } from "./primary-field.type";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { PrimaryField } from "../primary-field.type";
+import { CommonFieldAccessor } from "./common-field.accessor";
 
 export class PrimaryFieldAccessor<
   Entity extends AnyEntity<Entity, Field>,

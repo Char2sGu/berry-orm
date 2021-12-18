@@ -1,8 +1,8 @@
-import { AnyEntity } from "../entity/any-entity.type";
-import { CommonFieldAccessor } from "./common.field-accessor";
-import { RelationField } from "./relation-field.type";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { RelationField } from "../relation-field.type";
+import { CommonFieldAccessor } from "./common-field.accessor";
 
-export class RelationToOneFieldAccessor<
+export class RelationFieldToOneAccessor<
   Entity extends AnyEntity,
   Field extends RelationField<Entity>,
 > extends CommonFieldAccessor<Entity, Field> {

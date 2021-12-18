@@ -1,11 +1,11 @@
+import { CommonFieldAccessor } from "../field/accessors/common-field.accessor";
+import { PrimaryFieldAccessor } from "../field/accessors/primary-field.accessor";
+import { RelationFieldToManyAccessor } from "../field/accessors/relation-field-to-many.accessor";
+import { RelationFieldToOneAccessor } from "../field/accessors/relation-field-to-one.accessor";
 import { Collection } from "../field/collection.class";
-import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
-import { PrimaryFieldAccessor } from "../field/primary.field-accessor";
 import { PrimaryField } from "../field/primary-field.type";
 import { RelationField } from "../field/relation-field.type";
-import { RelationToManyFieldAccessor } from "../field/relation-to-many.field-accessor";
-import { RelationToOneFieldAccessor } from "../field/relation-to-one.field-accessor";
 import { EntityMeta } from "../meta/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
@@ -69,13 +69,13 @@ export abstract class BaseEntity<
     const accessor = isPrimaryField
       ? new PrimaryFieldAccessor(this.__orm, entity, field as Primary)
       : isCollectionField
-      ? new RelationToManyFieldAccessor(
+      ? new RelationFieldToManyAccessor(
           this.__orm,
           entity,
           field as RelationField<Entity>,
         )
       : isRelationEntityField
-      ? new RelationToOneFieldAccessor(
+      ? new RelationFieldToOneAccessor(
           this.__orm,
           entity,
           field as RelationField<Entity>,

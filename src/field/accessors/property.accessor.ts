@@ -1,4 +1,4 @@
-export class BaseAccessor<
+export class PropertyAccessor<
   // eslint-disable-next-line @typescript-eslint/ban-types
   Obj extends object,
   Key extends keyof Obj = keyof Obj,

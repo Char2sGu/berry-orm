@@ -9,7 +9,7 @@ import { Collection } from "../field/field-values/collection.class";
 import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
-import { EntityType } from "./entity-type.type";
+import { EntityType } from "./entity-type.interface";
 
 // It's not possible to use Active Record mode in Berry ORM because type
 // circular reference will happen and cause compile error.

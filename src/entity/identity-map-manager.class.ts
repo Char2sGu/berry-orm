@@ -1,6 +1,6 @@
 import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
-import { EntityType } from "./entity-type.type";
+import { EntityType } from "./entity-type.interface";
 import { IdentityMap } from "./identity-map.class";
 
 export class IdentityMapManager {

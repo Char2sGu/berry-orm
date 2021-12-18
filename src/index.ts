@@ -8,7 +8,7 @@ export { EntityDataRelation } from "./entity/entity-data/entity-data-relation.ty
 export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-field-value.type";
 export { EntityManager } from "./entity/entity-manager.class";
 export { EntityRelationManager } from "./entity/entity-relation-manager.class";
-export { EntityType } from "./entity/entity-type.type";
+export { EntityType } from "./entity/entity-type.interface";
 export { IdentityMap } from "./entity/identity-map.class";
 export { IdentityMapManager } from "./entity/identity-map-manager.class";
 export { RelationExpansions } from "./entity/relation-expansions.type";
@@ -43,7 +43,7 @@ export { NestedSerializerMap } from "./serializer/serializer-map/nested-serializ
 export { NestedSerializerMapEmpty } from "./serializer/serializer-map/nested-serializer-map-empty.type";
 export { SerializerMap } from "./serializer/serializer-map/serializer-map.type";
 export { SerializerMapEmpty } from "./serializer/serializer-map/serializer-map-empty.type";
-export { SerializerType } from "./serializer/serializer-type.type";
+export { SerializerType } from "./serializer/serializer-type.interface";
 export { META, POPULATED } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";

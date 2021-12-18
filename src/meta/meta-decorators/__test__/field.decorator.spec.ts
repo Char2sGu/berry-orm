@@ -1,5 +1,5 @@
 import { BaseEntity } from "../../..";
-import { EntityType } from "../../../entity/entity-type.type";
+import { EntityType } from "../../../entity/entity-type.interface";
 import { META } from "../../../symbols";
 import { EntityMeta } from "../../meta-objects/entity-meta.class";
 import { EntityMetaField } from "../../meta-objects/entity-meta-field.class";

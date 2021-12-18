@@ -8,7 +8,7 @@ import { DateSerializer } from "../../serializer/built-in/date.serializer";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
 import { EntityData } from "../entity-data/entity-data.type";
-import { EntityType } from "../entity-type.type";
+import { EntityType } from "../entity-type.interface";
 
 describe("EntityManager", () => {
   let orm: BerryOrm;

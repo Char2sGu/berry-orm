@@ -5,7 +5,7 @@ import { Collection } from "../../field/field-values/collection.class";
 import { AbstractSerializer } from "../../serializer/abstract.serializer";
 import { NestedSerializerMap } from "../../serializer/serializer-map/nested-serializer-map.type";
 import { NestedSerializerMapEmpty } from "../../serializer/serializer-map/nested-serializer-map-empty.type";
-import { SerializerType } from "../../serializer/serializer-type.type";
+import { SerializerType } from "../../serializer/serializer-type.interface";
 import { AnyEntity } from "../any-entity.type";
 import { RelationExpansions } from "../relation-expansions.type";
 import { RelationExpansionsEmpty } from "../relation-expansions-empty.type";

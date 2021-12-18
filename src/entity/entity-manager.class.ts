@@ -17,7 +17,7 @@ import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityData } from "./entity-data/entity-data.type";
 import { EntityDataExported } from "./entity-data/entity-data-exported.type";
-import { EntityType } from "./entity-type.type";
+import { EntityType } from "./entity-type.interface";
 import { RelationExpansions } from "./relation-expansions.type";
 import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 

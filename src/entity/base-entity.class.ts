@@ -6,7 +6,7 @@ import { RelationFieldToOneAccessor } from "../field/field-accessors/relation-fi
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { Collection } from "../field/field-values/collection.class";
-import { EntityMeta } from "../meta/entity-meta.class";
+import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityType } from "./entity-type.type";

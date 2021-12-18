@@ -2,9 +2,9 @@ import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.type";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { META } from "../symbols";
-import { EntityMeta } from "./entity-meta.class";
 import { EntityMetaError } from "./entity-meta.error";
-import { EntityMetaField } from "./entity-meta-field.class";
+import { EntityMeta } from "./meta-objects/entity-meta.class";
+import { EntityMetaField } from "./meta-objects/entity-meta-field.class";
 
 export const Field =
   () =>

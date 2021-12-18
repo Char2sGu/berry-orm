@@ -1,9 +1,9 @@
 import { BaseEntity } from "../..";
 import { EntityType } from "../../entity/entity-type.type";
 import { META } from "../../symbols";
-import { EntityMeta } from "../entity-meta.class";
-import { EntityMetaField } from "../entity-meta-field.class";
 import { Field } from "../field.decorator";
+import { EntityMeta } from "../meta-objects/entity-meta.class";
+import { EntityMetaField } from "../meta-objects/entity-meta-field.class";
 
 describe("@Field()", () => {
   let cls: EntityType;

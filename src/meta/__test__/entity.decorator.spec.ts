@@ -2,8 +2,8 @@ import { BaseEntity } from "../../entity/base-entity.class";
 import { EntityType } from "../../entity/entity-type.type";
 import { META } from "../../symbols";
 import { Entity } from "../entity.decorator";
-import { EntityMeta } from "../entity-meta.class";
 import { EntityMetaError } from "../entity-meta.error";
+import { EntityMeta } from "../meta-objects/entity-meta.class";
 
 describe("@Entity()", () => {
   let cls: EntityType;

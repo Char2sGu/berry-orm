@@ -6,9 +6,9 @@ import { Collection } from "../field/field-values/collection.class";
 import { EmptyValue } from "../field/field-values/empty-value.type";
 import { META } from "../symbols";
 import { ExtractKeys } from "../utils/extract-keys.type";
-import { EntityMeta } from "./entity-meta.class";
 import { EntityMetaError } from "./entity-meta.error";
-import { EntityMetaRelation } from "./entity-meta-relation.class";
+import { EntityMeta } from "./meta-objects/entity-meta.class";
+import { EntityMetaRelation } from "./meta-objects/entity-meta-relation.class";
 
 export const Relation =
   <TargetEntity extends AnyEntity, Multi extends boolean = false>(options: {

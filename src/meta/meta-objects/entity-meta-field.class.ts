@@ -1,5 +1,5 @@
-import { AnyEntity } from "../entity/any-entity.type";
-import { EntityField } from "../field/field-names/entity-field.type";
+import { AnyEntity } from "../../entity/any-entity.type";
+import { EntityField } from "../../field/field-names/entity-field.type";
 import { EntityMetaRelation } from "./entity-meta-relation.class";
 
 export class EntityMetaField<

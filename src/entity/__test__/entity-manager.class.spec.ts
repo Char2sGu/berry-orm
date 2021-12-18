@@ -4,7 +4,7 @@ import { Entity } from "../../meta/entity.decorator";
 import { Field } from "../../meta/field.decorator";
 import { Primary } from "../../meta/primary.decorator";
 import { Relation } from "../../meta/relation.decorator";
-import { DateSerializer } from "../../serializer/date.serializer";
+import { DateSerializer } from "../../serializer/built-in/date.serializer";
 import { POPULATED } from "../../symbols";
 import { BaseEntity } from "../base-entity.class";
 import { EntityData } from "../entity-data.type";

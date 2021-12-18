@@ -1,7 +1,7 @@
-import { Collection } from "../field/collection.class";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { CommonField } from "../field/field-types/common-field.type";
 import { RelationField } from "../field/field-types/relation-field.type";
+import { Collection } from "../field/field-values/collection.class";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
 import { NestedSerializerMap } from "../serializer/nested-serializer-map.type";
 import { NestedSerializerMapEmpty } from "../serializer/nested-serializer-map-empty.type";

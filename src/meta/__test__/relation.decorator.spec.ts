@@ -1,6 +1,6 @@
 import { BaseEntity } from "../../entity/base-entity.class";
 import { EntityType } from "../../entity/entity-type.type";
-import { Collection } from "../../field/collection.class";
+import { Collection } from "../../field/field-values/collection.class";
 import { EntityMetaError } from "../entity-meta.error";
 import { Field } from "../field.decorator";
 import { Relation } from "../relation.decorator";

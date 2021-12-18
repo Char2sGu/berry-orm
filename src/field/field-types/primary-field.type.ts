@@ -1,5 +1,5 @@
 import { AnyEntity, ExtractKeys } from "../..";
-import { PrimaryKey } from "../primary-key.type";
+import { PrimaryKey } from "../field-values/primary-key.type";
 import { CommonField } from "./common-field.type";
 
 export type PrimaryField<Entity extends AnyEntity> = Extract<

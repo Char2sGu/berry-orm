@@ -1,4 +1,4 @@
-import { Collection } from "../field/collection.class";
+import { Collection } from "../field/field-values/collection.class";
 import { AnyEntity } from "./any-entity.type";
 
 export type EntityOfRelation<

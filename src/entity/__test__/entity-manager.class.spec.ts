@@ -1,5 +1,5 @@
 import { BerryOrm } from "../../berry-orm.class";
-import { Collection } from "../../field/collection.class";
+import { Collection } from "../../field/field-values/collection.class";
 import { Entity } from "../../meta/entity.decorator";
 import { Field } from "../../meta/field.decorator";
 import { Primary } from "../../meta/primary.decorator";

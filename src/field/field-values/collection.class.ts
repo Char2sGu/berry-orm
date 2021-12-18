@@ -1,5 +1,5 @@
-import { BerryOrm } from "../berry-orm.class";
-import { AnyEntity } from "../entity/any-entity.type";
+import { BerryOrm } from "../../berry-orm.class";
+import { AnyEntity } from "../../entity/any-entity.type";
 
 export class Collection<Entity extends AnyEntity> extends Set<Entity> {
   constructor(

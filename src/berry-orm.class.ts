@@ -1,8 +1,8 @@
 import { AnyEntity } from "./entity/any-entity.type";
 import { EntityType } from "./entity/entity-type.interface";
 import { EntityManager } from "./managers/entity-manager.class";
-import { EntityRelationManager } from "./managers/entity-relation-manager.class";
 import { IdentityMapManager } from "./managers/identity-map-manager.class";
+import { RelationManager } from "./managers/relation-manager.class";
 import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 
@@ -37,14 +37,14 @@ export class BerryOrm {
     return registry;
   }
 
-  readonly erm: EntityRelationManager;
-  readonly imm: IdentityMapManager;
   readonly em: EntityManager;
+  readonly rm: RelationManager;
+  readonly imm: IdentityMapManager;
 
   private constructor(readonly registry: EntityRegistry) {
-    this.erm = new EntityRelationManager(this);
-    this.imm = new IdentityMapManager(this);
     this.em = new EntityManager(this);
+    this.rm = new RelationManager(this);
+    this.imm = new IdentityMapManager(this);
   }
 
   fork(): BerryOrm {

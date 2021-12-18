@@ -14,7 +14,7 @@ export class Collection<Entity extends AnyEntity> extends Set<Entity> {
     // end up recursion
     if (!this.has(entity)) {
       super.add(entity);
-      this.orm.erm.constructRelation(this.owner, this.field, entity);
+      this.orm.rm.constructRelation(this.owner, this.field, entity);
     }
     return this;
   }
@@ -23,13 +23,13 @@ export class Collection<Entity extends AnyEntity> extends Set<Entity> {
     // end up recursion
     if (this.has(entity)) {
       super.delete(entity);
-      this.orm.erm.destructRelation(this.owner, this.field, entity);
+      this.orm.rm.destructRelation(this.owner, this.field, entity);
       return true;
     }
     return false;
   }
 
   clear(): void {
-    this.orm.erm.clearRelations(this.owner, this.field);
+    this.orm.rm.clearRelations(this.owner, this.field);
   }
 }

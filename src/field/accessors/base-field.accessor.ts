@@ -2,7 +2,7 @@ import { BerryOrm } from "../../berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityField } from "../entity-field.type";
 
-export class FieldAccessor<
+export class BaseFieldAccessor<
   Entity extends AnyEntity = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {

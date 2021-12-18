@@ -3,6 +3,7 @@ import { PrimaryFieldAccessor } from "../field/accessors/primary-field.accessor"
 import { RelationFieldToManyAccessor } from "../field/accessors/relation-field-to-many.accessor";
 import { RelationFieldToOneAccessor } from "../field/accessors/relation-field-to-one.accessor";
 import { Collection } from "../field/collection.class";
+import { CommonField } from "../field/common-field.type";
 import { EntityField } from "../field/entity-field.type";
 import { PrimaryField } from "../field/primary-field.type";
 import { RelationField } from "../field/relation-field.type";
@@ -80,7 +81,11 @@ export abstract class BaseEntity<
           entity,
           field as RelationField<Entity>,
         )
-      : new CommonFieldAccessor(this.__orm, entity, field);
+      : new CommonFieldAccessor(
+          this.__orm,
+          entity,
+          field as CommonField<Entity>,
+        );
 
     accessor.apply();
 

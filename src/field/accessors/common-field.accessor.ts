@@ -1,8 +1,8 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { EntityField } from "../entity-field.type";
-import { FieldAccessor } from "./field.accessor";
+import { CommonField } from "../common-field.type";
+import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class CommonFieldAccessor<
   Entity extends AnyEntity = AnyEntity,
-  Field extends EntityField<Entity> = EntityField<Entity>,
-> extends FieldAccessor<Entity, Field> {}
+  Field extends CommonField<Entity> = CommonField<Entity>,
+> extends BaseFieldAccessor<Entity, Field> {}

@@ -4,10 +4,7 @@ export class DateSerializer extends AbstractSerializer<Date, string> {
   serialize(value: Date): string {
     return value.toISOString();
   }
-  deserialize(value: string): Date {
+  deserialize(value: string | Date): Date {
     return new Date(value);
-  }
-  distinguish(data: string | Date): data is Date {
-    return data instanceof Date;
   }
 }

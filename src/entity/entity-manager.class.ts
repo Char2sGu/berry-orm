@@ -61,9 +61,7 @@ export class EntityManager {
           const serializer = new serializerType!(
             this.orm,
           ) as AbstractSerializer<FieldValue>;
-          entity[commonField] = serializer.distinguish(fieldData)
-            ? fieldData
-            : serializer.deserialize(fieldData);
+          entity[commonField] = serializer.deserialize(fieldData);
         }
       } else {
         this.populateRelationField(

@@ -12,6 +12,5 @@ export abstract class AbstractSerializer<
     this.orm = orm;
   }
   abstract serialize(value: Internal): External;
-  abstract deserialize(value: External): Internal;
-  abstract distinguish(data: Internal | External): data is Internal;
+  abstract deserialize(value: External | Internal): Internal;
 }

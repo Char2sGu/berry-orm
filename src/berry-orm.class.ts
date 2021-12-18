@@ -7,21 +7,17 @@ import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 
 export class BerryOrm {
-  readonly erm;
-  readonly imm;
-  readonly em;
-
-  constructor(options: { entities: EntityType<AnyEntity>[] }) {
+  static create(options: { entities: EntityType<AnyEntity>[] }): BerryOrm {
     const registry = this.inspect(new Set(options.entities));
-    this.erm = new EntityRelationManager();
-    this.imm = new IdentityMapManager(registry, this.erm);
-    this.em = new EntityManager(this.imm, this.erm);
+    return new BerryOrm(registry);
   }
 
   /**
    * Check whether the entity registry can work correctly.
    */
-  private inspect(registry: Set<EntityType>) {
+  static inspect<Registry extends EntityRegistry>(
+    registry: Registry,
+  ): Registry {
     registry.forEach((type) => {
       if (!type.prototype[META])
         throw new EntityMetaError({ type, message: "Must be decorated" });
@@ -40,4 +36,16 @@ export class BerryOrm {
     });
     return registry;
   }
+
+  readonly erm: EntityRelationManager;
+  readonly imm: IdentityMapManager;
+  readonly em: EntityManager;
+
+  constructor(readonly registry: EntityRegistry) {
+    this.erm = new EntityRelationManager();
+    this.imm = new IdentityMapManager(registry, this.erm);
+    this.em = new EntityManager(this.imm, this.erm);
+  }
 }
+
+type EntityRegistry = Set<EntityType>;

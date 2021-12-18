@@ -1,7 +1,7 @@
 import { Collection } from "../field/field-values/collection.class";
 import { AnyEntity } from "./any-entity.type";
 
-export type EntityOfRelation<
+export type EntityFromRelationFieldValue<
   FieldValue extends AnyEntity | Collection<AnyEntity>,
 > = FieldValue extends AnyEntity
   ? FieldValue

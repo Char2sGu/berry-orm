@@ -1,3 +1,4 @@
+import { BerryOrm } from "../berry-orm.class";
 import { Collection } from "../field/collection.class";
 import { EmptyValue } from "../field/empty-value.type";
 import { RelationField } from "../field/relation-field.type";
@@ -5,6 +6,8 @@ import { META } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 
 export class EntityRelationManager {
+  constructor(readonly orm: BerryOrm) {}
+
   /**
    * Destruct any bilateral relation on the specified field of the entity.
    * @param entity

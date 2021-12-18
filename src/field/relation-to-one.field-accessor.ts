@@ -13,12 +13,7 @@ export class RelationToOneFieldAccessor<
 
     this.value = newValue;
     if (newValue)
-      this.relationManager.constructRelation(this.entity, this.field, newValue);
-    else
-      this.relationManager.destructRelation(
-        this.entity,
-        this.field,
-        currentValue,
-      );
+      this.orm.erm.constructRelation(this.entity, this.field, newValue);
+    else this.orm.erm.destructRelation(this.entity, this.field, currentValue);
   }
 }

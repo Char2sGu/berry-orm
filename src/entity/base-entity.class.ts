@@ -1,3 +1,4 @@
+import { BerryOrm } from "../berry-orm.class";
 import { Collection } from "../field/collection.class";
 import { CommonFieldAccessor } from "../field/common.field-accessor";
 import { EntityField } from "../field/entity-field.type";
@@ -47,12 +48,10 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
-  private readonly relationManager;
+  private __orm: BerryOrm;
 
-  constructor(
-    ...[relationManager, primaryKey]: ConstructorParameters<EntityType<Entity>>
-  ) {
-    this.relationManager = relationManager;
+  constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
+    this.__orm = orm;
     Object.keys(this[META]!.fields).forEach((field) =>
       this.initField(field as EntityField<Entity>),
     );
@@ -69,26 +68,26 @@ export abstract class BaseEntity<
       !!this[META]!.fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
-      ? new PrimaryFieldAccessor(this.relationManager, entity, field as Primary)
+      ? new PrimaryFieldAccessor(this.__orm, entity, field as Primary)
       : isCollectionField
       ? new RelationToManyFieldAccessor(
-          this.relationManager,
+          this.__orm,
           entity,
           field as RelationField<Entity>,
         )
       : isRelationEntityField
       ? new RelationToOneFieldAccessor(
-          this.relationManager,
+          this.__orm,
           entity,
           field as RelationField<Entity>,
         )
-      : new CommonFieldAccessor(this.relationManager, entity, field);
+      : new CommonFieldAccessor(this.__orm, entity, field);
 
     accessor.apply();
 
     if (isCollectionField)
       entity[field] = new Collection(
-        entity.relationManager,
+        entity.__orm,
         entity,
         field,
       ) as unknown as Entity[EntityField<Entity>];

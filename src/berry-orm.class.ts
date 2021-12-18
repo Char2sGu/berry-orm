@@ -42,9 +42,9 @@ export class BerryOrm {
   readonly em: EntityManager;
 
   private constructor(readonly registry: EntityRegistry) {
-    this.erm = new EntityRelationManager();
-    this.imm = new IdentityMapManager(registry, this.erm);
-    this.em = new EntityManager(this.imm, this.erm);
+    this.erm = new EntityRelationManager(this);
+    this.imm = new IdentityMapManager(this);
+    this.em = new EntityManager(this);
   }
 
   fork(): BerryOrm {

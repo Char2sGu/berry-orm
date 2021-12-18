@@ -1,3 +1,4 @@
+import { BerryOrm } from "../berry-orm.class";
 import { Collection } from "../field/collection.class";
 import { CommonField } from "../field/common-field.type";
 import { EntityField } from "../field/entity-field.type";
@@ -15,18 +16,13 @@ import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityData } from "./entity-data.type";
 import { EntityDataExported } from "./entity-data-exported.type";
-import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity-type.interface";
-import { IdentityMapManager } from "./identity-map-manager.class";
 import { RelationEntityRepresentation } from "./relation-entity-representation.type";
 import { RelationExpansions } from "./relation-expansions.type";
 import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 
 export class EntityManager {
-  constructor(
-    private readonly identityMapManager: IdentityMapManager,
-    private readonly relationManager: EntityRelationManager,
-  ) {}
+  constructor(readonly orm: BerryOrm) {}
 
   /**
    * Populate the entity using the data.
@@ -44,7 +40,7 @@ export class EntityManager {
     serializers?: Serializers,
   ): Entity {
     const primaryKey = data[type.prototype[META]!.primary] as Entity[Primary];
-    const entity = this.identityMapManager.get(type).get(primaryKey);
+    const entity = this.orm.imm.get(type).get(primaryKey);
 
     for (const k in entity[META]!.fields) {
       const field = k as CommonField<Entity> | RelationField<Entity>;
@@ -63,7 +59,7 @@ export class EntityManager {
           entity[commonField] = fieldData as FieldValue;
         } else {
           const serializer = new serializerType!(
-            this.relationManager,
+            this.orm,
           ) as AbstractSerializer<FieldValue>;
           entity[commonField] = serializer.distinguish(fieldData)
             ? fieldData
@@ -97,7 +93,7 @@ export class EntityManager {
     field: Field,
     data: RelationFieldData<Entity, Field>,
   ): void {
-    this.relationManager.clearRelations(entity, field);
+    this.orm.erm.clearRelations(entity, field);
 
     if (!data) return;
 
@@ -111,7 +107,7 @@ export class EntityManager {
         field,
         data,
       );
-      this.relationManager.constructRelation(entity, field, targetEntity);
+      this.orm.erm.constructRelation(entity, field, targetEntity);
     });
   }
 
@@ -131,7 +127,7 @@ export class EntityManager {
     if (typeof reference == "object") {
       return this.populate(relationMeta.target(), reference);
     } else {
-      return this.identityMapManager.get(relationMeta.target()).get(reference);
+      return this.orm.imm.get(relationMeta.target()).get(reference);
     }
   }
 
@@ -164,7 +160,7 @@ export class EntityManager {
         if (!serializerType) {
           data[field] = entity[field];
         } else {
-          const serializer = new serializerType!(this.relationManager);
+          const serializer = new serializerType!(this.orm);
           const value = serializer.serialize(entity[field]);
           data[field] = value as typeof data[typeof field];
         }

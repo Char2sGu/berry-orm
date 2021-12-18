@@ -1,6 +1,6 @@
+import { BerryOrm } from "../berry-orm.class";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { AnyEntity } from "./any-entity.type";
-import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity-type.interface";
 
 export class IdentityMap<Entity extends AnyEntity> extends Map<
@@ -8,8 +8,8 @@ export class IdentityMap<Entity extends AnyEntity> extends Map<
   Entity
 > {
   constructor(
+    readonly orm: BerryOrm,
     private readonly type: EntityType<Entity>,
-    readonly relationManager: EntityRelationManager,
   ) {
     super();
   }
@@ -17,7 +17,7 @@ export class IdentityMap<Entity extends AnyEntity> extends Map<
   get(key: EntityPrimaryKey<Entity>): Entity {
     let entity = super.get(key);
     if (!entity) {
-      entity = new this.type(this.relationManager, key);
+      entity = new this.type(this.orm, key);
       this.set(key, entity);
     }
     return entity;

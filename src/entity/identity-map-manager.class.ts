@@ -1,5 +1,5 @@
+import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
-import { EntityRelationManager } from "./entity-relation-manager.class";
 import { EntityType } from "./entity-type.interface";
 import { IdentityMap } from "./identity-map.class";
 
@@ -9,10 +9,7 @@ export class IdentityMapManager {
     IdentityMap<AnyEntity>
   >();
 
-  constructor(
-    private readonly registry: Set<EntityType>,
-    private readonly relationManager: EntityRelationManager,
-  ) {}
+  constructor(readonly orm: BerryOrm) {}
 
   get<Entity extends AnyEntity>(type: EntityType<Entity>): IdentityMap<Entity> {
     this.checkType(type);
@@ -29,13 +26,13 @@ export class IdentityMapManager {
   private createIdentityMap<Entity extends AnyEntity>(
     type: EntityType<Entity>,
   ) {
-    const map = new IdentityMap(type, this.relationManager);
+    const map = new IdentityMap(this.orm, type);
     this.identityMaps.set(type, map);
     return map;
   }
 
   private checkType(type: EntityType) {
-    if (!this.registry.has(type))
+    if (!this.orm.registry.has(type))
       throw new Error(`${type.name} is not a known entity type`);
   }
 }

@@ -34,6 +34,7 @@ export class IdentityMap {
   }
 
   forEach = this.map.forEach.bind(this.map);
+  clear = this.map.clear.bind(this.map);
   [Symbol.iterator] = this.map[Symbol.iterator].bind(this.map);
 
   private identify<Entity extends AnyEntity>(

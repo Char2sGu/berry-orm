@@ -8,7 +8,7 @@ export class IdentityMap<Entity extends AnyEntity> extends Map<
   Entity
 > {
   constructor(
-    readonly orm: BerryOrm,
+    private orm: BerryOrm,
     private readonly type: EntityType<Entity>,
   ) {
     super();

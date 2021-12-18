@@ -9,7 +9,7 @@ export class IdentityMapManager {
     IdentityMap<AnyEntity>
   >();
 
-  constructor(readonly orm: BerryOrm) {}
+  constructor(private orm: BerryOrm) {}
 
   get<Entity extends AnyEntity>(type: EntityType<Entity>): IdentityMap<Entity> {
     this.checkType(type);

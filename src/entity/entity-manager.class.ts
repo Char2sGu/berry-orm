@@ -22,7 +22,7 @@ import { RelationExpansions } from "./relation-expansions.type";
 import { RelationExpansionsEmpty } from "./relation-expansions-empty.type";
 
 export class EntityManager {
-  constructor(readonly orm: BerryOrm) {}
+  constructor(private orm: BerryOrm) {}
 
   /**
    * Populate the entity using the data.

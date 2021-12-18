@@ -43,10 +43,6 @@ export class BerryOrm {
     this.em = new EntityManager(this);
     this.rm = new RelationManager(this);
   }
-
-  fork(): BerryOrm {
-    return new BerryOrm(this.registry);
-  }
 }
 
 type EntityRegistry = Set<EntityType>;

@@ -1,9 +1,9 @@
 import { BerryOrm } from "../berry-orm.class";
+import { AnyEntity } from "../entity/any-entity.type";
 import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { EmptyValue } from "../field/field-values/empty-value.type";
 import { META } from "../symbols";
-import { AnyEntity } from "./any-entity.type";
 
 export class EntityRelationManager {
   constructor(private orm: BerryOrm) {}

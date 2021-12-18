@@ -1,8 +1,8 @@
 import { AnyEntity } from "./entity/any-entity.type";
-import { EntityManager } from "./entity/entity-manager.class";
-import { EntityRelationManager } from "./entity/entity-relation-manager.class";
 import { EntityType } from "./entity/entity-type.interface";
-import { IdentityMapManager } from "./entity/identity-map-manager.class";
+import { EntityManager } from "./managers/entity-manager.class";
+import { EntityRelationManager } from "./managers/entity-relation-manager.class";
+import { IdentityMapManager } from "./managers/identity-map-manager.class";
 import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 

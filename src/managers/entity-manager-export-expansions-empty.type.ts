@@ -1,4 +1,4 @@
-import { AnyEntity } from "./any-entity.type";
+import { AnyEntity } from "../entity/any-entity.type";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 
 export type EntityManagerExportExpansionsEmpty<Entity extends AnyEntity> =

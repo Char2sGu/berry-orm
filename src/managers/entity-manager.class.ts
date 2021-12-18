@@ -1,5 +1,9 @@
 import { PrimaryField } from "..";
 import { BerryOrm } from "../berry-orm.class";
+import { AnyEntity } from "../entity/any-entity.type";
+import { EntityData } from "../entity/entity-data/entity-data.type";
+import { EntityDataExported } from "../entity/entity-data/entity-data-exported.type";
+import { EntityType } from "../entity/entity-type.interface";
 import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { RelationFieldData } from "../field/field-data/relation-field-data.type";
 import { RelationFieldValueRepresentation } from "../field/field-data/relation-field-value-representation.type";
@@ -14,12 +18,8 @@ import { NestedSerializerMapEmpty } from "../serializer/serializer-map/nested-se
 import { SerializerMap } from "../serializer/serializer-map/serializer-map.type";
 import { SerializerMapEmpty } from "../serializer/serializer-map/serializer-map-empty.type";
 import { META, POPULATED } from "../symbols";
-import { AnyEntity } from "./any-entity.type";
-import { EntityData } from "./entity-data/entity-data.type";
-import { EntityDataExported } from "./entity-data/entity-data-exported.type";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
-import { EntityType } from "./entity-type.interface";
 
 export class EntityManager {
   constructor(private orm: BerryOrm) {}

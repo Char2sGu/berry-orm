@@ -1,5 +1,5 @@
 /**Build description. */
 const d = (s: string) => `berry-orm:${s}`;
 
-export const POPULATED = Symbol(d("populated"));
+export const RESOLVED = Symbol(d("resolved"));
 export const META = Symbol(d("meta"));

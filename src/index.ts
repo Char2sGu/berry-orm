@@ -6,6 +6,7 @@ export { EntityDataCommon } from "./entity/entity-data/entity-data-common.type";
 export { EntityDataExported } from "./entity/entity-data/entity-data-exported.type";
 export { EntityDataRelational } from "./entity/entity-data/entity-data-relational.type";
 export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-field-value.type";
+export { EntityRepresentation } from "./entity/entity-representation.type";
 export { EntityType } from "./entity/entity-type.interface";
 export { BaseFieldAccessor } from "./field/field-accessors/base-field.accessor";
 export { CommonFieldAccessor } from "./field/field-accessors/common-field.accessor";
@@ -13,7 +14,6 @@ export { PrimaryFieldAccessor } from "./field/field-accessors/primary-field.acce
 export { RelationFieldToManyAccessor } from "./field/field-accessors/relation-field-to-many.accessor";
 export { RelationFieldToOneAccessor } from "./field/field-accessors/relation-field-to-one.accessor";
 export { RelationFieldData } from "./field/field-data/relation-field-data.type";
-export { RelationFieldValueRepresentation } from "./field/field-data/relation-field-value-representation.type";
 export { CommonField } from "./field/field-names/common-field.type";
 export { EntityField } from "./field/field-names/entity-field.type";
 export { EntityFieldBase } from "./field/field-names/entity-field-base.type";
@@ -46,6 +46,6 @@ export { NestedSerializerMapEmpty } from "./serializer/serializer-map/nested-ser
 export { SerializerMap } from "./serializer/serializer-map/serializer-map.type";
 export { SerializerMapEmpty } from "./serializer/serializer-map/serializer-map-empty.type";
 export { SerializerType } from "./serializer/serializer-type.interface";
-export { META, POPULATED } from "./symbols";
+export { META, RESOLVED as POPULATED } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";

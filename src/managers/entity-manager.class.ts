@@ -2,9 +2,9 @@ import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityData } from "../entity/entity-data/entity-data.type";
 import { EntityDataExported } from "../entity/entity-data/entity-data-exported.type";
+import { EntityRepresentation } from "../entity/entity-representation.type";
 import { EntityType } from "../entity/entity-type.interface";
 import { RelationFieldData } from "../field/field-data/relation-field-data.type";
-import { RelationFieldValueRepresentation } from "../field/field-data/relation-field-value-representation.type";
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { PrimaryField } from "../field/field-names/primary-field.type";
@@ -18,7 +18,7 @@ import { NestedSerializerMapEmpty } from "../serializer/serializer-map/nested-se
 import { SerializerMap } from "../serializer/serializer-map/serializer-map.type";
 import { SerializerMapEmpty } from "../serializer/serializer-map/serializer-map-empty.type";
 import { SerializerType } from "../serializer/serializer-type.interface";
-import { META, POPULATED } from "../symbols";
+import { META, RESOLVED } from "../symbols";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
 import { IdentityMap } from "./identity-map.class";
@@ -28,13 +28,7 @@ export class EntityManager {
 
   constructor(private orm: BerryOrm) {}
 
-  /**
-   * Populate the entity using the data.
-   * @param type
-   * @param data
-   * @returns
-   */
-  populate<
+  resolve<
     Entity extends AnyEntity<Entity>,
     Serializers extends SerializerMap<Entity> = SerializerMapEmpty<Entity>,
   >(
@@ -66,23 +60,24 @@ export class EntityManager {
         }
       } else {
         const field = f as RelationField<Entity>;
-        this.populateRelationField(entity, field, data[field]);
+        this.resolveRelation(entity, field, data[field]);
       }
     }
 
-    entity[POPULATED] = true;
+    entity[RESOLVED] = true;
 
     return entity;
   }
 
   /**
-   * Populate the specified relation field of the entity using the data.
+   * Resolve the data to update the relation on the specified field of the
+   * entity.
    * @param entity
    * @param field
    * @param data
    * @returns
    */
-  populateRelationField<
+  resolveRelation<
     Entity extends AnyEntity<Entity>,
     Field extends RelationField<Entity>,
   >(
@@ -97,32 +92,28 @@ export class EntityManager {
     const relationMeta = entity[META].fields[field].relation!;
     const representations = (
       relationMeta.multi ? data : [data]
-    ) as RelationFieldValueRepresentation[];
+    ) as EntityRepresentation[];
     representations.forEach((data) => {
-      const targetEntity = this.resolveRelationRepresentation(
-        entity,
-        field,
-        data,
-      );
+      const targetEntity = this.resolveRepresentation(entity, field, data);
       this.orm.rm.constructRelation(entity, field, targetEntity);
     });
   }
 
   /**
-   * Get the target relation entity from a primary key or a data object.
+   * Resolve a primary key or a data object.
    * @param entity
    * @param field
    * @param representation
    * @returns
    */
-  resolveRelationRepresentation<Entity extends AnyEntity<Entity>>(
+  resolveRepresentation<Entity extends AnyEntity<Entity>>(
     entity: Entity,
     field: RelationField<Entity>,
-    representation: RelationFieldValueRepresentation,
+    representation: EntityRepresentation,
   ): AnyEntity {
     const relationMeta = entity[META].fields[field].relation!;
     if (typeof representation == "object") {
-      return this.populate(relationMeta.target(), representation);
+      return this.resolve(relationMeta.target(), representation);
     } else {
       return this.map.get(relationMeta.target(), representation);
     }
@@ -143,7 +134,7 @@ export class EntityManager {
     expansions?: Expansions,
     serializers?: Serializers,
   ): EntityDataExported<Entity, Serializers, Expansions> {
-    if (!entity[POPULATED])
+    if (!entity[RESOLVED])
       throw new Error("Unpopulated entities cannot be exported");
 
     const data: Partial<EntityDataExported<Entity, Serializers, Expansions>> =

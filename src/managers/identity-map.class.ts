@@ -33,6 +33,15 @@ export class IdentityMap {
     return this;
   }
 
+  has<Entity extends AnyEntity>(
+    type: EntityType<Entity>,
+    primaryKey: EntityPrimaryKey<Entity>,
+  ): boolean {
+    this.checkType(type);
+    const id = this.identify(type, primaryKey);
+    return this.map.has(id);
+  }
+
   forEach = this.map.forEach.bind(this.map);
   clear = this.map.clear.bind(this.map);
   [Symbol.iterator] = this.map[Symbol.iterator].bind(this.map);

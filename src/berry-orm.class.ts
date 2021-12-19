@@ -49,7 +49,7 @@ export class BerryOrm {
     type: EntityType<Entity>,
     field: EntityField<Entity>,
   ) {
-    const meta = type.prototype[META]!.fields[field];
+    const meta = type.prototype[META].fields[field];
     if (meta.relation) {
       if (!this.registry.has(meta.relation.target()))
         throw new EntityMetaError({
@@ -59,7 +59,7 @@ export class BerryOrm {
         });
 
       const metaInverse =
-        meta.relation.target().prototype[META]!.fields[meta.relation.inverse];
+        meta.relation.target().prototype[META].fields[meta.relation.inverse];
 
       if (!metaInverse.relation)
         throw new EntityMetaError({

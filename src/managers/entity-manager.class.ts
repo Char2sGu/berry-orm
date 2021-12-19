@@ -42,18 +42,18 @@ export class EntityManager {
     data: EntityData<Entity, Serializers>,
     serializers?: Serializers,
   ): Entity {
-    const primaryKey = data[type.prototype[META]!.primary] as Entity[Primary];
+    const primaryKey = data[type.prototype[META].primary] as Entity[Primary];
     const entity = this.map.get(type, primaryKey);
 
-    for (const k in entity[META]!.fields) {
+    for (const k in entity[META].fields) {
       const field = k as CommonField<Entity> | RelationField<Entity>;
       const fieldData = data[field];
 
       if (!(field in data)) continue;
-      if (field == entity[META]!.primary) continue;
+      if (field == entity[META].primary) continue;
 
       const isRelationField = (f: unknown): f is RelationField<Entity> =>
-        !!entity[META]!.fields[field].relation;
+        !!entity[META].fields[field].relation;
       if (!isRelationField(field)) {
         type FieldValue = Entity[CommonField<Entity>];
         const commonField = field as CommonField<Entity>;
@@ -98,7 +98,7 @@ export class EntityManager {
 
     if (!data) return;
 
-    const relationMeta = entity[META]!.fields[field].relation!;
+    const relationMeta = entity[META].fields[field].relation!;
     const representations = (
       relationMeta.multi ? data : [data]
     ) as RelationFieldValueRepresentation[];
@@ -124,7 +124,7 @@ export class EntityManager {
     field: RelationField<Entity>,
     representation: RelationFieldValueRepresentation,
   ): AnyEntity {
-    const relationMeta = entity[META]!.fields[field].relation!;
+    const relationMeta = entity[META].fields[field].relation!;
     if (typeof representation == "object") {
       return this.populate(relationMeta.target(), representation);
     } else {
@@ -152,7 +152,7 @@ export class EntityManager {
 
     const data: Partial<EntityDataExported<Entity, Serializers, Expansions>> =
       {};
-    const meta = entity[META]!;
+    const meta = entity[META];
     for (const k in meta.fields) {
       const f = k as EntityField<Entity>;
       if (!meta.fields[f].relation) {
@@ -171,7 +171,7 @@ export class EntityManager {
         if (!expansions?.[field]) {
           const getPrimaryKey = <Entity extends AnyEntity>(
             entity: Entity,
-          ): EntityPrimaryKey<Entity> => entity[entity[META]!.primary];
+          ): EntityPrimaryKey<Entity> => entity[entity[META].primary];
 
           if (!relationMeta.multi) {
             data[field] = getPrimaryKey(entity[field] as AnyEntity);

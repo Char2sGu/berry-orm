@@ -116,7 +116,7 @@ export class RelationManager {
         onToMany ? (entities) => onToMany(targetEntity, entities) : undefined,
       );
 
-    const relationMeta = entity[META]!.fields[field].relation!;
+    const relationMeta = entity[META].fields[field].relation!;
     wrappedInvoke(entity, field, targetEntity);
     wrappedInvoke(targetEntity, relationMeta.inverse, entity);
     return this;
@@ -136,7 +136,7 @@ export class RelationManager {
     onToOne?: (entity: AnyEntity | EmptyValue) => AnyEntity | EmptyValue,
     onToMany?: (entities: Collection<AnyEntity>) => void,
   ) {
-    const relationMeta = entity[META]!.fields[field].relation;
+    const relationMeta = entity[META].fields[field].relation;
     if (relationMeta?.multi) {
       if (!onToMany) return;
       const relationEntities = entity[field] as Collection<AnyEntity>;

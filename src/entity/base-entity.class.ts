@@ -39,19 +39,19 @@ export abstract class BaseEntity<
     Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
   >(entity: Entity, primaryKey: Entity[Primary]) {
-    for (const field of Object.keys(entity[META]!.fields))
+    for (const field of Object.keys(entity[META].fields))
       this.initField(entity, field as EntityField<Entity>);
-    entity[entity[META]!.primary] = primaryKey;
+    entity[entity[META].primary] = primaryKey;
   }
 
   private static initField<
     Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
   >(entity: Entity, field: EntityField<Entity>) {
-    const isPrimaryField = entity[META]!.primary == field;
-    const isCollectionField = !!entity[META]!.fields[field].relation?.multi;
+    const isPrimaryField = entity[META].primary == field;
+    const isCollectionField = !!entity[META].fields[field].relation?.multi;
     const isRelationEntityField =
-      !!entity[META]!.fields[field].relation && !isCollectionField;
+      !!entity[META].fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
       ? new PrimaryFieldAccessor(entity[ORM], entity, field as Primary)
@@ -86,10 +86,10 @@ export abstract class BaseEntity<
   /**
    * Definition metadata of this entity type.
    *
-   * It is marked as _optional_ because it only exists when there are at least
-   * one decorator applied.
+   * Potentially `undefined` because it only exists when there are at least one
+   * decorator applied.
    */
-  [META]?: EntityMeta<Entity, Primary>;
+  [META]: EntityMeta<Entity, Primary>;
 
   /**
    * Indicates that the **data** fields (**relation** fields not included) of

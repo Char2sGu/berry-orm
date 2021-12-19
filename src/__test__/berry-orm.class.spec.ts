@@ -62,10 +62,12 @@ describe("BerryOrm", () => {
       const base = new BerryOrm({ entities: [] });
       const sub = base.fork();
 
+      expect(sub.parent).toBeInstanceOf(BerryOrm);
       expect(sub.em).toBeInstanceOf(EntityManager);
       expect(sub.rm).toBeInstanceOf(RelationManager);
       expect(sub.registry).toBeInstanceOf(Set);
 
+      expect(sub.parent).toBe(base);
       expect(sub.em).not.toBe(base.em);
       expect(sub.rm).not.toBe(base.rm);
       expect(sub.registry).toBe(base.registry);

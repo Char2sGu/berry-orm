@@ -1,3 +1,4 @@
+import { EntityManager, RelationManager } from "..";
 import { BerryOrm } from "../berry-orm.class";
 import { BaseEntity } from "../entity/base-entity.class";
 import { EntityMetaError } from "../meta/entity-meta.error";
@@ -53,6 +54,21 @@ describe("BerryOrm", () => {
       expect(() => {
         new BerryOrm({ entities: [TestingEntity] });
       }).toThrowError(EntityMetaError);
+    });
+  });
+
+  describe(".fork()", () => {
+    it("should fork the original instance", () => {
+      const base = new BerryOrm({ entities: [] });
+      const sub = base.fork();
+
+      expect(sub.em).toBeInstanceOf(EntityManager);
+      expect(sub.rm).toBeInstanceOf(RelationManager);
+      expect(sub.registry).toBeInstanceOf(Set);
+
+      expect(sub.em).not.toBe(base.em);
+      expect(sub.rm).not.toBe(base.rm);
+      expect(sub.registry).toBe(base.registry);
     });
   });
 });

@@ -7,6 +7,7 @@ import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 
 export class BerryOrm {
+  readonly parent?: BerryOrm;
   readonly registry: Set<EntityType>;
   readonly em: EntityManager;
   readonly rm: RelationManager;
@@ -16,6 +17,22 @@ export class BerryOrm {
     this.inspect();
     this.em = new EntityManager(this);
     this.rm = new RelationManager(this);
+  }
+
+  fork(): BerryOrm {
+    const orm: BerryOrm = Object.create(BerryOrm.prototype);
+    define("parent", this);
+    define("registry", this.registry);
+    define("em", new EntityManager(this));
+    define("rm", new RelationManager(this));
+    return orm;
+
+    function define<Key extends keyof BerryOrm>(
+      key: Key,
+      value: BerryOrm[Key],
+    ) {
+      Object.defineProperty(orm, key, { value });
+    }
   }
 
   private inspect() {

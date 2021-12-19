@@ -1,11 +1,9 @@
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityType } from "../../entity/entity-type.interface";
-import { EntityField } from "../../field/field-names/entity-field.type";
 import { RelationField } from "../../field/field-names/relation-field.type";
-import { Collection } from "../../field/field-values/collection.class";
-import { EmptyValue } from "../../field/field-values/empty-value.type";
+import { RelationFieldToMany } from "../../field/field-names/relation-field-to-many.type";
+import { RelationFieldToOne } from "../../field/field-names/relation-field-to-one.type";
 import { META } from "../../symbols";
-import { ExtractKeys } from "../../utils/extract-keys.type";
 import { EntityMetaError } from "../entity-meta.error";
 import { EntityMeta } from "../meta-objects/entity-meta.class";
 import { EntityMetaRelation } from "../meta-objects/entity-meta-relation.class";
@@ -19,14 +17,8 @@ export const Relation =
   <Entity extends AnyEntity>(
     prototype: Entity,
     field: Multi extends true
-      ? Extract<
-          EntityField<Entity>,
-          ExtractKeys<Entity, Collection<TargetEntity>>
-        >
-      : Extract<
-          EntityField<Entity>,
-          ExtractKeys<Entity, TargetEntity | EmptyValue>
-        >,
+      ? RelationFieldToMany<Entity>
+      : RelationFieldToOne<Entity>,
   ): void => {
     const meta = prototype[META] as EntityMeta<Entity> | undefined;
     if (!meta?.fields[field])

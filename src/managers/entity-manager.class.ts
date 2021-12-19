@@ -48,37 +48,30 @@ export class EntityManager {
     const entity = this.map.get(type, primaryKey);
 
     for (const k in entity[META].fields) {
-      const field = k as
-        | PrimaryField<Entity>
-        | CommonField<Entity>
-        | RelationField<Entity>;
-      const fieldData = data[field];
+      const f = k as EntityField<Entity>;
+      if (!(f in data)) continue;
+      if (f == entity[META].primary) continue;
 
-      if (!(field in data)) continue;
-      if (field == entity[META].primary) continue;
-
-      const isRelationField = (f: unknown): f is RelationField<Entity> =>
+      const isRelationField = (field = f): field is RelationField<Entity> =>
         !!entity[META].fields[field].relation;
-      if (!isRelationField(field)) {
-        type FieldValue = Entity[CommonField<Entity>];
-        const commonField = field as CommonField<Entity>;
-        const serializerType = serializers?.[commonField];
-        if (!serializerType) {
-          entity[commonField] = fieldData as FieldValue;
+
+      if (!isRelationField(f)) {
+        type FieldValue = Entity[CommonField<Entity> | PrimaryField<Entity>];
+        const field = f as CommonField<Entity> | PrimaryField<Entity>;
+
+        if (!(serializers && field in serializers)) {
+          entity[field] = data[field] as FieldValue;
         } else {
-          const serializer = new serializerType!(
-            this.orm,
-          ) as AbstractSerializer<FieldValue>;
-          entity[commonField] = serializer.deserialize(fieldData);
+          type Type = SerializerType<AbstractSerializer<FieldValue>>;
+          const serializer = new (serializers[field]! as Type)(this.orm);
+          entity[field] = serializer.deserialize(data[field]);
         }
       } else {
-        this.populateRelationField(
-          entity,
-          field as RelationField<Entity>,
-          fieldData as RelationFieldData<Entity>,
-        );
+        const field = f as RelationField<Entity>;
+        this.populateRelationField(entity, field, data[field]);
       }
     }
+
     entity[POPULATED] = true;
 
     return entity;

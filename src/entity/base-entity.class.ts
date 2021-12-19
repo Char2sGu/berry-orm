@@ -11,8 +11,6 @@ import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityType } from "./entity-type.interface";
 
-const ORM = Symbol("berry-orm:orm");
-
 // It's not possible to use Active Record mode in Berry ORM because type
 // circular reference will happen and cause compile error.
 
@@ -38,46 +36,42 @@ export abstract class BaseEntity<
   private static init<
     Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
-  >(entity: Entity, primaryKey: Entity[Primary]) {
+  >(orm: BerryOrm, entity: Entity, primaryKey: Entity[Primary]) {
     for (const field of Object.keys(entity[META].fields))
-      this.initField(entity, field as EntityField<Entity>);
+      this.initField(orm, entity, field as EntityField<Entity>);
     entity[entity[META].primary] = primaryKey;
   }
 
   private static initField<
     Entity extends AnyEntity<Entity, Primary>,
     Primary extends PrimaryField<Entity>,
-  >(entity: Entity, field: EntityField<Entity>) {
+  >(orm: BerryOrm, entity: Entity, field: EntityField<Entity>) {
     const isPrimaryField = entity[META].primary == field;
     const isCollectionField = !!entity[META].fields[field].relation?.multi;
     const isRelationEntityField =
       !!entity[META].fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
-      ? new PrimaryFieldAccessor(entity[ORM], entity, field as Primary)
+      ? new PrimaryFieldAccessor(orm, entity, field as Primary)
       : isCollectionField
       ? new RelationFieldToManyAccessor(
-          entity[ORM],
+          orm,
           entity,
           field as RelationField<Entity>,
         )
       : isRelationEntityField
       ? new RelationFieldToOneAccessor(
-          entity[ORM],
+          orm,
           entity,
           field as RelationField<Entity>,
         )
-      : new CommonFieldAccessor(
-          entity[ORM],
-          entity,
-          field as CommonField<Entity>,
-        );
+      : new CommonFieldAccessor(orm, entity, field as CommonField<Entity>);
 
     accessor.apply();
 
     if (isCollectionField)
       entity[field] = new Collection(
-        entity[ORM],
+        orm,
         entity,
         field,
       ) as unknown as Entity[EntityField<Entity>];
@@ -97,10 +91,7 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
-  private [ORM]: BerryOrm;
-
   constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
-    this[ORM] = orm;
-    BaseEntity.init(this as Entity, primaryKey);
+    BaseEntity.init(orm, this as Entity, primaryKey);
   }
 }

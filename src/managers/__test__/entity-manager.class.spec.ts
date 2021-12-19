@@ -1,4 +1,7 @@
 import { BerryOrm } from "../../berry-orm.class";
+import { BaseEntity } from "../../entity/base-entity.class";
+import { EntityData } from "../../entity/entity-data/entity-data.type";
+import { EntityType } from "../../entity/entity-type.interface";
 import { Collection } from "../../field/field-values/collection.class";
 import { Entity } from "../../meta/meta-decorators/entity.decorator";
 import { Field } from "../../meta/meta-decorators/field.decorator";
@@ -6,9 +9,6 @@ import { Primary } from "../../meta/meta-decorators/primary.decorator";
 import { Relation } from "../../meta/meta-decorators/relation.decorator";
 import { DateSerializer } from "../../serializer/built-in/date.serializer";
 import { POPULATED } from "../../symbols";
-import { BaseEntity } from "../base-entity.class";
-import { EntityData } from "../entity-data/entity-data.type";
-import { EntityType } from "../entity-type.interface";
 
 describe("EntityManager", () => {
   let orm: BerryOrm;

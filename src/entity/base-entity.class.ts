@@ -11,7 +11,7 @@ import { RelationFieldToOne } from "../field/field-names/relation-field-to-one.t
 import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
-import { META, POPULATED } from "../symbols";
+import { META, RESOLVED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityType } from "./entity-type.interface";
 
@@ -95,7 +95,7 @@ export abstract class BaseEntity<
    * Indicates that the **data** fields (**relation** fields not included) of
    * the this has been populated.
    */
-  [POPULATED] = false;
+  [RESOLVED] = false;
 
   constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
     BaseEntity.init(orm, this as unknown as Entity, primaryKey);

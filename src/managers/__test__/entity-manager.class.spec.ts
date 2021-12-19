@@ -8,12 +8,12 @@ import { Field } from "../../meta/meta-decorators/field.decorator";
 import { Primary } from "../../meta/meta-decorators/primary.decorator";
 import { Relation } from "../../meta/meta-decorators/relation.decorator";
 import { DateSerializer } from "../../serializer/built-in/date.serializer";
-import { POPULATED } from "../../symbols";
+import { RESOLVED } from "../../symbols";
 
 describe("EntityManager", () => {
   let orm: BerryOrm;
 
-  describe(".populate()", () => {
+  describe(".resolve()", () => {
     describe("Scalars", () => {
       @Entity()
       class TestingEntity extends BaseEntity<TestingEntity, "id"> {
@@ -32,11 +32,11 @@ describe("EntityManager", () => {
       let entity: TestingEntity;
 
       it.each`
-        populate
-        ${() => orm.em.populate(TestingEntity, { id: 1, field1: new Date() })}
-        ${() => orm.em.populate(TestingEntity, { id: 1, field1: new Date().toISOString() }, { field1: DateSerializer })}
-      `("should populate the fields", ({ populate }) => {
-        entity = populate();
+        resolve
+        ${() => orm.em.resolve(TestingEntity, { id: 1, field1: new Date() })}
+        ${() => orm.em.resolve(TestingEntity, { id: 1, field1: new Date().toISOString() }, { field1: DateSerializer })}
+      `("should populate the fields", ({ resolve }) => {
+        entity = resolve();
         expect(entity.id).toBe(1);
         expect(entity.field1).toBeInstanceOf(Date);
         expect(entity.field1).not.toBeNaN();
@@ -81,7 +81,7 @@ describe("EntityManager", () => {
       describe("Foreign Keys", () => {
         describe("Create", () => {
           beforeEach(() => {
-            result = orm.em.populate(TestingEntity1, {
+            result = orm.em.resolve(TestingEntity1, {
               id: 1,
               entity2: 1,
             });
@@ -91,8 +91,8 @@ describe("EntityManager", () => {
             expect(result).toBeInstanceOf(TestingEntity1);
           });
 
-          it("should mark the entity as populated", () => {
-            expect(result[POPULATED]).toBe(true);
+          it("should mark the entity as resolved", () => {
+            expect(result[RESOLVED]).toBe(true);
           });
 
           it("should build the bilateral relations", () => {
@@ -100,19 +100,19 @@ describe("EntityManager", () => {
             expect(result.entity2.entity1).toBe(result);
           });
 
-          it("should mark the relation entity as unpopulated", () => {
-            expect(result.entity2[POPULATED]).toBe(false);
+          it("should mark the relation entity as unresolved", () => {
+            expect(result.entity2[RESOLVED]).toBe(false);
           });
         });
 
         describe("Update", () => {
           describe("Change", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntity1, {
+              result = orm.em.resolve(TestingEntity1, {
                 id: 1,
                 entity2: 1,
               });
-              orm.em.populate(TestingEntity1, {
+              orm.em.resolve(TestingEntity1, {
                 id: 1,
                 entity2: 2,
               });
@@ -135,11 +135,11 @@ describe("EntityManager", () => {
             ${undefined}
           `("Remove: $value", ({ value }) => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntity1, {
+              result = orm.em.resolve(TestingEntity1, {
                 id: 1,
                 entity2: 1,
               });
-              orm.em.populate(TestingEntity1, { id: 1, entity2: value });
+              orm.em.resolve(TestingEntity1, { id: 1, entity2: value });
             });
 
             it("should destruct the relation", () => {
@@ -152,7 +152,7 @@ describe("EntityManager", () => {
       describe("Nested Data", () => {
         describe("Create", () => {
           beforeEach(() => {
-            result = orm.em.populate(TestingEntity1, {
+            result = orm.em.resolve(TestingEntity1, {
               id: 1,
               entity2: { id: 1 },
             });
@@ -162,8 +162,8 @@ describe("EntityManager", () => {
             expect(result).toBeInstanceOf(TestingEntity1);
           });
 
-          it("should mark the entity as populated", () => {
-            expect(result[POPULATED]).toBe(true);
+          it("should mark the entity as resolved", () => {
+            expect(result[RESOLVED]).toBe(true);
           });
 
           it("should build the bilateral relations", () => {
@@ -171,18 +171,18 @@ describe("EntityManager", () => {
             expect(result.entity2.entity1).toBe(result);
           });
 
-          it("should mark the relation entity as populated", () => {
-            expect(result.entity2[POPULATED]).toBe(true);
+          it("should mark the relation entity as resolved", () => {
+            expect(result.entity2[RESOLVED]).toBe(true);
           });
         });
 
         describe("Update", () => {
           beforeEach(() => {
-            result = orm.em.populate(TestingEntity1, {
+            result = orm.em.resolve(TestingEntity1, {
               id: 1,
               entity2: 1,
             });
-            orm.em.populate(TestingEntity1, { id: 1, entity2: 2 });
+            orm.em.resolve(TestingEntity1, { id: 1, entity2: 2 });
           });
 
           it("should construct the new relation", () => {
@@ -238,7 +238,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityParent, {
+              result = orm.em.resolve(TestingEntityParent, {
                 id: 1,
                 children: [1],
               });
@@ -257,11 +257,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityParent, {
+              result = orm.em.resolve(TestingEntityParent, {
                 id: 1,
                 children: [1],
               });
-              orm.em.populate(TestingEntityParent, {
+              orm.em.resolve(TestingEntityParent, {
                 id: 1,
                 children: [2],
               });
@@ -286,7 +286,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityChild, {
+              result = orm.em.resolve(TestingEntityChild, {
                 id: 1,
                 parent: 1,
               });
@@ -305,11 +305,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityChild, {
+              result = orm.em.resolve(TestingEntityChild, {
                 id: 1,
                 parent: 1,
               });
-              orm.em.populate(TestingEntityChild, { id: 1, parent: 2 });
+              orm.em.resolve(TestingEntityChild, { id: 1, parent: 2 });
             });
 
             it("should construct the relation", () => {
@@ -331,7 +331,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityParent, {
+              result = orm.em.resolve(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 1 }],
               });
@@ -352,11 +352,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityParent, {
+              result = orm.em.resolve(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 1 }],
               });
-              orm.em.populate(TestingEntityParent, {
+              orm.em.resolve(TestingEntityParent, {
                 id: 1,
                 children: [{ id: 2 }],
               });
@@ -380,7 +380,7 @@ describe("EntityManager", () => {
 
           describe("Create", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityChild, {
+              result = orm.em.resolve(TestingEntityChild, {
                 id: 1,
                 parent: { id: 1 },
               });
@@ -399,11 +399,11 @@ describe("EntityManager", () => {
 
           describe("Update", () => {
             beforeEach(() => {
-              result = orm.em.populate(TestingEntityChild, {
+              result = orm.em.resolve(TestingEntityChild, {
                 id: 1,
                 parent: 1,
               });
-              orm.em.populate(TestingEntityChild, { id: 1, parent: 2 });
+              orm.em.resolve(TestingEntityChild, { id: 1, parent: 2 });
             });
 
             it("should construct the relation", () => {
@@ -430,7 +430,7 @@ describe("EntityManager", () => {
       }
       prepare([TestingEntity]);
       const originalData: EntityData<TestingEntity> = { id: 1, field: "a" };
-      const entity = orm.em.populate(TestingEntity, originalData);
+      const entity = orm.em.resolve(TestingEntity, originalData);
       const exportedData = orm.em.export(entity);
       expect(exportedData).toEqual(originalData);
     });
@@ -443,7 +443,7 @@ describe("EntityManager", () => {
       }
       prepare([TestingEntity]);
       const date = new Date();
-      const entity = orm.em.populate(TestingEntity, { id: 1, date });
+      const entity = orm.em.resolve(TestingEntity, { id: 1, date });
       const data = orm.em.export(entity, undefined, {
         date: DateSerializer,
       });
@@ -460,7 +460,7 @@ describe("EntityManager", () => {
         field!: TestingEntity;
       }
       prepare([TestingEntity]);
-      const entity = orm.em.populate(TestingEntity, {
+      const entity = orm.em.resolve(TestingEntity, {
         id: 1,
         field: { id: 2 },
       });
@@ -481,7 +481,7 @@ describe("EntityManager", () => {
         field!: Collection<TestingEntity>;
       }
       prepare([TestingEntity]);
-      const entity = orm.em.populate(TestingEntity, {
+      const entity = orm.em.resolve(TestingEntity, {
         id: 1,
         field: [{ id: 2 }],
       });
@@ -501,7 +501,7 @@ describe("EntityManager", () => {
         field2!: Date;
       }
       prepare([TestingEntity]);
-      const entity = orm.em.populate(TestingEntity, {
+      const entity = orm.em.resolve(TestingEntity, {
         id: 1,
         field2: new Date(),
         field1: { id: 2, field2: new Date() },

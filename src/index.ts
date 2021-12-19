@@ -46,6 +46,6 @@ export { NestedSerializerMapEmpty } from "./serializer/serializer-map/nested-ser
 export { SerializerMap } from "./serializer/serializer-map/serializer-map.type";
 export { SerializerMapEmpty } from "./serializer/serializer-map/serializer-map-empty.type";
 export { SerializerType } from "./serializer/serializer-type.interface";
-export { META, POPULATED } from "./symbols";
+export { META, RESOLVED as POPULATED } from "./symbols";
 export { ExcludeKeys } from "./utils/exclude-keys.type";
 export { ExtractKeys } from "./utils/extract-keys.type";

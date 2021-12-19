@@ -94,7 +94,10 @@ export class EntityManager {
       relationMeta.multi ? data : [data]
     ) as EntityRepresentation[];
     representations.forEach((data) => {
-      const targetEntity = this.resolveRepresentation(entity, field, data);
+      const targetEntity = this.resolveRepresentation(
+        relationMeta.target(),
+        data,
+      );
       this.orm.rm.constructRelation(entity, field, targetEntity);
     });
   }
@@ -107,15 +110,13 @@ export class EntityManager {
    * @returns
    */
   resolveRepresentation<Entity extends AnyEntity<Entity>>(
-    entity: Entity,
-    field: RelationField<Entity>,
+    type: EntityType<Entity>,
     representation: EntityRepresentation,
   ): AnyEntity {
-    const relationMeta = entity[META].fields[field].relation!;
     if (typeof representation == "object") {
-      return this.resolve(relationMeta.target(), representation);
+      return this.resolve(type, representation);
     } else {
-      return this.map.get(relationMeta.target(), representation);
+      return this.map.get(type, representation);
     }
   }
 

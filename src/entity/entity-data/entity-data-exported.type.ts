@@ -1,7 +1,8 @@
 import { EntityPrimaryKey } from "../../field/entity-primary-key.type";
 import { CommonField } from "../../field/field-names/common-field.type";
 import { RelationField } from "../../field/field-names/relation-field.type";
-import { Collection } from "../../field/field-values/collection.class";
+import { RelationFieldToMany } from "../../field/field-names/relation-field-to-many.type";
+import { RelationFieldToOne } from "../../field/field-names/relation-field-to-one.type";
 import { EntityManagerExportExpansions } from "../../managers/entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "../../managers/entity-manager-export-expansions-empty.type";
 import { AbstractSerializer } from "../../serializer/abstract.serializer";
@@ -23,22 +24,22 @@ export type EntityDataExported<
 } &
   {
     [Field in RelationField<Entity>]: Expansions[Field] extends true
-      ? Entity[Field] extends AnyEntity
+      ? Field extends RelationFieldToOne<Entity>
         ? EntityDataExported<
             Entity[Field],
             NestedSerializerMapUniformed<Entity[Field], Serializers[Field]>,
             RelationExpansionsUniformed<Entity[Field], Expansions[Field]>
           >
-        : Entity[Field] extends Collection<infer Entity>
+        : Field extends RelationFieldToMany<Entity>
         ? EntityDataExported<
             Entity,
             NestedSerializerMapUniformed<Entity, Serializers[Field]>,
             RelationExpansionsUniformed<Entity, Expansions[Field]>
           >[]
         : never
-      : Entity[Field] extends AnyEntity
+      : Field extends RelationFieldToOne<Entity>
       ? EntityPrimaryKey<Entity>
-      : Entity[Field] extends Collection<AnyEntity>
+      : Field extends RelationFieldToMany<Entity>
       ? EntityPrimaryKey<Entity>[]
       : never;
   };

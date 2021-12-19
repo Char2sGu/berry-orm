@@ -20,6 +20,8 @@ export { CommonField } from "./field/field-names/common-field.type";
 export { EntityField } from "./field/field-names/entity-field.type";
 export { PrimaryField } from "./field/field-names/primary-field.type";
 export { RelationField } from "./field/field-names/relation-field.type";
+export { RelationFieldToMany } from "./field/field-names/relation-field-to-many.type";
+export { RelationFieldToOne } from "./field/field-names/relation-field-to-one.type";
 export { Collection } from "./field/field-values/collection.class";
 export { EmptyValue } from "./field/field-values/empty-value.type";
 export { PrimaryKey } from "./field/field-values/primary-key.type";

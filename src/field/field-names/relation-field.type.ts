@@ -1,9 +1,7 @@
-import { AnyEntity, ExtractKeys } from "../..";
-import { Collection } from "../field-values/collection.class";
-import { EmptyValue } from "../field-values/empty-value.type";
-import { EntityField } from "./entity-field.type";
+import { AnyEntity } from "../..";
+import { RelationFieldToMany } from "./relation-field-to-many.type";
+import { RelationFieldToOne } from "./relation-field-to-one.type";
 
-export type RelationField<Entity extends AnyEntity> = Extract<
-  EntityField<Entity>,
-  ExtractKeys<Entity, AnyEntity | Collection<AnyEntity> | EmptyValue>
->;
+export type RelationField<Entity extends AnyEntity> =
+  | RelationFieldToOne<Entity>
+  | RelationFieldToMany<Entity>;

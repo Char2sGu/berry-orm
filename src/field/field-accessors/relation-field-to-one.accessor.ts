@@ -1,10 +1,10 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { RelationField } from "../field-names/relation-field.type";
+import { RelationFieldToOne } from "../field-names/relation-field-to-one.type";
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class RelationFieldToOneAccessor<
-  Entity extends AnyEntity,
-  Field extends RelationField<Entity>,
+  Entity extends AnyEntity = AnyEntity,
+  Field extends RelationFieldToOne<Entity> = RelationFieldToOne<Entity>,
 > extends BaseFieldAccessor<Entity, Field> {
   handleSet(newValue: Entity[Field]): void {
     const currentValue = this.value;

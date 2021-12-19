@@ -1,10 +1,12 @@
-import { BerryOrm, PrimaryField, RelationField } from "..";
+import { BerryOrm, PrimaryField } from "..";
 import { CommonFieldAccessor } from "../field/field-accessors/common-field.accessor";
 import { PrimaryFieldAccessor } from "../field/field-accessors/primary-field.accessor";
 import { RelationFieldToManyAccessor } from "../field/field-accessors/relation-field-to-many.accessor";
 import { RelationFieldToOneAccessor } from "../field/field-accessors/relation-field-to-one.accessor";
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
+import { RelationFieldToMany } from "../field/field-names/relation-field-to-many.type";
+import { RelationFieldToOne } from "../field/field-names/relation-field-to-one.type";
 import { Collection } from "../field/field-values/collection.class";
 import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
 import { META, POPULATED } from "../symbols";
@@ -57,13 +59,13 @@ export abstract class BaseEntity<
       ? new RelationFieldToManyAccessor(
           orm,
           entity,
-          field as RelationField<Entity>,
+          field as RelationFieldToMany<Entity>,
         )
       : isRelationEntityField
       ? new RelationFieldToOneAccessor(
           orm,
           entity,
-          field as RelationField<Entity>,
+          field as RelationFieldToOne<Entity>,
         )
       : new CommonFieldAccessor(orm, entity, field as CommonField<Entity>);
 

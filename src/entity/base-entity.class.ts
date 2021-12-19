@@ -1,4 +1,4 @@
-import { PrimaryField, RelationField } from "..";
+import { BerryOrm, PrimaryField, RelationField } from "..";
 import { CommonFieldAccessor } from "../field/field-accessors/common-field.accessor";
 import { PrimaryFieldAccessor } from "../field/field-accessors/primary-field.accessor";
 import { RelationFieldToManyAccessor } from "../field/field-accessors/relation-field-to-many.accessor";
@@ -10,6 +10,8 @@ import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityType } from "./entity-type.interface";
+
+const ORM = Symbol("berry-orm:orm");
 
 // It's not possible to use Active Record mode in Berry ORM because type
 // circular reference will happen and cause compile error.
@@ -52,21 +54,21 @@ export abstract class BaseEntity<
       !!entity[META]!.fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
-      ? new PrimaryFieldAccessor(entity.__orm, entity, field as Primary)
+      ? new PrimaryFieldAccessor(entity[ORM], entity, field as Primary)
       : isCollectionField
       ? new RelationFieldToManyAccessor(
-          entity.__orm,
+          entity[ORM],
           entity,
           field as RelationField<Entity>,
         )
       : isRelationEntityField
       ? new RelationFieldToOneAccessor(
-          entity.__orm,
+          entity[ORM],
           entity,
           field as RelationField<Entity>,
         )
       : new CommonFieldAccessor(
-          entity.__orm,
+          entity[ORM],
           entity,
           field as CommonField<Entity>,
         );
@@ -75,7 +77,7 @@ export abstract class BaseEntity<
 
     if (isCollectionField)
       entity[field] = new Collection(
-        entity.__orm,
+        entity[ORM],
         entity,
         field,
       ) as unknown as Entity[EntityField<Entity>];
@@ -95,10 +97,10 @@ export abstract class BaseEntity<
    */
   [POPULATED] = false;
 
-  private __orm;
+  private [ORM]: BerryOrm;
 
   constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
-    this.__orm = orm;
+    this[ORM] = orm;
     BaseEntity.init(this as Entity, primaryKey);
   }
 }

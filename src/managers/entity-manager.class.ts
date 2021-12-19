@@ -3,16 +3,15 @@ import { AnyEntity } from "../entity/any-entity.type";
 import { EntityData } from "../entity/entity-data/entity-data.type";
 import { EntityDataExported } from "../entity/entity-data/entity-data-exported.type";
 import { EntityType } from "../entity/entity-type.interface";
-import { EntityPrimaryKey } from "../field/entity-primary-key.type";
 import { RelationFieldData } from "../field/field-data/relation-field-data.type";
 import { RelationFieldValueRepresentation } from "../field/field-data/relation-field-value-representation.type";
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { PrimaryField } from "../field/field-names/primary-field.type";
-import { PrimaryFieldPossible } from "../field/field-names/primary-field-possible.type";
 import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
+import { PrimaryKeyPossible } from "../field/field-values/primary-key-possible.type";
 import { AbstractSerializer } from "../serializer/abstract.serializer";
 import { NestedSerializerMap } from "../serializer/serializer-map/nested-serializer-map.type";
 import { NestedSerializerMapEmpty } from "../serializer/serializer-map/nested-serializer-map-empty.type";
@@ -36,15 +35,14 @@ export class EntityManager {
    * @returns
    */
   populate<
-    Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryFieldPossible<Entity>,
+    Entity extends AnyEntity<Entity>,
     Serializers extends SerializerMap<Entity> = SerializerMapEmpty<Entity>,
   >(
     type: EntityType<Entity>,
     data: EntityData<Entity, Serializers>,
     serializers?: Serializers,
   ): Entity {
-    const primaryKey = data[type.prototype[META].primary] as Entity[Primary];
+    const primaryKey = data[type.prototype[META].primary] as PrimaryKey<Entity>;
     const entity = this.map.get(type, primaryKey);
 
     for (const k in entity[META].fields) {
@@ -85,7 +83,7 @@ export class EntityManager {
    * @returns
    */
   populateRelationField<
-    Entity extends AnyEntity,
+    Entity extends AnyEntity<Entity>,
     Field extends RelationField<Entity>,
   >(
     entity: Entity,
@@ -117,7 +115,7 @@ export class EntityManager {
    * @param representation
    * @returns
    */
-  resolveRelationRepresentation<Entity extends AnyEntity>(
+  resolveRelationRepresentation<Entity extends AnyEntity<Entity>>(
     entity: Entity,
     field: RelationField<Entity>,
     representation: RelationFieldValueRepresentation,
@@ -137,7 +135,7 @@ export class EntityManager {
    * @param expand
    */
   export<
-    Entity extends AnyEntity,
+    Entity extends AnyEntity<Entity>,
     Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
     Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
   >(
@@ -169,15 +167,14 @@ export class EntityManager {
         const field = f as RelationField<Entity>;
         const relationMeta = meta.fields[field].relation!;
         if (!expansions?.[field]) {
-          const getPrimaryKey = <Entity extends AnyEntity>(
-            entity: Entity,
-          ): EntityPrimaryKey<Entity> => entity[entity[META].primary];
+          const getPrimaryKey = <Entity extends AnyEntity>(entity: Entity) =>
+            entity[entity[META].primary] as PrimaryKey<Entity>;
 
           if (!relationMeta.multi) {
             data[field] = getPrimaryKey(entity[field] as AnyEntity);
           } else {
             const collection = entity[field] as Collection<AnyEntity>;
-            const primaryKeys: PrimaryKey[] = [];
+            const primaryKeys: PrimaryKeyPossible[] = [];
             collection.forEach((relationEntity) => {
               primaryKeys.push(getPrimaryKey(relationEntity));
             });

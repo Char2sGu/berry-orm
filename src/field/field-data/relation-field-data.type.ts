@@ -5,7 +5,7 @@ import { EmptyValue } from "../field-values/empty-value.type";
 import { RelationFieldValueRepresentation } from "./relation-field-value-representation.type";
 
 export type RelationFieldData<
-  Entity extends AnyEntity = AnyEntity,
+  Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends RelationField<Entity> = RelationField<Entity>,
 > = Entity[Field] extends AnyEntity
   ? RelationFieldValueRepresentation<Entity[Field]> | EmptyValue

@@ -7,7 +7,6 @@ export { EntityDataExported } from "./entity/entity-data/entity-data-exported.ty
 export { EntityDataRelational } from "./entity/entity-data/entity-data-relational.type";
 export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-field-value.type";
 export { EntityType } from "./entity/entity-type.interface";
-export { EntityPrimaryKey } from "./field/entity-primary-key.type";
 export { BaseFieldAccessor } from "./field/field-accessors/base-field.accessor";
 export { CommonFieldAccessor } from "./field/field-accessors/common-field.accessor";
 export { PrimaryFieldAccessor } from "./field/field-accessors/primary-field.accessor";
@@ -26,6 +25,7 @@ export { RelationFieldToOne } from "./field/field-names/relation-field-to-one.ty
 export { Collection } from "./field/field-values/collection.class";
 export { EmptyValue } from "./field/field-values/empty-value.type";
 export { PrimaryKey } from "./field/field-values/primary-key.type";
+export { PrimaryKeyPossible } from "./field/field-values/primary-key-possible.type";
 export { EntityManager } from "./managers/entity-manager.class";
 export { EntityManagerExportExpansions } from "./managers/entity-manager-export-expansions.type";
 export { EntityManagerExportExpansionsEmpty } from "./managers/entity-manager-export-expansions-empty.type";

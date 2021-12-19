@@ -5,9 +5,11 @@ import { RelationFieldToManyAccessor } from "../field/field-accessors/relation-f
 import { RelationFieldToOneAccessor } from "../field/field-accessors/relation-field-to-one.accessor";
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
+import { PrimaryField } from "../field/field-names/primary-field.type";
 import { RelationFieldToMany } from "../field/field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "../field/field-names/relation-field-to-one.type";
 import { Collection } from "../field/field-values/collection.class";
+import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
 import { META, POPULATED } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
@@ -32,29 +34,31 @@ import { EntityType } from "./entity-type.interface";
  * is defined getters so that the metadata can be accessed more conveniently.
  */
 export abstract class BaseEntity<
-  Entity extends AnyEntity<Entity, Primary>,
+  Entity extends BaseEntity<Entity, Primary>,
   Primary extends PrimaryFieldPossible<Entity>,
 > {
-  private static init<
-    Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryFieldPossible<Entity>,
-  >(orm: BerryOrm, entity: Entity, primaryKey: Entity[Primary]) {
+  private static init<Entity extends AnyEntity<Entity>>(
+    orm: BerryOrm,
+    entity: Entity,
+    primaryKey: PrimaryKey<Entity>,
+  ) {
     for (const field of Object.keys(entity[META].fields))
       this.initField(orm, entity, field as EntityField<Entity>);
     entity[entity[META].primary] = primaryKey;
   }
 
-  private static initField<
-    Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryFieldPossible<Entity>,
-  >(orm: BerryOrm, entity: Entity, field: EntityField<Entity>) {
+  private static initField<Entity extends AnyEntity<Entity>>(
+    orm: BerryOrm,
+    entity: Entity,
+    field: EntityField<Entity>,
+  ) {
     const isPrimaryField = entity[META].primary == field;
     const isCollectionField = !!entity[META].fields[field].relation?.multi;
     const isRelationEntityField =
       !!entity[META].fields[field].relation && !isCollectionField;
 
     const accessor = isPrimaryField
-      ? new PrimaryFieldAccessor(orm, entity, field as Primary)
+      ? new PrimaryFieldAccessor(orm, entity, field as PrimaryField<Entity>)
       : isCollectionField
       ? new RelationFieldToManyAccessor(
           orm,
@@ -85,7 +89,7 @@ export abstract class BaseEntity<
    * Potentially `undefined` because it only exists when there are at least one
    * decorator applied.
    */
-  [META]: EntityMeta<Entity, Primary>;
+  [META]: EntityMeta<Entity>;
 
   /**
    * Indicates that the **data** fields (**relation** fields not included) of
@@ -94,6 +98,6 @@ export abstract class BaseEntity<
   [POPULATED] = false;
 
   constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
-    BaseEntity.init(orm, this as Entity, primaryKey);
+    BaseEntity.init(orm, this as unknown as Entity, primaryKey);
   }
 }

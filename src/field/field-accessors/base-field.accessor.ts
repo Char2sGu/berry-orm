@@ -3,7 +3,7 @@ import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityField } from "../field-names/entity-field.type";
 
 export class BaseFieldAccessor<
-  Entity extends AnyEntity = AnyEntity,
+  Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {
   value = this.entity[this.field];

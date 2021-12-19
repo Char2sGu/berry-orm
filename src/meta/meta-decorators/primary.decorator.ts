@@ -6,7 +6,7 @@ import { EntityMetaError } from "../entity-meta.error";
 
 export const Primary =
   () =>
-  <Entity extends AnyEntity>(
+  <Entity extends AnyEntity<Entity>>(
     prototype: Entity,
     field: PrimaryField<Entity>,
   ): void => {

@@ -3,7 +3,7 @@ import { EntityField } from "../../field/field-names/entity-field.type";
 import { EntityMetaRelation } from "./entity-meta-relation.class";
 
 export class EntityMetaField<
-  Entity extends AnyEntity = AnyEntity,
+  Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {
   relation?: EntityMetaRelation;

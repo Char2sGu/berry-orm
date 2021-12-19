@@ -1,12 +1,13 @@
+import { AnyEntity } from "..";
 import { EntityType } from "../entity/entity-type.interface";
 
-export class EntityMetaError extends Error {
+export class EntityMetaError<Entity extends AnyEntity<Entity>> extends Error {
   constructor({
     type,
     field,
     message,
   }: {
-    type: EntityType;
+    type: EntityType<Entity>;
     field?: string;
     message: string;
   }) {

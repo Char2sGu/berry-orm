@@ -2,7 +2,7 @@ import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityFieldBase } from "./entity-field-base.type";
 import { RelationField } from "./relation-field.type";
 
-export type CommonField<Entity extends AnyEntity> = Exclude<
+export type CommonField<Entity extends AnyEntity<Entity>> = Exclude<
   EntityFieldBase<Entity>,
   /**
    * Relation fields are not possible to be `string` unless `Entity` is

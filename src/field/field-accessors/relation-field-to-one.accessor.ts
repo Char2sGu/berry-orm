@@ -3,7 +3,7 @@ import { RelationFieldToOne } from "../field-names/relation-field-to-one.type";
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class RelationFieldToOneAccessor<
-  Entity extends AnyEntity = AnyEntity,
+  Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends RelationFieldToOne<Entity> = RelationFieldToOne<Entity>,
 > extends BaseFieldAccessor<Entity, Field> {
   handleSet(newValue: Entity[Field]): void {

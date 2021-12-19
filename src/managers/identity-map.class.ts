@@ -1,20 +1,20 @@
 import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.interface";
-import { EntityPrimaryKey } from "../field/entity-primary-key.type";
+import { PrimaryKey } from "../field/field-values/primary-key.type";
 
 export class IdentityMap {
   private map = new Map<string, AnyEntity>();
 
   constructor(private orm: BerryOrm) {}
 
-  get<Entity extends AnyEntity>(
+  get<Entity extends AnyEntity<Entity>>(
     type: EntityType<Entity>,
-    primaryKey: EntityPrimaryKey<Entity>,
+    primaryKey: PrimaryKey<Entity>,
   ): Entity {
     this.checkType(type);
     const id = this.identify(type, primaryKey);
-    let entity = this.map.get(id);
+    let entity = this.map.get(id) as Entity | undefined;
     if (!entity) {
       entity = new type(this.orm, primaryKey);
       this.set(type, primaryKey, entity);
@@ -22,9 +22,9 @@ export class IdentityMap {
     return entity as Entity;
   }
 
-  set<Entity extends AnyEntity>(
+  set<Entity extends AnyEntity<Entity>>(
     type: EntityType<Entity>,
-    primaryKey: EntityPrimaryKey<Entity>,
+    primaryKey: PrimaryKey<Entity>,
     entity: Entity,
   ): this {
     this.checkType(type);
@@ -33,9 +33,9 @@ export class IdentityMap {
     return this;
   }
 
-  has<Entity extends AnyEntity>(
+  has<Entity extends AnyEntity<Entity>>(
     type: EntityType<Entity>,
-    primaryKey: EntityPrimaryKey<Entity>,
+    primaryKey: PrimaryKey<Entity>,
   ): boolean {
     this.checkType(type);
     const id = this.identify(type, primaryKey);
@@ -52,13 +52,15 @@ export class IdentityMap {
 
   private identify<Entity extends AnyEntity>(
     type: EntityType<Entity>,
-    key: EntityPrimaryKey<Entity>,
+    key: PrimaryKey<Entity>,
   ) {
     return `${type.name}:${key}` as const;
   }
 
-  private checkType(type: EntityType) {
-    if (!this.orm.registry.has(type))
+  private checkType<Entity extends AnyEntity<Entity>>(
+    type: EntityType<Entity>,
+  ) {
+    if (!this.orm.registry.has(type as EntityType))
       throw new Error(`${type.name} is not a known entity type`);
   }
 }

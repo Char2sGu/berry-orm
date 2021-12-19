@@ -1,6 +1,6 @@
 import { AnyEntity } from "../../entity/any-entity.type";
 import { SerializerMap } from "./serializer-map.type";
 
-export type SerializerMapEmpty<Entity extends AnyEntity> = Partial<
+export type SerializerMapEmpty<Entity extends AnyEntity<Entity>> = Partial<
   Record<keyof SerializerMap<Entity>, undefined>
 >;

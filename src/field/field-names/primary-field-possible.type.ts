@@ -1,8 +1,10 @@
 import { AnyEntity, ExtractKeys } from "../..";
-import { PrimaryKey } from "../field-values/primary-key.type";
+import { PrimaryKeyPossible } from "../field-values/primary-key-possible.type";
 import { EntityFieldBase } from "./entity-field-base.type";
 
-export type PrimaryFieldPossible<Entity extends AnyEntity> = Extract<
+export type PrimaryFieldPossible<Entity extends AnyEntity<Entity>> = Extract<
   EntityFieldBase<Entity>,
-  { [Type in PrimaryKey]: ExtractKeys<Entity, Type> }[PrimaryKey]
+  {
+    [Type in PrimaryKeyPossible]: ExtractKeys<Entity, Type>;
+  }[PrimaryKeyPossible]
 >;

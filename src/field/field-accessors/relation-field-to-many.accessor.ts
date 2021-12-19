@@ -3,7 +3,7 @@ import { RelationFieldToMany } from "../field-names/relation-field-to-many.type"
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class RelationFieldToManyAccessor<
-  Entity extends AnyEntity = AnyEntity,
+  Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends RelationFieldToMany<Entity> = RelationFieldToMany<Entity>,
 > extends BaseFieldAccessor<Entity, Field> {
   handleSet(newValue: Entity[Field]): void {

@@ -1,9 +1,9 @@
-import { EntityPrimaryKey } from "../../field/entity-primary-key.type";
 import { CommonField } from "../../field/field-names/common-field.type";
 import { PrimaryField } from "../../field/field-names/primary-field.type";
 import { RelationField } from "../../field/field-names/relation-field.type";
 import { RelationFieldToMany } from "../../field/field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "../../field/field-names/relation-field-to-one.type";
+import { PrimaryKey } from "../../field/field-values/primary-key.type";
 import { EntityManagerExportExpansions } from "../../managers/entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "../../managers/entity-manager-export-expansions-empty.type";
 import { AbstractSerializer } from "../../serializer/abstract.serializer";
@@ -41,9 +41,9 @@ export type EntityDataExported<
           >[]
         : never
       : Field extends RelationFieldToOne<Entity>
-      ? EntityPrimaryKey<Entity>
+      ? PrimaryKey<Entity>
       : Field extends RelationFieldToMany<Entity>
-      ? EntityPrimaryKey<Entity>[]
+      ? PrimaryKey<Entity>[]
       : never;
   };
 

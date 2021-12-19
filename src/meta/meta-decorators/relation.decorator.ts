@@ -6,7 +6,7 @@ import { RelationFieldToOne } from "../../field/field-names/relation-field-to-on
 import { META } from "../../symbols";
 import { EntityMetaError } from "../entity-meta.error";
 import { EntityMeta } from "../meta-objects/entity-meta.class";
-import { EntityMetaRelation } from "../meta-objects/entity-meta-relation.class";
+import { EntityRelationMeta } from "../meta-objects/entity-relation-meta.class";
 
 export const Relation =
   <
@@ -32,6 +32,6 @@ export const Relation =
       });
 
     const { target, inverse, multi } = options;
-    (meta.fields[field].relation as EntityMetaRelation<TargetEntity>) =
-      new EntityMetaRelation(target, inverse, multi);
+    (meta.fields[field].relation as EntityRelationMeta<TargetEntity>) =
+      new EntityRelationMeta(target, inverse, multi);
   };

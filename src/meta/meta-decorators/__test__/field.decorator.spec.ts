@@ -1,8 +1,8 @@
 import { BaseEntity } from "../../..";
 import { EntityType } from "../../../entity/entity-type.interface";
 import { META } from "../../../symbols";
+import { EntityFieldMeta } from "../../meta-objects/entity-field-meta.class";
 import { EntityMeta } from "../../meta-objects/entity-meta.class";
-import { EntityMetaField } from "../../meta-objects/entity-meta-field.class";
 import { Field } from "../field.decorator";
 
 describe("@Field()", () => {
@@ -21,6 +21,6 @@ describe("@Field()", () => {
 
   it("should define the metadata of the field", () => {
     const meta = cls.prototype[META]?.fields.id;
-    expect(meta).toBeInstanceOf(EntityMetaField);
+    expect(meta).toBeInstanceOf(EntityFieldMeta);
   });
 });

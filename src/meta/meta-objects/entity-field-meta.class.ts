@@ -1,11 +1,11 @@
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityField } from "../../field/field-names/entity-field.type";
-import { EntityMetaRelation } from "./entity-meta-relation.class";
+import { EntityRelationMeta } from "./entity-relation-meta.class";
 
-export class EntityMetaField<
+export class EntityFieldMeta<
   Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {
-  relation?: EntityMetaRelation;
+  relation?: EntityRelationMeta;
   constructor(readonly name: Field) {}
 }

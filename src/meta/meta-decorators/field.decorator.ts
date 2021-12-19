@@ -3,8 +3,8 @@ import { EntityType } from "../../entity/entity-type.interface";
 import { EntityField } from "../../field/field-names/entity-field.type";
 import { META } from "../../symbols";
 import { EntityMetaError } from "../entity-meta.error";
+import { EntityFieldMeta } from "../meta-objects/entity-field-meta.class";
 import { EntityMeta } from "../meta-objects/entity-meta.class";
-import { EntityMetaField } from "../meta-objects/entity-meta-field.class";
 
 export const Field =
   () =>
@@ -16,7 +16,7 @@ export const Field =
       prototype[META] ??
       new EntityMeta(prototype.constructor as EntityType<Entity>));
 
-    const fieldMeta = new EntityMetaField(field);
+    const fieldMeta = new EntityFieldMeta(field);
 
     if (meta.fields[field])
       throw new EntityMetaError({

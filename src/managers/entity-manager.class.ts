@@ -1,4 +1,3 @@
-import { PrimaryField } from "..";
 import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityData } from "../entity/entity-data/entity-data.type";
@@ -9,6 +8,8 @@ import { RelationFieldData } from "../field/field-data/relation-field-data.type"
 import { RelationFieldValueRepresentation } from "../field/field-data/relation-field-value-representation.type";
 import { CommonField } from "../field/field-names/common-field.type";
 import { EntityField } from "../field/field-names/entity-field.type";
+import { PrimaryField } from "../field/field-names/primary-field.type";
+import { PrimaryFieldPossible } from "../field/field-names/primary-field-possible.type";
 import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
@@ -17,6 +18,7 @@ import { NestedSerializerMap } from "../serializer/serializer-map/nested-seriali
 import { NestedSerializerMapEmpty } from "../serializer/serializer-map/nested-serializer-map-empty.type";
 import { SerializerMap } from "../serializer/serializer-map/serializer-map.type";
 import { SerializerMapEmpty } from "../serializer/serializer-map/serializer-map-empty.type";
+import { SerializerType } from "../serializer/serializer-type.interface";
 import { META, POPULATED } from "../symbols";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
@@ -35,7 +37,7 @@ export class EntityManager {
    */
   populate<
     Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryField<Entity>,
+    Primary extends PrimaryFieldPossible<Entity>,
     Serializers extends SerializerMap<Entity> = SerializerMapEmpty<Entity>,
   >(
     type: EntityType<Entity>,
@@ -46,7 +48,10 @@ export class EntityManager {
     const entity = this.map.get(type, primaryKey);
 
     for (const k in entity[META].fields) {
-      const field = k as CommonField<Entity> | RelationField<Entity>;
+      const field = k as
+        | PrimaryField<Entity>
+        | CommonField<Entity>
+        | RelationField<Entity>;
       const fieldData = data[field];
 
       if (!(field in data)) continue;
@@ -156,8 +161,10 @@ export class EntityManager {
     for (const k in meta.fields) {
       const f = k as EntityField<Entity>;
       if (!meta.fields[f].relation) {
-        const field = f as CommonField<Entity>;
-        const serializerType = serializers?.[field];
+        const field = f as CommonField<Entity> | PrimaryField<Entity>;
+        const serializerType = serializers?.[
+          field
+        ] as SerializerType<AbstractSerializer>;
         if (!serializerType) {
           data[field] = entity[field];
         } else {

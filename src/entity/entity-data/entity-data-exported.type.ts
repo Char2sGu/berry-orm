@@ -1,5 +1,6 @@
 import { EntityPrimaryKey } from "../../field/entity-primary-key.type";
 import { CommonField } from "../../field/field-names/common-field.type";
+import { PrimaryField } from "../../field/field-names/primary-field.type";
 import { RelationField } from "../../field/field-names/relation-field.type";
 import { RelationFieldToMany } from "../../field/field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "../../field/field-names/relation-field-to-one.type";
@@ -16,7 +17,9 @@ export type EntityDataExported<
   Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
   Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
 > = {
-  [Field in CommonField<Entity>]: Serializers[Field] extends SerializerType<
+  [Field in
+    | CommonField<Entity>
+    | PrimaryField<Entity>]: Serializers[Field] extends SerializerType<
     AbstractSerializer<Entity[Field], infer Value>
   >
     ? Value

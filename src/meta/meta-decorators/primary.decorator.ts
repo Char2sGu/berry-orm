@@ -1,6 +1,6 @@
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityType } from "../../entity/entity-type.interface";
-import { EntityPrimaryField } from "../../field/entity-primary-field.type";
+import { PrimaryField } from "../../field/field-names/primary-field.type";
 import { META } from "../../symbols";
 import { EntityMetaError } from "../entity-meta.error";
 
@@ -8,7 +8,7 @@ export const Primary =
   () =>
   <Entity extends AnyEntity>(
     prototype: Entity,
-    field: EntityPrimaryField<Entity>,
+    field: PrimaryField<Entity>,
   ): void => {
     const meta = prototype[META];
     if (!meta?.fields[field])

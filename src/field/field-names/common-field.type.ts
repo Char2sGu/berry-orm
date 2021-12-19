@@ -1,9 +1,9 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { EntityField } from "./entity-field.type";
+import { EntityFieldBase } from "./entity-field-base.type";
 import { RelationField } from "./relation-field.type";
 
 export type CommonField<Entity extends AnyEntity> = Exclude<
-  EntityField<Entity>,
+  EntityFieldBase<Entity>,
   /**
    * Relation fields are not possible to be `string` unless `Entity` is
    * `AnyEntity`, if so, `Exclude<string, string>` will be `never` and cause

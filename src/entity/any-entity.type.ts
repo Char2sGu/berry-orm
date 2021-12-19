@@ -1,4 +1,4 @@
-import { PrimaryField } from "../field/field-names/primary-field.type";
+import { PrimaryFieldPossible } from "../field/field-names/primary-field-possible.type";
 import { BaseEntity } from "./base-entity.class";
 
 /**
@@ -6,5 +6,5 @@ import { BaseEntity } from "./base-entity.class";
  */
 export type AnyEntity<
   Entity extends AnyEntity<Entity, Primary> = any,
-  Primary extends PrimaryField<Entity> = any,
+  Primary extends PrimaryFieldPossible<Entity> = any,
 > = BaseEntity<Entity, Primary> & Record<string, any>;

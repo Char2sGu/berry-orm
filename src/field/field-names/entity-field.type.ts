@@ -1,7 +1,9 @@
 import { AnyEntity } from "../../entity/any-entity.type";
-import { ExcludeKeys } from "../../utils/exclude-keys.type";
+import { CommonField } from "./common-field.type";
+import { PrimaryField } from "./primary-field.type";
+import { RelationField } from "./relation-field.type";
 
-export type EntityField<Entity extends AnyEntity> = string &
-  // We are excluding Functions here, so it's fine to be generic
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  ExcludeKeys<Entity, Function>;
+export type EntityField<Entity extends AnyEntity> =
+  | PrimaryField<Entity>
+  | CommonField<Entity>
+  | RelationField<Entity>;

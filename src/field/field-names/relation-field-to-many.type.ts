@@ -1,9 +1,9 @@
 import { AnyEntity } from "../..";
 import { ExtractKeys } from "../../utils/extract-keys.type";
 import { Collection } from "../field-values/collection.class";
-import { EntityField } from "./entity-field.type";
+import { EntityFieldBase } from "./entity-field-base.type";
 
 export type RelationFieldToMany<Entity extends AnyEntity> = Extract<
-  EntityField<Entity>,
+  EntityFieldBase<Entity>,
   ExtractKeys<Entity, Collection<AnyEntity>>
 >;

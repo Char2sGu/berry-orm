@@ -7,7 +7,6 @@ export { EntityDataExported } from "./entity/entity-data/entity-data-exported.ty
 export { EntityDataRelational } from "./entity/entity-data/entity-data-relational.type";
 export { EntityFromRelationFieldValue } from "./entity/entity-from-relation-field-value.type";
 export { EntityType } from "./entity/entity-type.interface";
-export { EntityPrimaryField } from "./field/entity-primary-field.type";
 export { EntityPrimaryKey } from "./field/entity-primary-key.type";
 export { BaseFieldAccessor } from "./field/field-accessors/base-field.accessor";
 export { CommonFieldAccessor } from "./field/field-accessors/common-field.accessor";
@@ -18,7 +17,9 @@ export { RelationFieldData } from "./field/field-data/relation-field-data.type";
 export { RelationFieldValueRepresentation } from "./field/field-data/relation-field-value-representation.type";
 export { CommonField } from "./field/field-names/common-field.type";
 export { EntityField } from "./field/field-names/entity-field.type";
+export { EntityFieldBase } from "./field/field-names/entity-field-base.type";
 export { PrimaryField } from "./field/field-names/primary-field.type";
+export { PrimaryFieldPossible } from "./field/field-names/primary-field-possible.type";
 export { RelationField } from "./field/field-names/relation-field.type";
 export { RelationFieldToMany } from "./field/field-names/relation-field-to-many.type";
 export { RelationFieldToOne } from "./field/field-names/relation-field-to-one.type";

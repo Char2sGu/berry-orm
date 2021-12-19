@@ -1,4 +1,4 @@
-import { BerryOrm, PrimaryField } from "..";
+import { BerryOrm, PrimaryFieldPossible } from "..";
 import { CommonFieldAccessor } from "../field/field-accessors/common-field.accessor";
 import { PrimaryFieldAccessor } from "../field/field-accessors/primary-field.accessor";
 import { RelationFieldToManyAccessor } from "../field/field-accessors/relation-field-to-many.accessor";
@@ -33,11 +33,11 @@ import { EntityType } from "./entity-type.interface";
  */
 export abstract class BaseEntity<
   Entity extends AnyEntity<Entity, Primary>,
-  Primary extends PrimaryField<Entity>,
+  Primary extends PrimaryFieldPossible<Entity>,
 > {
   private static init<
     Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryField<Entity>,
+    Primary extends PrimaryFieldPossible<Entity>,
   >(orm: BerryOrm, entity: Entity, primaryKey: Entity[Primary]) {
     for (const field of Object.keys(entity[META].fields))
       this.initField(orm, entity, field as EntityField<Entity>);
@@ -46,7 +46,7 @@ export abstract class BaseEntity<
 
   private static initField<
     Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryField<Entity>,
+    Primary extends PrimaryFieldPossible<Entity>,
   >(orm: BerryOrm, entity: Entity, field: EntityField<Entity>) {
     const isPrimaryField = entity[META].primary == field;
     const isCollectionField = !!entity[META].fields[field].relation?.multi;

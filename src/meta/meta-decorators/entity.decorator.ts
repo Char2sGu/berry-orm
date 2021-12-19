@@ -1,6 +1,6 @@
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityType } from "../../entity/entity-type.interface";
-import { PrimaryField } from "../../field/field-names/primary-field.type";
+import { PrimaryFieldPossible } from "../../field/field-names/primary-field-possible.type";
 import { META } from "../../symbols";
 import { EntityMetaError } from "../entity-meta.error";
 
@@ -8,7 +8,7 @@ export const Entity =
   () =>
   <
     Entity extends AnyEntity<Entity, Primary>,
-    Primary extends PrimaryField<Entity>,
+    Primary extends PrimaryFieldPossible<Entity>,
   >(
     type: EntityType<Entity>,
   ): void => {

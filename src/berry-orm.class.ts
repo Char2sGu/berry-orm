@@ -7,6 +7,9 @@ import { EntityMetaError } from "./meta/entity-meta.error";
 import { META } from "./symbols";
 
 export class BerryOrm {
+  private static nextId = 1;
+
+  readonly id = BerryOrm.nextId++;
   readonly parent?: BerryOrm;
   readonly registry: Set<EntityType>;
   readonly em: EntityManager;
@@ -21,6 +24,7 @@ export class BerryOrm {
 
   fork(): BerryOrm {
     const orm: BerryOrm = Object.create(BerryOrm.prototype);
+    define("id", BerryOrm.nextId++);
     define("parent", this);
     define("registry", this.registry);
     define("em", new EntityManager(this));

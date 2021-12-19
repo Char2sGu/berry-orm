@@ -8,6 +8,6 @@ export class RelationFieldToManyAccessor<
 > extends BaseFieldAccessor<Entity, Field> {
   handleSet(newValue: Entity[Field]): void {
     if (this.value) throw new Error("Collection fields cannot be updated");
-    this.value = newValue;
+    super.handleSet(newValue);
   }
 }

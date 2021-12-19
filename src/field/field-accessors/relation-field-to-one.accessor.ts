@@ -8,10 +8,12 @@ export class RelationFieldToOneAccessor<
 > extends BaseFieldAccessor<Entity, Field> {
   handleSet(newValue: Entity[Field]): void {
     const currentValue = this.value;
+
     // end up recurse
     if (newValue == currentValue) return;
 
-    this.value = newValue;
+    super.handleSet(newValue);
+
     if (newValue)
       this.orm.rm.constructRelation(this.entity, this.field, newValue);
     else this.orm.rm.destructRelation(this.entity, this.field, currentValue);

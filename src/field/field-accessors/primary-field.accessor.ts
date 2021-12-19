@@ -8,6 +8,6 @@ export class PrimaryFieldAccessor<
 > extends BaseFieldAccessor<Entity, PrimaryField<Entity>> {
   handleSet(newValue: PrimaryKey<Entity>): void {
     if (this.value) throw new Error("The Primary key field cannot be updated");
-    this.value = newValue;
+    super.handleSet(newValue);
   }
 }

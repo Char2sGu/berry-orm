@@ -33,6 +33,54 @@ export abstract class BaseEntity<
   Entity extends AnyEntity<Entity, Primary>,
   Primary extends PrimaryField<Entity>,
 > {
+  private static init<
+    Entity extends AnyEntity<Entity, Primary>,
+    Primary extends PrimaryField<Entity>,
+  >(entity: Entity, primaryKey: Entity[Primary]) {
+    for (const field of Object.keys(entity[META]!.fields))
+      this.initField(entity, field as EntityField<Entity>);
+    entity[entity[META]!.primary] = primaryKey;
+  }
+
+  private static initField<
+    Entity extends AnyEntity<Entity, Primary>,
+    Primary extends PrimaryField<Entity>,
+  >(entity: Entity, field: EntityField<Entity>) {
+    const isPrimaryField = entity[META]!.primary == field;
+    const isCollectionField = !!entity[META]!.fields[field].relation?.multi;
+    const isRelationEntityField =
+      !!entity[META]!.fields[field].relation && !isCollectionField;
+
+    const accessor = isPrimaryField
+      ? new PrimaryFieldAccessor(entity.__orm, entity, field as Primary)
+      : isCollectionField
+      ? new RelationFieldToManyAccessor(
+          entity.__orm,
+          entity,
+          field as RelationField<Entity>,
+        )
+      : isRelationEntityField
+      ? new RelationFieldToOneAccessor(
+          entity.__orm,
+          entity,
+          field as RelationField<Entity>,
+        )
+      : new CommonFieldAccessor(
+          entity.__orm,
+          entity,
+          field as CommonField<Entity>,
+        );
+
+    accessor.apply();
+
+    if (isCollectionField)
+      entity[field] = new Collection(
+        entity.__orm,
+        entity,
+        field,
+      ) as unknown as Entity[EntityField<Entity>];
+  }
+
   /**
    * Definition metadata of this entity type.
    *
@@ -51,52 +99,6 @@ export abstract class BaseEntity<
 
   constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
     this.__orm = orm;
-    Object.keys(this[META]!.fields).forEach((field) =>
-      this.initField(field as EntityField<Entity>),
-    );
-    const entity = this.asEntity;
-    entity[this[META]!.primary] = primaryKey;
-  }
-
-  private initField(field: EntityField<Entity>) {
-    const entity = this.asEntity;
-
-    const isPrimaryField = this[META]!.primary == field;
-    const isCollectionField = !!this[META]!.fields[field].relation?.multi;
-    const isRelationEntityField =
-      !!this[META]!.fields[field].relation && !isCollectionField;
-
-    const accessor = isPrimaryField
-      ? new PrimaryFieldAccessor(this.__orm, entity, field as Primary)
-      : isCollectionField
-      ? new RelationFieldToManyAccessor(
-          this.__orm,
-          entity,
-          field as RelationField<Entity>,
-        )
-      : isRelationEntityField
-      ? new RelationFieldToOneAccessor(
-          this.__orm,
-          entity,
-          field as RelationField<Entity>,
-        )
-      : new CommonFieldAccessor(
-          this.__orm,
-          entity,
-          field as CommonField<Entity>,
-        );
-
-    accessor.apply();
-
-    if (isCollectionField)
-      entity[field] = new Collection(
-        entity.__orm,
-        entity,
-        field,
-      ) as unknown as Entity[EntityField<Entity>];
-  }
-
-  private get asEntity() {
-    return this as unknown as Entity;
+    BaseEntity.init(this as Entity, primaryKey);
   }
 }

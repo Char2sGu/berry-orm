@@ -119,8 +119,13 @@ export class BerryOrm {
     }
   }
 
+  /**
+   * Bypass the `readonly` check.
+   * @param key
+   * @param value
+   */
   private define<Key extends keyof this>(key: Key, value: this[Key]) {
-    Object.defineProperty(this, key, { value, configurable: true });
+    this[key] = value;
   }
 }
 

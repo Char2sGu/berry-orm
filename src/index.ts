@@ -15,6 +15,7 @@ export { EntityRepresentation } from "./entity/entity-representation.type";
 export { EntityType } from "./entity/entity-type.interface";
 export { BaseFieldAccessor } from "./field/field-accessors/base-field.accessor";
 export { CommonFieldAccessor } from "./field/field-accessors/common-field.accessor";
+export { FieldAccessDeniedError } from "./field/field-accessors/field-access-denied.error";
 export { PrimaryFieldAccessor } from "./field/field-accessors/primary-field.accessor";
 export { RelationFieldToManyAccessor } from "./field/field-accessors/relation-field-to-many.accessor";
 export { RelationFieldToOneAccessor } from "./field/field-accessors/relation-field-to-one.accessor";

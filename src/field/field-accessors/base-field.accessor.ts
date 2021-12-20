@@ -2,6 +2,7 @@ import { BerryOrm } from "../../core/berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
 import { VERSION } from "../../symbols";
 import { EntityField } from "../field-names/entity-field.type";
+import { FieldAccessDeniedError } from "./field-access-denied.error";
 
 export class BaseFieldAccessor<
   Entity extends AnyEntity<Entity> = AnyEntity,
@@ -35,8 +36,11 @@ export class BaseFieldAccessor<
 
   private checkExpiry() {
     if (this.entity[VERSION] == this.orm.version) return;
-    throw new Error(
-      `Entity version not matched: ${this.entity[VERSION]}/${this.orm.version}`,
+    throw new FieldAccessDeniedError(
+      this.entity,
+      this.field,
+      "version-conflict",
+      `Entity version does not match the ORM version: ${this.entity[VERSION]}/${this.orm.version}`,
     );
   }
 }

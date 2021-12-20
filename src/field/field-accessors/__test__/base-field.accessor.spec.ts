@@ -27,7 +27,7 @@ describe("BaseFieldAccessor", () => {
       orm.reset();
       expect(() => {
         entity.value;
-      }).toThrow("Entity version not matched: 1/2");
+      }).toThrow("Entity version does not match the ORM version: 1/2");
     });
   });
 
@@ -37,7 +37,7 @@ describe("BaseFieldAccessor", () => {
       orm.reset();
       expect(() => {
         entity.value = "";
-      }).toThrow("Entity version not matched: 3/4");
+      }).toThrow("Entity version does not match the ORM version: 3/4");
     });
   });
 });

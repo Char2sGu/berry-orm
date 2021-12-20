@@ -80,9 +80,17 @@ describe("BerryOrm", () => {
   });
 
   describe(".reset()", () => {
-    const orm = new BerryOrm({ entities: [] });
-    const version = orm.version;
-    orm.reset();
-    expect(orm.version).toBe(version + 1);
+    it("should update the version", () => {
+      const orm = new BerryOrm({ entities: [] });
+      const version = orm.version;
+      orm.reset();
+      expect(orm.version).toBe(version + 1);
+    });
+
+    it("should work when reset for ", () => {
+      const orm = new BerryOrm({ entities: [] });
+      orm.reset();
+      orm.reset();
+    });
   });
 });

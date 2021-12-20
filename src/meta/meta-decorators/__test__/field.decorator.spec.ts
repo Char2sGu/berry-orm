@@ -1,4 +1,4 @@
-import { BaseEntity } from "../../..";
+import { BaseEntity } from "../../../entity/base-entity.class";
 import { EntityType } from "../../../entity/entity-type.interface";
 import { META } from "../../../symbols";
 import { EntityFieldMeta } from "../../meta-objects/entity-field-meta.class";

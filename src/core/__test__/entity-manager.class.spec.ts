@@ -1,4 +1,3 @@
-import { BerryOrm } from "../../berry-orm.class";
 import { BaseEntity } from "../../entity/base-entity.class";
 import { EntityData } from "../../entity/entity-data/entity-data.type";
 import { EntityType } from "../../entity/entity-type.interface";
@@ -9,6 +8,7 @@ import { Primary } from "../../meta/meta-decorators/primary.decorator";
 import { Relation } from "../../meta/meta-decorators/relation.decorator";
 import { DateSerializer } from "../../serializer/built-in/date.serializer";
 import { RESOLVED } from "../../symbols";
+import { BerryOrm } from "../berry-orm.class";
 
 describe("EntityManager", () => {
   let orm: BerryOrm;

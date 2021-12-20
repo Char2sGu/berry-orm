@@ -1,4 +1,4 @@
-import { BerryOrm } from "../../berry-orm.class";
+import { BerryOrm } from "../../core/berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
 import { EntityField } from "../field-names/entity-field.type";
 

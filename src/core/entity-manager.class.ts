@@ -1,4 +1,3 @@
-import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityData } from "../entity/entity-data/entity-data.type";
 import { EntityDataExported } from "../entity/entity-data/entity-data-exported.type";
@@ -19,6 +18,7 @@ import { SerializerMap } from "../serializer/serializer-map/serializer-map.type"
 import { SerializerMapEmpty } from "../serializer/serializer-map/serializer-map-empty.type";
 import { SerializerType } from "../serializer/serializer-type.interface";
 import { META, RESOLVED } from "../symbols";
+import { BerryOrm } from "./berry-orm.class";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
 import { IdentityMap } from "./identity-map.class";

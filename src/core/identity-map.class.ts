@@ -1,7 +1,7 @@
-import { BerryOrm } from "../berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.interface";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
+import { BerryOrm } from "./berry-orm.class";
 
 export class IdentityMap {
   private map = new Map<string, AnyEntity>();

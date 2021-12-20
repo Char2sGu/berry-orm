@@ -1,11 +1,11 @@
-import { EntityManager, RelationManager } from "..";
+import { EntityManager, RelationManager } from "../..";
+import { BaseEntity } from "../../entity/base-entity.class";
+import { EntityMetaError } from "../../meta/entity-meta.error";
+import { Entity } from "../../meta/meta-decorators/entity.decorator";
+import { Field } from "../../meta/meta-decorators/field.decorator";
+import { Primary } from "../../meta/meta-decorators/primary.decorator";
+import { Relation } from "../../meta/meta-decorators/relation.decorator";
 import { BerryOrm } from "../berry-orm.class";
-import { BaseEntity } from "../entity/base-entity.class";
-import { EntityMetaError } from "../meta/entity-meta.error";
-import { Entity } from "../meta/meta-decorators/entity.decorator";
-import { Field } from "../meta/meta-decorators/field.decorator";
-import { Primary } from "../meta/meta-decorators/primary.decorator";
-import { Relation } from "../meta/meta-decorators/relation.decorator";
 
 describe("BerryOrm", () => {
   describe("new", () => {

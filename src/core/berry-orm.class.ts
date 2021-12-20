@@ -1,10 +1,10 @@
-import { AnyEntity } from "./entity/any-entity.type";
-import { EntityType } from "./entity/entity-type.interface";
-import { EntityField } from "./field/field-names/entity-field.type";
-import { EntityManager } from "./managers/entity-manager.class";
-import { RelationManager } from "./managers/relation-manager.class";
-import { EntityMetaError } from "./meta/entity-meta.error";
-import { META } from "./symbols";
+import { AnyEntity } from "../entity/any-entity.type";
+import { EntityType } from "../entity/entity-type.interface";
+import { EntityField } from "../field/field-names/entity-field.type";
+import { EntityMetaError } from "../meta/entity-meta.error";
+import { META } from "../symbols";
+import { EntityManager } from "./entity-manager.class";
+import { RelationManager } from "./relation-manager.class";
 
 export class BerryOrm {
   private static nextId = 1;

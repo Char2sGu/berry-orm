@@ -1,11 +1,11 @@
+import { EntityManagerExportExpansions } from "../../core/entity-manager-export-expansions.type";
+import { EntityManagerExportExpansionsEmpty } from "../../core/entity-manager-export-expansions-empty.type";
 import { CommonField } from "../../field/field-names/common-field.type";
 import { PrimaryField } from "../../field/field-names/primary-field.type";
 import { RelationField } from "../../field/field-names/relation-field.type";
 import { RelationFieldToMany } from "../../field/field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "../../field/field-names/relation-field-to-one.type";
 import { PrimaryKey } from "../../field/field-values/primary-key.type";
-import { EntityManagerExportExpansions } from "../../managers/entity-manager-export-expansions.type";
-import { EntityManagerExportExpansionsEmpty } from "../../managers/entity-manager-export-expansions-empty.type";
 import { AbstractSerializer } from "../../serializer/abstract.serializer";
 import { NestedSerializerMap } from "../../serializer/serializer-map/nested-serializer-map.type";
 import { NestedSerializerMapEmpty } from "../../serializer/serializer-map/nested-serializer-map-empty.type";

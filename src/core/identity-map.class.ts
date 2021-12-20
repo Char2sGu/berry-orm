@@ -42,6 +42,13 @@ export class IdentityMap {
     return this.map.has(id);
   }
 
+  /**
+   * Clear the identities.
+   *
+   * In most cases, you are NOT likely to invoke this method manually because
+   * this won't deal with the existing entities. Maybe {@link BerryOrm.reset}
+   * is what you want.
+   */
   clear(): void {
     this.map.clear();
   }

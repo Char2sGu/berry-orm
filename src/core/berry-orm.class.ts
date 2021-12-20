@@ -32,6 +32,12 @@ export class BerryOrm {
     return orm;
   }
 
+  reset(): this {
+    this.define("id", BerryOrm.nextId++);
+    this.em.map.clear();
+    return this;
+  }
+
   private inspect() {
     const names = new Set<string>();
 

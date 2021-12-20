@@ -7,9 +7,9 @@ import { EntityManager } from "./entity-manager.class";
 import { RelationManager } from "./relation-manager.class";
 
 export class BerryOrm {
-  private static nextId = 1;
+  private static nextVersion = 1;
 
-  readonly id = BerryOrm.nextId++;
+  readonly version = BerryOrm.nextVersion++;
   readonly parent?: BerryOrm;
   readonly registry: Set<EntityType>;
   readonly em: EntityManager;
@@ -24,7 +24,7 @@ export class BerryOrm {
 
   fork(): BerryOrm {
     const orm: BerryOrm = Object.create(BerryOrm.prototype);
-    orm.define("id", BerryOrm.nextId++);
+    orm.define("version", BerryOrm.nextVersion++);
     orm.define("parent", this);
     orm.define("registry", this.registry);
     orm.define("em", new EntityManager(this));
@@ -33,8 +33,8 @@ export class BerryOrm {
   }
 
   reset(): this {
-    this.define("id", BerryOrm.nextId++);
     this.em.map.clear();
+    this.define("version", BerryOrm.nextVersion++);
     return this;
   }
 

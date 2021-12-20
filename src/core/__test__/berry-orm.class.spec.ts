@@ -67,12 +67,19 @@ describe("BerryOrm", () => {
       expect(sub.rm).toBeInstanceOf(RelationManager);
       expect(sub.registry).toBeInstanceOf(Set);
 
-      expect(sub.id).toBeDefined();
-      expect(sub.id).not.toBe(base.id);
+      expect(sub.version).toBeDefined();
+      expect(sub.version).not.toBe(base.version);
       expect(sub.parent).toBe(base);
       expect(sub.em).not.toBe(base.em);
       expect(sub.rm).not.toBe(base.rm);
       expect(sub.registry).toBe(base.registry);
     });
+  });
+
+  describe(".reset()", () => {
+    const orm = new BerryOrm({ entities: [] });
+    const version = orm.version;
+    orm.reset();
+    expect(orm.version).toBe(version + 1);
   });
 });

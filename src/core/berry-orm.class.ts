@@ -33,10 +33,10 @@ export class BerryOrm {
     orm.define("version", BerryOrm.nextVersion++);
     orm.define("parent", this);
     orm.define("registry", this.registry);
-    orm.define("em", new EntityManager(this));
-    orm.define("erm", new EntityRelationManager(this));
-    orm.define("eem", new EntityEventManager(this));
-    orm.define("map", new IdentityMap(this));
+    orm.define("em", new EntityManager(orm));
+    orm.define("erm", new EntityRelationManager(orm));
+    orm.define("eem", new EntityEventManager(orm));
+    orm.define("map", new IdentityMap(orm));
     return orm;
   }
 

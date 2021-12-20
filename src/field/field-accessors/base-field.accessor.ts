@@ -8,7 +8,10 @@ export class BaseFieldAccessor<
   Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {
-  value = this.entity[this.field];
+  /**
+   * Exists only after {@link BaseFieldAccessor.apply} has been invoked.
+   */
+  value!: Entity[Field];
 
   constructor(
     protected orm: BerryOrm,
@@ -16,7 +19,11 @@ export class BaseFieldAccessor<
     readonly field: Field,
   ) {}
 
+  /**
+   * Initialize {@link BaseFieldAccessor.value} and start the proxy.
+   */
   apply(): void {
+    this.value = this.entity[this.field];
     Reflect.defineProperty(this.entity, this.field, {
       configurable: true,
       get: () => this.handleGet(),

@@ -32,6 +32,11 @@ export class BerryOrm {
     return orm;
   }
 
+  /**
+   * Clear the identity map and update the ORM version, which will make all
+   * existing entities belonging to this ORM instance to be unreachable.
+   * @returns
+   */
   reset(): this {
     this.em.map.clear();
     this.define("version", BerryOrm.nextVersion++);

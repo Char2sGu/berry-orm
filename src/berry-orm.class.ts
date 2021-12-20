@@ -24,19 +24,12 @@ export class BerryOrm {
 
   fork(): BerryOrm {
     const orm: BerryOrm = Object.create(BerryOrm.prototype);
-    define("id", BerryOrm.nextId++);
-    define("parent", this);
-    define("registry", this.registry);
-    define("em", new EntityManager(this));
-    define("rm", new RelationManager(this));
+    orm.define("id", BerryOrm.nextId++);
+    orm.define("parent", this);
+    orm.define("registry", this.registry);
+    orm.define("em", new EntityManager(this));
+    orm.define("rm", new RelationManager(this));
     return orm;
-
-    function define<Key extends keyof BerryOrm>(
-      key: Key,
-      value: BerryOrm[Key],
-    ) {
-      Object.defineProperty(orm, key, { value });
-    }
   }
 
   private inspect() {
@@ -104,6 +97,10 @@ export class BerryOrm {
             "The inverse side of the inverse side must point back to this field",
         });
     }
+  }
+
+  private define<Key extends keyof this>(key: Key, value: this[Key]) {
+    Object.defineProperty(this, key, { value });
   }
 }
 

@@ -8,7 +8,6 @@ import { EntityField } from "../field/field-names/entity-field.type";
 import { PrimaryField } from "../field/field-names/primary-field.type";
 import { RelationFieldToMany } from "../field/field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "../field/field-names/relation-field-to-one.type";
-import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
 import { META, RESOLVED, VERSION } from "../symbols";
@@ -53,20 +52,19 @@ export abstract class BaseEntity<
     entity: Entity,
     field: EntityField<Entity>,
   ) {
-    const isPrimaryField = entity[META].primary == field;
-    const isCollectionField = !!entity[META].fields[field].relation?.multi;
-    const isRelationEntityField =
-      !!entity[META].fields[field].relation && !isCollectionField;
+    const isPrimary = entity[META].primary == field;
+    const isToMany = !!entity[META].fields[field].relation?.multi;
+    const isToOne = !!entity[META].fields[field].relation && !isToMany;
 
-    const accessor = isPrimaryField
+    const accessor = isPrimary
       ? new PrimaryFieldAccessor(orm, entity, field as PrimaryField<Entity>)
-      : isCollectionField
+      : isToMany
       ? new RelationFieldToManyAccessor(
           orm,
           entity,
           field as RelationFieldToMany<Entity>,
         )
-      : isRelationEntityField
+      : isToOne
       ? new RelationFieldToOneAccessor(
           orm,
           entity,
@@ -75,13 +73,6 @@ export abstract class BaseEntity<
       : new CommonFieldAccessor(orm, entity, field as CommonField<Entity>);
 
     accessor.apply();
-
-    if (isCollectionField)
-      entity[field] = new Collection(
-        orm,
-        entity,
-        field,
-      ) as unknown as Entity[EntityField<Entity>];
   }
 
   /**

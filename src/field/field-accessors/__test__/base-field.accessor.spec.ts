@@ -21,15 +21,23 @@ describe("BaseFieldAccessor", () => {
     orm = new BerryOrm({ entities: [TestingEntity] });
   });
 
+  describe(".handleGet()", () => {
+    it("should throw when the entity has expired", () => {
+      const entity = orm.em.resolve(TestingEntity, { id: 1, value: "" });
+      orm.reset();
+      expect(() => {
+        entity.value;
+      }).toThrow("Entity version not matched: 1/2");
+    });
+  });
+
   describe(".handleSet()", () => {
     it("should throw when the entity has expired", () => {
       const entity = orm.em.resolve(TestingEntity, { id: 1, value: "" });
       orm.reset();
       expect(() => {
         entity.value = "";
-      }).toThrow(
-        'Entity version not matched: 1/2 TestingEntity {"id":1,"value":""}',
-      );
+      }).toThrow("Entity version not matched: 3/4");
     });
   });
 });

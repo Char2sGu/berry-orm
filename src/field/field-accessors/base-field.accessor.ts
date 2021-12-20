@@ -24,6 +24,7 @@ export class BaseFieldAccessor<
   }
 
   handleGet(): Entity[Field] {
+    this.checkExpiry();
     return this.value;
   }
 
@@ -34,9 +35,8 @@ export class BaseFieldAccessor<
 
   private checkExpiry() {
     if (this.entity[VERSION] == this.orm.version) return;
-    const json = JSON.stringify(this.orm.em.export(this.entity));
     throw new Error(
-      `Entity version not matched: ${this.entity[VERSION]}/${this.orm.version} ${this.entity.constructor.name} ${json}`,
+      `Entity version not matched: ${this.entity[VERSION]}/${this.orm.version}`,
     );
   }
 }

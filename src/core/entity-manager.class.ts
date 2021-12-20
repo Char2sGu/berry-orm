@@ -65,6 +65,7 @@ export class EntityManager {
     }
 
     entity[RESOLVED] = true;
+    this.orm.eem.emit(entity, "resolve");
 
     return entity;
   }

@@ -1,6 +1,6 @@
 import { BerryOrm } from "../../core/berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
-import { VERSION } from "../../symbols";
+import { RESOLVED, VERSION } from "../../symbols";
 import { EntityField } from "../field-names/entity-field.type";
 import { FieldAccessDeniedError } from "./field-access-denied.error";
 
@@ -39,6 +39,7 @@ export class BaseFieldAccessor<
   handleSet(newValue: Entity[Field]): void {
     this.checkExpiry();
     this.value = newValue;
+    if (this.entity[RESOLVED]) this.orm.eem.emit(this.entity, "update");
   }
 
   private checkExpiry() {

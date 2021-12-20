@@ -6,6 +6,7 @@ import { Field } from "../../meta/meta-decorators/field.decorator";
 import { Primary } from "../../meta/meta-decorators/primary.decorator";
 import { Relation } from "../../meta/meta-decorators/relation.decorator";
 import { BerryOrm } from "../berry-orm.class";
+import { EntityEventManager } from "../entity-event-manager.class";
 
 describe("BerryOrm", () => {
   describe("new", () => {
@@ -65,6 +66,7 @@ describe("BerryOrm", () => {
       expect(sub.parent).toBeInstanceOf(BerryOrm);
       expect(sub.em).toBeInstanceOf(EntityManager);
       expect(sub.erm).toBeInstanceOf(RelationManager);
+      expect(sub.eem).toBeInstanceOf(EntityEventManager);
       expect(sub.registry).toBeInstanceOf(Set);
 
       expect(sub.version).toBeDefined();
@@ -72,6 +74,7 @@ describe("BerryOrm", () => {
       expect(sub.parent).toBe(base);
       expect(sub.em).not.toBe(base.em);
       expect(sub.erm).not.toBe(base.erm);
+      expect(sub.eem).not.toBe(base.eem);
       expect(sub.registry).toBe(base.registry);
     });
   });

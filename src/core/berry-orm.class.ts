@@ -11,32 +11,25 @@ import { IdentityMap } from "./identity-map.class";
 export class BerryOrm {
   private static nextVersion = 1;
 
-  readonly version = BerryOrm.nextVersion++;
   readonly parent?: BerryOrm;
   readonly registry: Set<EntityType>;
-  readonly em: EntityManager;
-  readonly erm: EntityRelationManager;
-  readonly eem: EntityEventManager;
-  readonly map: IdentityMap;
+  readonly version!: number;
+  readonly em!: EntityManager;
+  readonly erm!: EntityRelationManager;
+  readonly eem!: EntityEventManager;
+  readonly map!: IdentityMap;
 
   constructor(options: BerryOrmOptions) {
     this.registry = new Set(options.entities);
     this.inspect();
-    this.em = new EntityManager(this);
-    this.erm = new EntityRelationManager(this);
-    this.eem = new EntityEventManager(this);
-    this.map = new IdentityMap(this);
+    this.init();
   }
 
   fork(): BerryOrm {
     const orm: BerryOrm = Object.create(BerryOrm.prototype);
-    orm.define("version", BerryOrm.nextVersion++);
     orm.define("parent", this);
     orm.define("registry", this.registry);
-    orm.define("em", new EntityManager(orm));
-    orm.define("erm", new EntityRelationManager(orm));
-    orm.define("eem", new EntityEventManager(orm));
-    orm.define("map", new IdentityMap(orm));
+    orm.init();
     return orm;
   }
 
@@ -49,6 +42,14 @@ export class BerryOrm {
     this.map.clear();
     this.define("version", BerryOrm.nextVersion++);
     return this;
+  }
+
+  private init() {
+    this.define("version", BerryOrm.nextVersion++);
+    this.define("em", new EntityManager(this));
+    this.define("erm", new EntityRelationManager(this));
+    this.define("eem", new EntityEventManager(this));
+    this.define("map", new IdentityMap(this));
   }
 
   private inspect() {

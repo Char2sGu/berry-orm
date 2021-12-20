@@ -8,7 +8,14 @@ export class RelationFieldToManyAccessor<
   Entity extends AnyEntity<Entity> = AnyEntity,
   Field extends RelationFieldToMany<Entity> = RelationFieldToMany<Entity>,
 > extends BaseFieldAccessor<Entity, Field> {
-  value = new Collection(this.orm, this.entity, this.field) as Entity[Field];
+  apply(): void {
+    this.entity[this.field] = new Collection(
+      this.orm,
+      this.entity,
+      this.field,
+    ) as Entity[Field];
+    super.apply();
+  }
 
   handleSet(): void {
     throw new FieldAccessDeniedError(

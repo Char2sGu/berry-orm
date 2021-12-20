@@ -11,7 +11,7 @@ import { RelationFieldToOne } from "../field/field-names/relation-field-to-one.t
 import { Collection } from "../field/field-values/collection.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { EntityMeta } from "../meta/meta-objects/entity-meta.class";
-import { META, RESOLVED } from "../symbols";
+import { META, RESOLVED, VERSION } from "../symbols";
 import { AnyEntity } from "./any-entity.type";
 import { EntityType } from "./entity-type.interface";
 
@@ -42,6 +42,7 @@ export abstract class BaseEntity<
     entity: Entity,
     primaryKey: PrimaryKey<Entity>,
   ) {
+    entity[VERSION] = orm.version;
     for (const field of Object.keys(entity[META].fields))
       this.initField(orm, entity, field as EntityField<Entity>);
     entity[entity[META].primary] = primaryKey;
@@ -96,6 +97,12 @@ export abstract class BaseEntity<
    * the this has been populated.
    */
   [RESOLVED] = false;
+
+  /**
+   * The ORM version of this entity which is used to prevent operations on
+   * expired entities.
+   */
+  [VERSION]: number;
 
   constructor(...[orm, primaryKey]: ConstructorParameters<EntityType<Entity>>) {
     BaseEntity.init(orm, this as unknown as Entity, primaryKey);

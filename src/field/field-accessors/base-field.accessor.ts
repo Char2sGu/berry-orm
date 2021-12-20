@@ -1,5 +1,6 @@
 import { BerryOrm } from "../../core/berry-orm.class";
 import { AnyEntity } from "../../entity/any-entity.type";
+import { VERSION } from "../../symbols";
 import { EntityField } from "../field-names/entity-field.type";
 
 export class BaseFieldAccessor<
@@ -27,6 +28,15 @@ export class BaseFieldAccessor<
   }
 
   handleSet(newValue: Entity[Field]): void {
+    this.checkExpiry();
     this.value = newValue;
+  }
+
+  private checkExpiry() {
+    if (this.entity[VERSION] == this.orm.version) return;
+    const json = JSON.stringify(this.orm.em.export(this.entity));
+    throw new Error(
+      `Entity version not matched: ${this.entity[VERSION]}/${this.orm.version} ${this.entity.constructor.name} ${json}`,
+    );
   }
 }

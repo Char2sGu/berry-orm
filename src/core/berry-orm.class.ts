@@ -4,7 +4,7 @@ import { EntityField } from "../field/field-names/entity-field.type";
 import { EntityMetaError } from "../meta/entity-meta.error";
 import { META } from "../symbols";
 import { EntityManager } from "./entity-manager.class";
-import { RelationManager } from "./relation-manager.class";
+import { EntityRelationManager } from "./entity-relation-manager.class";
 
 export class BerryOrm {
   private static nextVersion = 1;
@@ -13,13 +13,13 @@ export class BerryOrm {
   readonly parent?: BerryOrm;
   readonly registry: Set<EntityType>;
   readonly em: EntityManager;
-  readonly rm: RelationManager;
+  readonly erm: EntityRelationManager;
 
   constructor(options: BerryOrmOptions) {
     this.registry = new Set(options.entities);
     this.inspect();
     this.em = new EntityManager(this);
-    this.rm = new RelationManager(this);
+    this.erm = new EntityRelationManager(this);
   }
 
   fork(): BerryOrm {
@@ -28,7 +28,7 @@ export class BerryOrm {
     orm.define("parent", this);
     orm.define("registry", this.registry);
     orm.define("em", new EntityManager(this));
-    orm.define("rm", new RelationManager(this));
+    orm.define("erm", new EntityRelationManager(this));
     return orm;
   }
 

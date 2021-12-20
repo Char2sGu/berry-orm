@@ -64,14 +64,14 @@ describe("BerryOrm", () => {
 
       expect(sub.parent).toBeInstanceOf(BerryOrm);
       expect(sub.em).toBeInstanceOf(EntityManager);
-      expect(sub.rm).toBeInstanceOf(RelationManager);
+      expect(sub.erm).toBeInstanceOf(RelationManager);
       expect(sub.registry).toBeInstanceOf(Set);
 
       expect(sub.version).toBeDefined();
       expect(sub.version).not.toBe(base.version);
       expect(sub.parent).toBe(base);
       expect(sub.em).not.toBe(base.em);
-      expect(sub.rm).not.toBe(base.rm);
+      expect(sub.erm).not.toBe(base.erm);
       expect(sub.registry).toBe(base.registry);
     });
   });

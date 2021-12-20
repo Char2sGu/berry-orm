@@ -5,7 +5,7 @@ import { EmptyValue } from "../field/field-values/empty-value.type";
 import { META } from "../symbols";
 import { BerryOrm } from "./berry-orm.class";
 
-export class RelationManager {
+export class EntityRelationManager {
   constructor(private orm: BerryOrm) {}
 
   /**

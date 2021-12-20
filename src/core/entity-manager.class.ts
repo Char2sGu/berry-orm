@@ -85,7 +85,7 @@ export class EntityManager {
     field: Field,
     data: RelationFieldData<Entity, Field>,
   ): void {
-    this.orm.rm.clearRelations(entity, field);
+    this.orm.erm.clearRelations(entity, field);
 
     if (!data) return;
 
@@ -98,7 +98,7 @@ export class EntityManager {
         relationMeta.target(),
         data,
       );
-      this.orm.rm.constructRelation(entity, field, targetEntity);
+      this.orm.erm.constructRelation(entity, field, targetEntity);
     });
   }
 

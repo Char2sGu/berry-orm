@@ -21,11 +21,8 @@ import { META, RESOLVED } from "../symbols";
 import { BerryOrm } from "./berry-orm.class";
 import { EntityManagerExportExpansions } from "./entity-manager-export-expansions.type";
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
-import { IdentityMap } from "./identity-map.class";
 
 export class EntityManager {
-  readonly map = new IdentityMap(this.orm);
-
   constructor(private orm: BerryOrm) {}
 
   resolve<
@@ -37,7 +34,7 @@ export class EntityManager {
     serializers?: Serializers,
   ): Entity {
     const primaryKey = data[type.prototype[META].primary] as PrimaryKey<Entity>;
-    const entity = this.map.get(type, primaryKey);
+    const entity = this.orm.map.get(type, primaryKey);
 
     for (const k in entity[META].fields) {
       const f = k as EntityField<Entity>;
@@ -117,7 +114,7 @@ export class EntityManager {
     if (typeof representation == "object") {
       return this.resolve(type, representation);
     } else {
-      return this.map.get(type, representation);
+      return this.orm.map.get(type, representation);
     }
   }
 

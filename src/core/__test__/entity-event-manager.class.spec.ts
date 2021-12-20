@@ -20,7 +20,7 @@ describe("EntityEventManager", () => {
 
   beforeEach(() => {
     orm = new BerryOrm({ entities: [TestingEntity] });
-    entity = orm.em.map.get(TestingEntity, 1);
+    entity = orm.map.get(TestingEntity, 1);
   });
 
   describe(".on()", () => {

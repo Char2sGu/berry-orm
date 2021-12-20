@@ -124,7 +124,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = orm.em.map.get(TestingEntity2, 1);
+              const previous = orm.map.get(TestingEntity2, 1);
               expect(previous.entity1).toBeUndefined();
             });
           });
@@ -191,7 +191,7 @@ describe("EntityManager", () => {
           });
 
           it("should destruct the previous relation", () => {
-            const previous = orm.em.map.get(TestingEntity2, 1);
+            const previous = orm.map.get(TestingEntity2, 1);
             expect(previous.entity1).toBeUndefined();
           });
         });
@@ -275,7 +275,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the relation", () => {
-              const previous = orm.em.map.get(TestingEntityChild, 1);
+              const previous = orm.map.get(TestingEntityChild, 1);
               expect(previous.parent).toBeUndefined();
             });
           });
@@ -318,7 +318,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = orm.em.map.get(TestingEntityParent, 1);
+              const previous = orm.map.get(TestingEntityParent, 1);
               expect(previous.children.size).toBe(0);
             });
           });
@@ -369,7 +369,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the previous relation", () => {
-              const previous = orm.em.map.get(TestingEntityChild, 1);
+              const previous = orm.map.get(TestingEntityChild, 1);
               expect(previous.parent).toBeUndefined();
             });
           });
@@ -412,7 +412,7 @@ describe("EntityManager", () => {
             });
 
             it("should destruct the relation", () => {
-              const previous = orm.em.map.get(TestingEntityParent, 1);
+              const previous = orm.map.get(TestingEntityParent, 1);
               expect(previous.children.size).toBe(0);
             });
           });

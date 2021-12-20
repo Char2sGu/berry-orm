@@ -6,6 +6,7 @@ import { META } from "../symbols";
 import { EntityEventManager } from "./entity-event-manager.class";
 import { EntityManager } from "./entity-manager.class";
 import { EntityRelationManager } from "./entity-relation-manager.class";
+import { IdentityMap } from "./identity-map.class";
 
 export class BerryOrm {
   private static nextVersion = 1;
@@ -16,6 +17,7 @@ export class BerryOrm {
   readonly em: EntityManager;
   readonly erm: EntityRelationManager;
   readonly eem: EntityEventManager;
+  readonly map: IdentityMap;
 
   constructor(options: BerryOrmOptions) {
     this.registry = new Set(options.entities);
@@ -23,6 +25,7 @@ export class BerryOrm {
     this.em = new EntityManager(this);
     this.erm = new EntityRelationManager(this);
     this.eem = new EntityEventManager(this);
+    this.map = new IdentityMap(this);
   }
 
   fork(): BerryOrm {
@@ -33,6 +36,7 @@ export class BerryOrm {
     orm.define("em", new EntityManager(this));
     orm.define("erm", new EntityRelationManager(this));
     orm.define("eem", new EntityEventManager(this));
+    orm.define("map", new IdentityMap(this));
     return orm;
   }
 
@@ -42,7 +46,7 @@ export class BerryOrm {
    * @returns
    */
   reset(): this {
-    this.em.map.clear();
+    this.map.clear();
     this.define("version", BerryOrm.nextVersion++);
     return this;
   }

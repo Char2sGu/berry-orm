@@ -53,7 +53,7 @@ export class EntityManager {
         } else {
           type Type = SerializerType<AbstractSerializer<FieldValue>>;
           const serializer = new (serializers[field]! as Type)(this.orm);
-          entity[field] = serializer.deserialize(data[field]);
+          entity[field] = serializer.deserialize(data[field] as any);
         }
       } else {
         const field = f as RelationField<Entity>;
@@ -147,7 +147,7 @@ export class EntityManager {
           field
         ] as SerializerType<AbstractSerializer>;
         if (!serializerType) {
-          data[field] = entity[field];
+          data[field] = entity[field] as any;
         } else {
           const serializer = new serializerType!(this.orm);
           const value = serializer.serialize(entity[field]);
@@ -157,8 +157,9 @@ export class EntityManager {
         const field = f as RelationField<Entity>;
         const relationMeta = meta.fields[field].relation!;
         if (!expansions?.[field]) {
-          const getPrimaryKey = <Entity extends AnyEntity>(entity: Entity) =>
-            entity[entity[META].primary] as PrimaryKey<Entity>;
+          const getPrimaryKey = <Entity extends AnyEntity<Entity>>(
+            entity: Entity,
+          ) => entity[entity[META].primary] as PrimaryKey<Entity>;
 
           if (!relationMeta.multi) {
             data[field] = getPrimaryKey(entity[field] as AnyEntity);

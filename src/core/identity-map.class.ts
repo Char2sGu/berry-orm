@@ -57,7 +57,7 @@ export class IdentityMap {
     yield* this.map[Symbol.iterator]();
   }
 
-  private identify<Entity extends AnyEntity>(
+  private identify<Entity extends AnyEntity<Entity>>(
     type: EntityType<Entity>,
     key: PrimaryKey<Entity>,
   ) {

@@ -81,7 +81,7 @@ export abstract class BaseEntity<
    * Potentially `undefined` because it only exists when there are at least one
    * decorator applied.
    */
-  [META]: EntityMeta<Entity>;
+  [META]: EntityMeta<Entity, Primary>;
 
   /**
    * Indicates that the **data** fields (**relation** fields not included) of

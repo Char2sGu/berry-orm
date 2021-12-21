@@ -1,7 +1,7 @@
 {
   "name": "berry-orm",
   "version": "0.2.0",
-  "description": "Object Relational Mapping for front-ends.",
+  "description": "A lightweight ORM with ❗SUPER AWESOME TYPINGS❗",
   "main": "lib/index.js",
   "scripts": {
     "prepare": "husky install",

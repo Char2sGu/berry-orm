@@ -2,7 +2,7 @@
 
 [中文](./README_zh.md)
 
-Lightweight object-relational mapper for Node.js and the browser.
+A lightweight ORM with ❗SUPER AWESOME TYPINGS❗
 
 ```sh
 npm i berry-orm

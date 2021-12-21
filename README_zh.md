@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-用于 Node.js 和浏览器的严格类型的轻量级对象关系映射器。
+一个具备超棒类型的轻量级对象关系映射器
 
 ```sh
 npm i berry-orm

@@ -13,7 +13,7 @@ import { SerializerType } from "../../serializer/serializer-type.interface";
 import { AnyEntity } from "../any-entity.type";
 
 export type EntityDataExported<
-  Entity extends AnyEntity,
+  Entity extends AnyEntity<Entity>,
   Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
   Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
 > = {
@@ -48,14 +48,14 @@ export type EntityDataExported<
   };
 
 type NestedSerializerMapUniformed<
-  Entity extends AnyEntity,
+  Entity extends AnyEntity<Entity>,
   Value,
 > = Value extends NestedSerializerMap<Entity>
   ? Value
   : NestedSerializerMapEmpty<Entity>;
 
 type RelationExpansionsUniformed<
-  Entity extends AnyEntity,
+  Entity extends AnyEntity<Entity>,
   Value,
 > = Value extends EntityManagerExportExpansions<Entity>
   ? Value

@@ -1,4 +1,5 @@
 import { AnyEntity } from "../entity/any-entity.type";
+import { FieldDiscriminator } from "../field/field-discriminator.class";
 import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
 import { EmptyValue } from "../field/field-values/empty-value.type";
@@ -136,8 +137,7 @@ export class EntityRelationManager {
     onToOne?: (entity: AnyEntity | EmptyValue) => AnyEntity | EmptyValue,
     onToMany?: (entities: Collection<AnyEntity>) => void,
   ) {
-    const relationMeta = entity[META].fields[field].relation;
-    if (relationMeta?.multi) {
+    if (FieldDiscriminator.isRelationFieldToMany(entity, field)) {
       if (!onToMany) return;
       const relationEntities = entity[field] as Collection<AnyEntity>;
       onToMany(relationEntities);

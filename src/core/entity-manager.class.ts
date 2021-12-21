@@ -41,18 +41,15 @@ export class EntityManager {
       if (!(f in data)) continue;
       if (f == entity[META].primary) continue;
 
-      const isRelationField = (field = f): field is RelationField<Entity> =>
-        !!entity[META].fields[field].relation;
+      if (!entity[META].fields[f].relation) {
+        type Field = CommonField<Entity> | PrimaryField<Entity>;
+        const field = f as Field;
 
-      if (!isRelationField(f)) {
-        type FieldValue = Entity[CommonField<Entity> | PrimaryField<Entity>];
-        const field = f as CommonField<Entity> | PrimaryField<Entity>;
-
-        if (!(serializers && field in serializers)) {
-          entity[field] = data[field] as FieldValue;
+        if (!serializers || !(field in serializers)) {
+          entity[field] = data[field] as Entity[Field];
         } else {
-          type Type = SerializerType<AbstractSerializer<FieldValue>>;
-          const serializer = new (serializers[field]! as Type)(this.orm);
+          type Type = SerializerType<AbstractSerializer<Entity[Field]>>;
+          const serializer = new (serializers[field] as Type)(this.orm);
           entity[field] = serializer.deserialize(data[field] as any);
         }
       } else {
@@ -138,9 +135,11 @@ export class EntityManager {
 
     const data: Partial<EntityDataExported<Entity, Serializers, Expansions>> =
       {};
+
     const meta = entity[META];
     for (const k in meta.fields) {
       const f = k as EntityField<Entity>;
+
       if (!meta.fields[f].relation) {
         const field = f as CommonField<Entity> | PrimaryField<Entity>;
         const serializerType = serializers?.[

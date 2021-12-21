@@ -2,24 +2,107 @@
 
 [中文](./README_zh.md)
 
-A lightweight ORM with ❗SUPER AWESOME TYPINGS❗
+A lightweight ORM with **_❗SUPER AWESOME TYPINGS❗_**
 
 ```sh
 npm i berry-orm
 ```
 
-Berry ORM allows you transform between plain data objects and entities by defining entity classes. An entity is an instance of the entity class, which allows you to easily access and update bilateral relations. You can also transform an entity back into a plain data object.
+**NOTE!** Berry ORM is a generic object relation mapper that is only responsible for mapping relations and you can freely combine it with other data management solutions.
 
-Strict typing is a key focus of Berry ORM, therefore, all the features have advanced type support to maximize the benefits of TypeScript.
+# Demo
 
-It is important to note that Berry ORM is not the same concept as a traditional ORM. The latter is usually a complete data management solution that includes additional features such as a database layer, where the object-relational mapper is only a coupled part, while the former is a generic object-relational mapper that is only responsible for mapping relations and you can freely combine it with other data management solutions.
+## Defining Entities
 
-# Scenarios
+<details>
 
-- When using relational state management in a web application
-- When keeping large amounts of relational data in IndexedDB
-- When storing relational data in simple files like "data.json"
-- Any time you don't use a database but need to manage relational data
+```ts
+@Entity()
+class Book extends BaseEntity<Book, "id"> {
+  @Primary()
+  @Field()
+  id!: number;
+
+  @Field()
+  name!: string;
+
+  @Relation({
+    target: () => Author,
+    inverse: "books",
+  })
+  @Field()
+  author!: Author;
+}
+
+@Entity()
+class Author extends BaseEntity<Author, "id"> {
+  @Primary()
+  @Field()
+  id!: number;
+
+  @Field()
+  name!: string;
+
+  @Relation({
+    target: () => Book,
+    inverse: "author",
+    multi: true,
+  })
+  @Field()
+  books!: Collection<Book>;
+}
+```
+
+</details>
+
+![](./res/defining-entities.gif)
+
+## Resolving Data
+
+```ts
+const orm = new BerryOrm({ entities: [Book, Author] });
+
+const book1 = orm.em.resolve(Book, {
+  id: 1,
+  name: "1000 Ways to Code",
+  author: 1,
+});
+
+book1[RESOLVED]; // true
+book1.author[RESOLVED]; // false
+
+const book2 = orm.em.resolve(Book, {
+  id: 2,
+  name: "2000 Ways to Code",
+  author: { id: 1, name: "Char2s" },
+});
+
+book2[RESOLVED]; // true
+book2.author[RESOLVED]; // true
+
+book1.author == book2.author; // true
+```
+
+## Exporting Entities
+
+<details>
+
+```ts
+const orm = new BerryOrm({ entities: [Book, Author] });
+
+const book = orm.em.resolve(Book, {
+  id: 1,
+  name: "1000 Ways to Code",
+  author: { id: 1, name: "Char2s" },
+});
+
+const data = orm.em.export(book, { author: { books: { author: true } } });
+data.author.books[0].author.
+```
+
+</details>
+
+![](./res/exporting-entities.gif)
 
 # Documents
 

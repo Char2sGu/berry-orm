@@ -2,24 +2,107 @@
 
 [English](./README.md)
 
-一个具备超棒类型的轻量级对象关系映射器
+一个具备 **_❗ 超 棒 类 型 ❗_** 的轻量级对象关系映射器
 
 ```sh
 npm i berry-orm
 ```
 
-Berry ORM 允许你通过定义实体类来在普通数据对象和实体之间进行转换。实体是实体类的实例，它允许你轻松地访问和更新双向关系。你也可以将实体转换回普通数据对象。
+**注意！** Berry ORM 是一个通用的对象关系映射器，只负责映射关系，你可以自由地将它与其他数据管理解决方案结合。
 
-严格的类型是 Berry ORM 的重点，因此，所有的特性都具备有高级类型支持，以最大限度地发挥 TypeScript 的优势。
+# 演示
 
-值得注意的是，Berry ORM 与传统的 ORM 概念并不相同。后者通常是一套完整的数据管理解决方案，包含了数据库层等等额外的功能，对象关系映射器仅仅是其中耦合的一部分，而前者则是一款通用的对象关系映射器，仅仅负责映射关系，你可以将其与其他数据管理解决方案自由组合使用。
+## 定义实体
 
-# 场景
+<details>
 
-- 在 Web 应用中使用关系型的状态管理时
-- 在 IndexedDB 中保存大量的关系型数据时
-- 在“data.json”这样的简单文件中存储关系型数据时
-- 任何不使用数据库但需要管理关系型数据的时候
+```ts
+@Entity()
+class Book extends BaseEntity<Book, "id"> {
+  @Primary()
+  @Field()
+  id!: number;
+
+  @Field()
+  name!: string;
+
+  @Relation({
+    target: () => Author,
+    inverse: "books",
+  })
+  @Field()
+  author!: Author;
+}
+
+@Entity()
+class Author extends BaseEntity<Author, "id"> {
+  @Primary()
+  @Field()
+  id!: number;
+
+  @Field()
+  name!: string;
+
+  @Relation({
+    target: () => Book,
+    inverse: "author",
+    multi: true,
+  })
+  @Field()
+  books!: Collection<Book>;
+}
+```
+
+</details>
+
+![](./res/defining-entities.gif)
+
+## 解析数据
+
+```ts
+const orm = new BerryOrm({ entities: [Book, Author] });
+
+const book1 = orm.em.resolve(Book, {
+  id: 1,
+  name: "1000 Ways to Code",
+  author: 1,
+});
+
+book1[RESOLVED]; // true
+book1.author[RESOLVED]; // false
+
+const book2 = orm.em.resolve(Book, {
+  id: 2,
+  name: "2000 Ways to Code",
+  author: { id: 1, name: "Char2s" },
+});
+
+book2[RESOLVED]; // true
+book2.author[RESOLVED]; // true
+
+book1.author == book2.author; // true
+```
+
+## 导出实体
+
+<details>
+
+```ts
+const orm = new BerryOrm({ entities: [Book, Author] });
+
+const book = orm.em.resolve(Book, {
+  id: 1,
+  name: "1000 Ways to Code",
+  author: { id: 1, name: "Char2s" },
+});
+
+const data = orm.em.export(book, { author: { books: { author: true } } });
+data.author.books[0].author.
+```
+
+</details>
+
+![](./res/exporting-entities.gif)
 
 # 文档
 

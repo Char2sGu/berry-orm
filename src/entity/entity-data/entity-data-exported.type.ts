@@ -11,6 +11,7 @@ import { NestedSerializerMap } from "../../serializer/serializer-map/nested-seri
 import { NestedSerializerMapEmpty } from "../../serializer/serializer-map/nested-serializer-map-empty.type";
 import { SerializerType } from "../../serializer/serializer-type.interface";
 import { AnyEntity } from "../any-entity.type";
+import { EntityFromRelationFieldValue } from "../entity-from-relation-field-value.type";
 
 export type EntityDataExported<
   Entity extends AnyEntity<Entity>,
@@ -26,18 +27,34 @@ export type EntityDataExported<
     : Entity[Field];
 } &
   {
-    [Field in RelationField<Entity>]: Expansions[Field] extends true
+    [Field in RelationField<Entity>]: Expansions[Field] extends
+      | true
+      | EntityManagerExportExpansions<
+          EntityFromRelationFieldValue<Entity[Field]>
+        >
       ? Field extends RelationFieldToOne<Entity>
         ? EntityDataExported<
-            Entity[Field],
-            NestedSerializerMapUniformed<Entity[Field], Serializers[Field]>,
-            RelationExpansionsUniformed<Entity[Field], Expansions[Field]>
+            EntityFromRelationFieldValue<Entity[Field]>,
+            NestedSerializerMapUniformed<
+              EntityFromRelationFieldValue<Entity[Field]>,
+              Serializers[Field]
+            >,
+            RelationExpansionsUniformed<
+              EntityFromRelationFieldValue<Entity[Field]>,
+              Expansions[Field]
+            >
           >
         : Field extends RelationFieldToMany<Entity>
         ? EntityDataExported<
-            Entity,
-            NestedSerializerMapUniformed<Entity, Serializers[Field]>,
-            RelationExpansionsUniformed<Entity, Expansions[Field]>
+            EntityFromRelationFieldValue<Entity[Field]>,
+            NestedSerializerMapUniformed<
+              EntityFromRelationFieldValue<Entity[Field]>,
+              Serializers[Field]
+            >,
+            RelationExpansionsUniformed<
+              EntityFromRelationFieldValue<Entity[Field]>,
+              Expansions[Field]
+            >
           >[]
         : never
       : Field extends RelationFieldToOne<Entity>

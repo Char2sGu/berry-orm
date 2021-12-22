@@ -1,4 +1,4 @@
-import { EntityManager, RelationManager } from "../..";
+import { EntityManager, EntityRelationManager } from "../..";
 import { BaseEntity } from "../../entity/base-entity.class";
 import { EntityMetaError } from "../../meta/entity-meta.error";
 import { Entity } from "../../meta/meta-decorators/entity.decorator";
@@ -65,7 +65,7 @@ describe("BerryOrm", () => {
 
       expect(sub.parent).toBeInstanceOf(BerryOrm);
       expect(sub.em).toBeInstanceOf(EntityManager);
-      expect(sub.erm).toBeInstanceOf(RelationManager);
+      expect(sub.erm).toBeInstanceOf(EntityRelationManager);
       expect(sub.eem).toBeInstanceOf(EntityEventManager);
       expect(sub.registry).toBeInstanceOf(Set);
 

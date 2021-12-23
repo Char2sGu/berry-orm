@@ -10,7 +10,7 @@ npm i berry-orm
 
 **NOTE!** Berry ORM is a generic object relation mapper that is only responsible for mapping relations and you can freely combine it with other data management solutions.
 
-# Demo
+# Basic Usage
 
 ## Defining Entities
 

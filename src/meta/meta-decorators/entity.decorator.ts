@@ -9,6 +9,7 @@ export const Entity =
     if (!type.prototype[META])
       throw new EntityMetaError({
         type,
-        message: "Must have at least one field",
+        message:
+          "@Field() must be applied for at least once in each entity class",
       });
   };

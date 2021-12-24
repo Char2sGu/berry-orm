@@ -22,7 +22,7 @@ export const Field =
       throw new EntityMetaError({
         type: meta.type,
         field: field,
-        message: "The field cannot be registered for more than once",
+        message: "@Field() can be applied for only once on each field",
       });
 
     meta.fields[field] = fieldMeta;

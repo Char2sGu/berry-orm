@@ -28,7 +28,7 @@ export const Relation =
       throw new EntityMetaError({
         type: prototype.constructor as EntityType<Entity>,
         field,
-        message: "@Field() must be applied before @Relation()",
+        message: "@Relation() must be applied after(above) @Field()",
       });
 
     const { target, inverse, multi } = options;

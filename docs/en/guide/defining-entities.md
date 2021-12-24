@@ -92,10 +92,16 @@ Similarly, for relations, apply a `@Relation()` **after(above)** `@Field()`
   multi: false, // optional
 })
 @Field()
-author!: Author;
+author?: Author;
 ```
 
 In the code above, we defined a relation field in the `Book` class with `multi` set to `false`. Such relation fields can represent _OneToOne_ or _ManyToOne_ relations.
+
+::: tip Recommended Practices
+
+Use the optional operator `?` instead of the non-nullable operator `!`, because it may be `undefined` if there is no plain data object specifying its relation, and what's more, we can assign an `undefined` to the field to destruct its relation, which will be talked about in [Updating Entities](./updating-entities.html)
+
+:::
 
 The value of `inverse` should be a field of the target entity which points back to this entity. And of course, it is strictly typed, with value limited and auto-completion enabled.
 

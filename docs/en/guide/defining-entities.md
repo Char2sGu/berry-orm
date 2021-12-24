@@ -114,6 +114,12 @@ And here we defined another relation field in the `Author` class but with `multi
 
 _ToMany_ relation fields should have a `Collection` type and will be automatically assigned a `Collection` instance during the instantiation of entities.
 
+::: tip
+
+`Collection` is derived from `Set`.
+
+:::
+
 ::: warning
 
 - There will be an `EntityMetaError` when `@Relation()` is applied before(below) `@Field()` or is applied for multiple times on one field.

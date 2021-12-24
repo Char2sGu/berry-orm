@@ -22,7 +22,16 @@ describe("@Relation()", () => {
 
   it("should define the relation metadata", () => {
     Field()(cls.prototype, "a");
-    Relation({ target: () => cls, inverse: "" });
+    Relation({ target: () => cls, inverse: "" })(cls.prototype, "a");
+  });
+
+  it("should throw an error when applied for multiple times on a field", () => {
+    Field()(cls.prototype, "a");
+    Relation({ target: () => cls, inverse: "" })(cls.prototype, "a");
+
+    expect(() => {
+      Relation({ target: () => cls, inverse: "" })(cls.prototype, "a");
+    }).toThrow(EntityMetaError);
   });
 
   describe("Type", () => {

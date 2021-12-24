@@ -23,12 +23,21 @@ export const Relation =
       ? RelationFieldToMany<Entity>
       : RelationFieldToOne<Entity>,
   ): void => {
+    const type = prototype.constructor as EntityType<Entity>;
     const meta = prototype[META] as EntityMeta<Entity> | undefined;
+
     if (!meta?.fields[field])
       throw new EntityMetaError({
-        type: prototype.constructor as EntityType<Entity>,
+        type,
         field,
         message: "@Relation() must be applied after(above) @Field()",
+      });
+
+    if (meta?.fields[field].relation)
+      throw new EntityMetaError({
+        type,
+        field,
+        message: "@Relation() can be applied for only once on each field",
       });
 
     const { target, inverse, multi } = options;

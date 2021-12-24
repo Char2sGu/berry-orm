@@ -12,7 +12,7 @@ export class EntityMetaError<Entity extends AnyEntity<Entity>> extends Error {
     message: string;
   }) {
     super();
-    const prefix = field ? `[${type.name}]` : `[${type.name}:${field}]`;
+    const prefix = field ? `[${type.name}:${field}]` : `[${type.name}]`;
     this.message = `${prefix} - ${message}`;
   }
 }

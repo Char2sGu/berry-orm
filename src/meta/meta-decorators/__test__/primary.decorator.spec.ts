@@ -26,12 +26,12 @@ describe("@Primary()", () => {
     expect(cls.prototype[META]?.primary).toBe("id");
   });
 
-  describe("Test", () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    class TestingEntity extends BaseEntity<TestingEntity, "id"> {
-      @Primary()
-      @Field()
-      id!: number;
-    }
+  it("should throw an error when it is applied for more than once", () => {
+    Field()(cls.prototype, "id");
+    Primary()(cls.prototype, "id");
+
+    expect(() => {
+      Primary()(cls.prototype, "id");
+    }).toThrow(EntityMetaError);
   });
 });

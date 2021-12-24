@@ -93,31 +93,6 @@ export class BerryOrm {
           field: meta.name,
           message: "The relation entity must be also registered",
         });
-
-      const metaInverse =
-        meta.relation.target().prototype[META].fields[meta.relation.inverse];
-
-      if (!metaInverse.relation)
-        throw new EntityMetaError({
-          type,
-          field,
-          message: "The inverse side must be a relation field",
-        });
-
-      if (metaInverse.relation.target() != type)
-        throw new EntityMetaError({
-          type,
-          field,
-          message: "The inverse side must point back to this entity",
-        });
-
-      if (metaInverse.relation.inverse != field)
-        throw new EntityMetaError({
-          type,
-          field,
-          message:
-            "The inverse side of the inverse side must point back to this field",
-        });
     }
   }
 

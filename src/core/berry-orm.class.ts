@@ -70,12 +70,6 @@ export class BerryOrm {
     if (!meta)
       throw new EntityMetaError({ type, message: "Must be decorated" });
 
-    if (!meta.primary)
-      throw new EntityMetaError({
-        type,
-        message: "Must have a primary field registered",
-      });
-
     for (const field in meta.fields) {
       this.inspectEntityField(type, field as EntityField<Entity>);
     }

@@ -20,8 +20,10 @@ describe("@Entity()", () => {
     }).toThrowError(EntityMetaError);
   });
 
-  it("should pass when there are metadata defined", () => {
-    cls.prototype[META] = new EntityMeta(cls);
+  it("should pass when meta is defined correctly", () => {
+    const meta = new EntityMeta(cls);
+    meta.primary = "id";
+    cls.prototype[META] = meta;
     expect(() => {
       Entity()(cls);
     }).not.toThrowError();

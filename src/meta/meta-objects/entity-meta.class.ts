@@ -15,6 +15,7 @@ export class EntityMeta<
 > {
   primary!: Primary;
   fields = {} as Record<EntityField<Entity>, EntityFieldMeta<Entity>>;
+  completed = false;
 
   constructor(readonly type: EntityType<Entity>) {}
 }

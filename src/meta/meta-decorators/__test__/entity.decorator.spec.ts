@@ -17,15 +17,23 @@ describe("@Entity()", () => {
   it("should throw an error when there are no metadata defined", () => {
     expect(() => {
       Entity()(cls);
-    }).toThrowError(EntityMetaError);
+    }).toThrow(EntityMetaError);
   });
 
   it("should pass when meta is defined correctly", () => {
     const meta = new EntityMeta(cls);
     meta.primary = "id";
     cls.prototype[META] = meta;
+    Entity()(cls);
+  });
+
+  it("should throw when applied for multiple times", () => {
+    const meta = new EntityMeta(cls);
+    meta.primary = "id";
+    cls.prototype[META] = meta;
+    Entity()(cls);
     expect(() => {
       Entity()(cls);
-    }).not.toThrowError();
+    }).toThrow(EntityMetaError);
   });
 });

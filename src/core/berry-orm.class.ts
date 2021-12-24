@@ -67,8 +67,8 @@ export class BerryOrm {
   ) {
     const meta = type.prototype[META];
 
-    if (!meta)
-      throw new EntityMetaError({ type, message: "Must be decorated" });
+    if (!meta?.completed)
+      throw new EntityMetaError({ type, message: "@Entity() must be applied" });
 
     for (const field in meta.fields) {
       this.inspectEntityField(type, field as EntityField<Entity>);

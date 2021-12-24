@@ -21,4 +21,12 @@ export const Entity =
         type,
         message: "Must have a primary field registered",
       });
+
+    if (meta.completed)
+      throw new EntityMetaError({
+        type,
+        message: "@Entity() can be applied for only once to each entity",
+      });
+
+    meta.completed = true;
   };

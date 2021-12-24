@@ -99,7 +99,7 @@ In the code above, we defined a relation field in the `Book` class with `multi` 
 
 ::: tip Recommended Practices
 
-Use the optional operator `?` instead of the non-nullable operator `!`, because it may be `undefined` if there is no plain data object specifying its relation, and what's more, we can assign an `undefined` to the field to destruct its relation, which will be talked about in [Updating Entities](./updating-entities.html)
+Use the optional operator `?` instead of the non-nullable operator `!`, because it may be `undefined` if there is no plain data object specifying its relation, and what's more, we can assign an `undefined` to the field to destruct its relation, which will be talked about in [Accessing Fields](./accessing-fields.html#relation-fields)
 
 :::
 

@@ -93,7 +93,7 @@ orm.em.resolve(Author, {
 
 ::: tip
 
-This approach is not being used to destruct relations intentionally. See [Updating Entities](./updating-entities.html) for more information.
+This approach is not being used to destruct relations intentionally. See [Accessing Fields](./accessing-fields.html#relation-fields) for more information.
 
 :::
 

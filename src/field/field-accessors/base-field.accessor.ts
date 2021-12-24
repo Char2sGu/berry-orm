@@ -28,6 +28,7 @@ export class BaseFieldAccessor<
       configurable: true,
       get: () => this.handleGet(),
       set: (v) => this.handleSet(v),
+      enumerable: true,
     });
   }
 

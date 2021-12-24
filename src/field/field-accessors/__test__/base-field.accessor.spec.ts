@@ -40,4 +40,17 @@ describe("BaseFieldAccessor", () => {
       }).toThrow("Entity version does not match the ORM version: 3/4");
     });
   });
+
+  it("should be enumerable", () => {
+    const entity = orm.map.get(TestingEntity, 1);
+    expect(Object.entries(entity)).toEqual([
+      ["id", 1],
+      ["value", undefined],
+    ]);
+    entity.value = "value";
+    expect(Object.entries(entity)).toEqual([
+      ["id", 1],
+      ["value", "value"],
+    ]);
+  });
 });

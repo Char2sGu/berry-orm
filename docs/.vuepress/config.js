@@ -23,7 +23,7 @@ module.exports = {
             children: [
               "/en/guide/introduction",
               "/en/guide/defining-entities",
-              "/en/guide/constructing-orm",
+              "/en/guide/preparing-the-orm",
               "/en/guide/using-entity-manager",
               "/en/guide/updating-entities",
               "/en/guide/using-identity-map-manager",

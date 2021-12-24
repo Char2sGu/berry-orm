@@ -24,6 +24,7 @@ module.exports = {
               "/en/guide/introduction",
               "/en/guide/defining-entities",
               "/en/guide/preparing-the-orm",
+              "/en/guide/resolving-data",
               "/en/guide/using-entity-manager",
               "/en/guide/updating-entities",
               "/en/guide/using-identity-map-manager",

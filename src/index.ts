@@ -1,3 +1,5 @@
+export { ExcludeKeys } from "./common/exclude-keys.type";
+export { ExtractKeys } from "./common/extract-keys.type";
 export { BerryOrm } from "./core/berry-orm.class";
 export { EntityManager } from "./core/entity-manager.class";
 export { EntityManagerExportExpansions } from "./core/entity-manager-export-expansions.type";
@@ -48,5 +50,3 @@ export { SerializerMap } from "./serializer/serializer-map/serializer-map.type";
 export { SerializerMapEmpty } from "./serializer/serializer-map/serializer-map-empty.type";
 export { SerializerType } from "./serializer/serializer-type.interface";
 export { META, RESOLVED } from "./symbols";
-export { ExcludeKeys } from "./utils/exclude-keys.type";
-export { ExtractKeys } from "./utils/extract-keys.type";

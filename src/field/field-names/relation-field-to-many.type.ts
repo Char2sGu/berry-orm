@@ -1,5 +1,5 @@
-import { AnyEntity } from "../..";
-import { ExtractKeys } from "../../utils/extract-keys.type";
+import { ExtractKeys } from "../../common/extract-keys.type";
+import { AnyEntity } from "../../entity/any-entity.type";
 import { Collection } from "../field-values/collection.class";
 import { EntityFieldBase } from "./entity-field-base.type";
 

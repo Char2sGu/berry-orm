@@ -65,7 +65,7 @@ book.author == author; // true
 author.books.has(book); // true
 ```
 
-We can also specify primary keys to represent relations, but note that the relation entities will be [shell entities](#shell-entities) if they have not been resolved before, about which we will talk later.
+We can also specify primary keys to represent relations, but note that the relation entities will be [skeleton entities](#skeleton-entities) if they have not been resolved before, about which we will talk later.
 
 ### Updating Relations
 
@@ -97,7 +97,7 @@ This approach is not being used to destruct relations intentionally. See [Access
 
 :::
 
-## Shell Entities
+## Skeleton Entities
 
 We can use primary keys to represent the value of relation fields in plain data objects.
 
@@ -109,7 +109,7 @@ const book = orm.em.resolve(Book, {
 });
 ```
 
-`book.author` here is a _shell entity_ because `Author` with `id: 1` is never resolved before, which means that we can only ensure that its primary key is known and most of its common fields and relation fields will probably be `undefined`.
+`book.author` here is a _skeleton entity_ because `Author` with `id: 1` is never resolved before, which means that we can only ensure that its primary key is known and most of its common fields and relation fields will probably be `undefined`.
 
 ```ts
 book.author.id == 1; // true
@@ -117,7 +117,7 @@ book.author.books.has(book); // true
 book.author.name === undefined; // true
 ```
 
-We can recognize shell entities through the `[RESOLVED]` property.
+We can recognize skeleton entities through the `[RESOLVED]` property.
 
 ```ts
 book[RESOLVED]; // true

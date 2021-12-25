@@ -4,13 +4,13 @@
 
 A lightweight ORM with **_❗SUPER AWESOME TYPINGS❗_**
 
-> **The types currently only apply to TypeScript 4.3 and 4.4.**
-
 ```sh
 npm i berry-orm
 ```
 
 **NOTE!** Berry ORM is a generic object relation mapper that is only responsible for mapping relations and you can freely combine it with other data management solutions.
+
+> **Requires: TypeScript 4.1/4.2/4.3/4.4/4.5**
 
 # Basic Usage
 

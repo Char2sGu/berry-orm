@@ -59,7 +59,7 @@ module.exports = {
           {
             title: "进阶",
             collapsable: false,
-            children: ["/zh/advanced/serializers"],
+            children: ["/zh/advanced/serializers", "/zh/advanced/identity-map"],
           },
         ],
       },

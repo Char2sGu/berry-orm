@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 
 import { AnyEntity } from "../entity/any-entity.type";
+import { EntityType } from "../entity/entity-type.interface";
 import { META } from "../symbols";
 import { BerryOrm } from "./berry-orm.class";
 
@@ -15,47 +16,47 @@ export class EntityEventManager {
   constructor(private orm: BerryOrm) {}
 
   on<Entity extends AnyEntity<Entity>>(
-    entity: AnyEntity<Entity>,
+    target: EventTarget<Entity>,
     event: EntityEvent,
     listener: Listener<Entity>,
   ): this {
-    this.emitter.on(this.identify(entity, event), listener);
+    this.emitter.on(this.identify(target, event), listener);
     return this;
   }
 
   once<Entity extends AnyEntity<Entity>>(
-    entity: AnyEntity<Entity>,
+    target: EventTarget<Entity>,
     event: EntityEvent,
     listener: Listener<Entity>,
   ): this {
-    this.emitter.once(this.identify(entity, event), listener);
+    this.emitter.once(this.identify(target, event), listener);
     return this;
   }
 
   off<Entity extends AnyEntity<Entity>>(
-    entity: AnyEntity<Entity>,
+    target: EventTarget<Entity>,
     event: EntityEvent,
     listener: Listener<Entity>,
   ): this;
   off<Entity extends AnyEntity<Entity>>(
-    entity: AnyEntity<Entity>,
+    target: EventTarget<Entity>,
     event: EntityEvent,
   ): this;
-  off<Entity extends AnyEntity<Entity>>(entity: AnyEntity<Entity>): this;
+  off<Entity extends AnyEntity<Entity>>(target: EventTarget<Entity>): this;
   off(): void;
   off<Entity extends AnyEntity<Entity>>(
-    entity?: AnyEntity<Entity>,
+    target?: EventTarget<Entity>,
     event?: EntityEvent,
     listener?: Listener<Entity>,
   ): this {
-    if (entity && event && listener) {
-      this.emitter.off(this.identify(entity, event), listener);
-    } else if (entity && event) {
-      const id = this.identify(entity, event);
+    if (target && event && listener) {
+      this.emitter.off(this.identify(target, event), listener);
+    } else if (target && event) {
+      const id = this.identify(target, event);
       const listeners = this.emitter.listeners(id) as Listener<Entity>[];
-      listeners.forEach((listener) => this.off(entity, event, listener));
-    } else if (entity) {
-      events.forEach((event) => this.off(entity, event));
+      listeners.forEach((listener) => this.off(target, event, listener));
+    } else if (target) {
+      events.forEach((event) => this.off(target, event));
     } else {
       this.emitter.removeAllListeners();
     }
@@ -63,13 +64,32 @@ export class EntityEventManager {
   }
 
   emit(entity: AnyEntity, event: EntityEvent): this {
+    const type = entity.constructor as EntityType;
     this.emitter.emit(this.identify(entity, event), entity);
+    this.emitter.emit(this.identify(type, event), entity);
+    this.emitter.emit(this.identify("any", event), entity);
+
     return this;
   }
 
-  private identify(entity: AnyEntity, event: EntityEvent) {
-    const name = entity.constructor.name;
-    const pk = entity[entity[META].primary];
-    return `${name}:${pk}:${event}` as const;
+  private identify<Entity extends AnyEntity<Entity>>(
+    target: EventTarget<Entity>,
+    event: EntityEvent,
+  ) {
+    if (typeof target == "string") {
+      return `${target}:${event}`;
+    } else if (target instanceof Function) {
+      const name = target.name;
+      return `${name}:${event}`;
+    } else {
+      const name = target.constructor.name;
+      const pk = target[target[META].primary];
+      return `${name}:${pk}:${event}` as const;
+    }
   }
 }
+
+type EventTarget<Entity extends AnyEntity<Entity> = AnyEntity> =
+  | Entity
+  | EntityType<Entity>
+  | "any";

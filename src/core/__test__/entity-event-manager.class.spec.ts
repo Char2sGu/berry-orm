@@ -70,4 +70,19 @@ describe("EntityEventManager", () => {
       expect(callback).not.toHaveBeenCalled();
     });
   });
+
+  describe(".emit()", () => {
+    it("should work for all the callbacks", () => {
+      const cb1 = jest.fn();
+      const cb2 = jest.fn();
+      const cb3 = jest.fn();
+      orm.eem.on(entity, "update", cb1);
+      orm.eem.on(TestingEntity, "update", cb2);
+      orm.eem.on("any", "update", cb3);
+      orm.eem.emit(entity, "update");
+      expect(cb1).toHaveBeenCalledTimes(1);
+      expect(cb2).toHaveBeenCalledTimes(1);
+      expect(cb3).toHaveBeenCalledTimes(1);
+    });
+  });
 });

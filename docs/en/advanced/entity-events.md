@@ -1,17 +1,17 @@
 # Entity Events
 
-We can listen to entity events through the `orm.eem`. (`eem` means `EntityEventManager`).
+We can listen for entity events through the `orm.eem`. (`eem` means `EntityEventManager`).
 
 All event listeners will be removed after invoking `orm.reset()`.
 
-| Event       | Timing                                                                     |
-| ----------- | -------------------------------------------------------------------------- |
-| `"resolve"` | Called after resolved using `orm.resolve()`                                |
-| `"update"`  | Called after any field is assigned a new value when the entity is resolved |
+| Event       | Timing                                                      |
+| ----------- | ----------------------------------------------------------- |
+| `"resolve"` | Called after resolved using `orm.resolve()`                 |
+| `"update"`  | Called after resolved and any field is assigned a new value |
 
 ## Listening for Events
 
-We can use `orm.eem.on()` or `orm.eem.once()` to listen for events.
+We can use `orm.eem.on()` or `orm.eem.once()` to listen for events. The entity which triggered the event will be passed to event listeners.
 
 The event target can be:
 
@@ -29,9 +29,10 @@ orm.eem.on("any", "update", (book) => console.debug(book));
 
 We can remove:
 
-- A specific event listener of a specific event of a specific target.
-- All event listeners of a specific event of a specific target.
-- All event listeners of a specific target or all event listeners.
+- A specific event listener of a specific event of a specific event target.
+- All event listeners of a specific event of a specific event target.
+- All event listeners of a specific event target.
+- All event listeners.
 
 ```ts
 orm.eem.off(book, "update", callback);

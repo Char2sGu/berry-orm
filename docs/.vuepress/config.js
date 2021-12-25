@@ -47,7 +47,7 @@ module.exports = {
           {
             title: "指南",
             collapsable: false,
-            children: ["/zh/guide/introduction"],
+            children: ["/zh/guide/introduction", "/zh/guide/defining-entities"],
           },
           {
             title: "进阶",

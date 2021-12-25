@@ -1,6 +1,6 @@
 # Accessing Fields
 
-Proxies are applied to entity fields during entity instantiations to change the behavior when accessing entity fields.
+Accessors will be applied to entity fields during entity instantiations to change the behavior when accessing entity fields.
 
 ## Primary Fields
 

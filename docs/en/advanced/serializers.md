@@ -1,19 +1,17 @@
 # Serializers
 
-The serializer can make the representation of the values of the **non-relation fields** in the data more diverse.
+Serializers allow **non-relational** fields' representations more diverse.
 
 ## Using Serializers
 
-Both the `.populate()` and `.export()` methods of `EntityManager` instances support specifying serializers.
+Berry ORM has a built-in `DateSerializer` allowing fields with a `Date` type to be represented using a `string` instead of a `Date` in plain data objects.
 
-Berry ORM has a built-in `DateSerializer` to allow date fields to be represented as a string in the data.
+### Resolving Data with Serializers
 
-### Using in Populations
-
-By using `DateSerializer`, the representation of `joinedAt` in the data can be either a `Date` as before or a `string`:
+By using `DateSerializer`, the representation of `joinedAt` in the plain data object can be `Date | string` instead of `Date`.
 
 ```ts {5,7}
-const user = orm.em.populate(
+const user = orm.em.resolve(
   User,
   {
     id: 1,
@@ -21,52 +19,43 @@ const user = orm.em.populate(
   },
   { joinedAt: DateSerializer },
 );
-```
 
-```ts
-user.joinedAt instanceof Date;
+user.joinedAt instanceof Date; // true
 ```
 
 ::: tip
 
-The type of the original data accepted by `.populate()` will be automatically updated based on the serializers specified.
+The type of the `data` parameter of `orm.em.resolve()` is dynamic based on the `serializers` parameter you specified.
 
 :::
 
-### Using in Exportings
+### Exporting Entities with Serializers
 
-By using `DateSerializer`, the representation of `user.joinedAt` in exported data becomes a `string`:
+By using `DateSerializer`, the representation of `user.joinedAt` in the exported object will be a `string` instead of a `Date`.
 
-```ts {2}
-const data = orm.em.export(user, undefined, {
-  joinedAt: DateSerializer,
-});
-```
+```ts {1}
+const data = orm.em.export(user, {}, { joinedAt: DateSerializer });
 
-```ts
-typeof data.joinedAt == "string";
+typeof data.joinedAt; // "string"
 ```
 
 ::: tip
 
-The return type of `.export()` will be automatically updated based on the serializers specified.
+The return type of `orm.em.export()` is dynamic based on the `serializers` parameter you specified.
 
 :::
 
 ## Creating Serializers
 
-It is only needed to inherit `AbstractSerializer` and implement its abstract methods to create a serializer. `AbstractSerializer` requires two generic type parameters, the first is the type of the value of the target field in the entity, and the second is the type of the representation of the target field in the data.
+Serializers are classes extending `AbstractSerializer` with its abstract methods implemented.
 
 ```ts
-export class StringNumberSerializer extends AbstractSerializer<number, string> {
-  serialize(value: number) {
-    return String(value);
+export class DateSerializer extends AbstractSerializer<Date, string> {
+  serialize(value: Date): string {
+    return value.toISOString();
   }
-  deserialize(data: string) {
-    return Number(data);
-  }
-  distinguish(data: number | string): data is number {
-    return typeof data == number;
+  deserialize(value: string | Date): Date {
+    return new Date(value);
   }
 }
 ```

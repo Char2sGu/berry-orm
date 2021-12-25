@@ -51,6 +51,7 @@ module.exports = {
               "/zh/guide/introduction",
               "/zh/guide/defining-entities",
               "/zh/guide/preparing-the-orm",
+              "/zh/guide/resolving-data",
             ],
           },
           {

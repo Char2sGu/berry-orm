@@ -54,4 +54,20 @@ describe("EntityEventManager", () => {
       expect(spy).toHaveBeenCalledWith(entity);
     });
   });
+
+  describe(".off()", () => {
+    it.each`
+      index | exec
+      ${1}  | ${(cb: any) => orm.eem.off(entity, "update", cb)}
+      ${2}  | ${() => orm.eem.off(entity, "update")}
+      ${3}  | ${() => orm.eem.off(entity)}
+      ${4}  | ${() => orm.eem.off()}
+    `("should not invoke the removed callback: $index", () => {
+      const callback = jest.fn();
+      orm.eem.on(entity, "update", callback);
+      orm.eem.off(entity, "update", callback);
+      orm.eem.emit(entity, "update");
+      expect(callback).not.toHaveBeenCalled();
+    });
+  });
 });

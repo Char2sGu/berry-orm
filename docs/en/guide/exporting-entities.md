@@ -4,7 +4,7 @@ Entities can also be converted back to plain data object through `orm.em.export(
 
 ## Basic
 
-The primary key and common fields' values will be directly copied from the entity, and relations will be represented using primary keys by default.
+The primary key and common fields' values in the exported plain data object will be directly copied from the entity, and relations will be represented using primary keys by default.
 
 ```ts
 const book = orm.em.resolve(Book, {
@@ -42,8 +42,8 @@ data.friends.forEach((friend) => {
 
 `orm.em.export()` has been strictly typed.
 
-- The return type will be generated dynamically.
-- There will be a type error if invalid value is passed to `expansions`, although auto-completion is not supported because of TypeScript's limitations.
+- The return type is dynamically generated.
+- There will be a type error if invalid value is passed to `expansions`. But auto-completion is not supported because of TypeScript's limitations.
 
 ![](../../../res/exporting-entities.gif)
 

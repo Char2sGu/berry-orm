@@ -47,19 +47,12 @@ module.exports = {
           {
             title: "指南",
             collapsable: false,
-            children: [
-              "/zh/guide/introduction",
-              "/zh/guide/defining-entities",
-              "/zh/guide/constructing-orm",
-              "/zh/guide/using-entity-manager",
-              "/zh/guide/updating-entities",
-              "/zh/guide/using-identity-map-manager",
-            ],
+            children: [],
           },
           {
             title: "进阶",
             collapsable: false,
-            children: ["/zh/advanced/serializers"],
+            children: [],
           },
         ],
       },

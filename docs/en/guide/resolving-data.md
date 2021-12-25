@@ -8,7 +8,7 @@ Of course, `orm.em.resolve()` is also strictly typed to restrict the type of the
 
 The primary key and all the common fields' values must be specified in the plain data object, while relations can be optional.
 
-For the primary field and common fields, their values are simply copied from the plain data object.
+For the primary field and common fields, their values in entities are simply copied from the plain data object.
 
 ```ts
 const book = orm.em.resolve(Book, {
@@ -58,14 +58,14 @@ const author = orm.em.resolve(Author, {
 });
 ```
 
-Bilateral relations will be constructed after relational data are resolved, which means that although `author.books` was not specified in its plain data object, the `book` was added to `author.books` automatically, and vice versa.
+Bilateral relations will be constructed when relational data are resolved, which means that although `author.books` was not specified in its plain data object, the `book` was added to `author.books` automatically, and vice versa.
 
 ```ts
 book.author == author; // true
 author.books.has(book); // true
 ```
 
-We can also specify primary keys to represent relations, but note that the relation entities will be [skeleton entities](#skeleton-entities) if they have not been resolved before, about which we will talk later.
+We can also use primary keys to represent relations, but note that the target entities will be [skeleton entities](#skeleton-entities) if they have not been resolved before, about which we will talk later.
 
 ### Updating Relations
 
@@ -73,7 +73,7 @@ In a [duplicated resolving](#duplicated-resolving), old relations will be destru
 
 ### Destructing Relations
 
-Relations will be destructed when an `undefined` is specified as the value of relation fields representing _OneToOne_ or _ManyToOne_ relations, or an array with the target removed as the value of relation fields representing _OneToMany_ or _ManyToMany_ relations.
+Relations will be destructed when an `undefined` is specified as the value of relation fields representing _OneToOne_ or _ManyToOne_ relations, or an array with some relations removed as the value of relation fields representing _OneToMany_ or _ManyToMany_ relations.
 
 ```ts
 orm.em.resolve(Book, {
@@ -101,7 +101,7 @@ This approach is not being used to destruct relations intentionally. See [Access
 
 We can use primary keys to represent the value of relation fields in plain data objects.
 
-```ts
+```ts {4}
 const book = orm.em.resolve(Book, {
   id: 1,
   name: "Book",

@@ -43,6 +43,7 @@ export class BerryOrm {
    */
   reset(): this {
     this.map.clear();
+    this.eem.off();
     this.define("version", BerryOrm.nextVersion++);
     return this;
   }

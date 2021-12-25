@@ -31,7 +31,7 @@ module.exports = {
           {
             title: "Advanced",
             collapsable: false,
-            children: ["/en/advanced/serializers"],
+            children: ["/en/advanced/serializers", "/en/advanced/identity-map"],
           },
         ],
       },

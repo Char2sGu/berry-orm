@@ -40,7 +40,10 @@ data.friends.forEach((friend) => {
 
 ::: tip
 
-`orm.em.export()` has been strictly typed and the return type will be generated dynamically.
+`orm.em.export()` has been strictly typed.
+
+- The return type will be generated dynamically.
+- There will be a type error if invalid value is passed to `expansions`, although auto-completion is not supported because of TypeScript's limitations.
 
 ![](../../../res/exporting-entities.gif)
 

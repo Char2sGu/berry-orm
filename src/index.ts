@@ -1,5 +1,5 @@
-export { ExcludeKeys } from "./common/exclude-keys.type";
-export { ExtractKeys } from "./common/extract-keys.type";
+export { MatchedKeys } from "./common/matched-keys.type";
+export { UnmatchedKeys } from "./common/unmatched-keys.type";
 export { BerryOrm } from "./core/berry-orm.class";
 export { EntityManager } from "./core/entity-manager.class";
 export { EntityManagerExportExpansions } from "./core/entity-manager-export-expansions.type";

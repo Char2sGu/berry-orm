@@ -27,8 +27,6 @@ module.exports = {
               "/en/guide/resolving-data",
               "/en/guide/accessing-fields",
               "/en/guide/exporting-entities",
-              "/en/guide/using-entity-manager",
-              "/en/guide/using-identity-map-manager",
             ],
           },
           {

@@ -8,14 +8,14 @@ import { RelationFieldToMany } from "./field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "./field-names/relation-field-to-one.type";
 
 export class FieldDiscriminator {
-  static isPrimaryField<Entity extends AnyEntity<Entity>>(
+  static isPrimaryField<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is PrimaryField<Entity> {
     return entity[META].primary == field;
   }
 
-  static isCommonField<Entity extends AnyEntity<Entity>>(
+  static isCommonField<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is CommonField<Entity> {
@@ -25,14 +25,14 @@ export class FieldDiscriminator {
     );
   }
 
-  static isRelationField<Entity extends AnyEntity<Entity>>(
+  static isRelationField<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is RelationField<Entity> {
     return !!entity[META].fields[field].relation;
   }
 
-  static isRelationFieldToOne<Entity extends AnyEntity<Entity>>(
+  static isRelationFieldToOne<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is RelationFieldToOne<Entity> {
@@ -42,7 +42,7 @@ export class FieldDiscriminator {
     );
   }
 
-  static isRelationFieldToMany<Entity extends AnyEntity<Entity>>(
+  static isRelationFieldToMany<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is RelationFieldToMany<Entity> {

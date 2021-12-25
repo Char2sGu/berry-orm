@@ -5,7 +5,7 @@ import { BaseFieldAccessor } from "./base-field.accessor";
 import { FieldAccessDeniedError } from "./field-access-denied.error";
 
 export class RelationFieldToManyAccessor<
-  Entity extends AnyEntity<Entity> = AnyEntity,
+  Entity extends AnyEntity = AnyEntity,
   Field extends RelationFieldToMany<Entity> = RelationFieldToMany<Entity>,
 > extends BaseFieldAccessor<Entity, Field> {
   apply(): void {

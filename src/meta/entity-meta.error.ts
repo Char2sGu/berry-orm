@@ -1,7 +1,7 @@
 import { AnyEntity } from "..";
 import { EntityType } from "../entity/entity-type.interface";
 
-export class EntityMetaError<Entity extends AnyEntity<Entity>> extends Error {
+export class EntityMetaError<Entity extends AnyEntity> extends Error {
   constructor({
     type,
     field,

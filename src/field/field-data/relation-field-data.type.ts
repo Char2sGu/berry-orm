@@ -5,12 +5,10 @@ import { Collection } from "../field-values/collection.class";
 import { EmptyValue } from "../field-values/empty-value.type";
 
 export type RelationFieldData<
-  Entity extends AnyEntity<Entity> = AnyEntity,
+  Entity extends AnyEntity = AnyEntity,
   Field extends RelationField<Entity> = RelationField<Entity>,
 > = Entity[Field] extends AnyEntity
   ? EntityRepresentation<Entity[Field]> | EmptyValue
-  : Entity[Field] extends Collection<infer E>
-  ? E extends AnyEntity<E>
-    ? EntityRepresentation<E>[]
-    : never
+  : Entity[Field] extends Collection<infer Entity>
+  ? EntityRepresentation<Entity>[]
   : never;

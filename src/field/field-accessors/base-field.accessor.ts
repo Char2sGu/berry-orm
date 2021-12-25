@@ -5,7 +5,7 @@ import { EntityField } from "../field-names/entity-field.type";
 import { FieldAccessDeniedError } from "./field-access-denied.error";
 
 export class BaseFieldAccessor<
-  Entity extends AnyEntity<Entity> = AnyEntity,
+  Entity extends AnyEntity = AnyEntity,
   Field extends EntityField<Entity> = EntityField<Entity>,
 > {
   /**

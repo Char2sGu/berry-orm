@@ -14,7 +14,7 @@ import { AnyEntity } from "../any-entity.type";
 import { EntityFromRelationFieldValue } from "../entity-from-relation-field-value.type";
 
 export type EntityDataExported<
-  Entity extends AnyEntity<Entity>,
+  Entity extends AnyEntity,
   Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
   Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
 > = {
@@ -65,14 +65,14 @@ export type EntityDataExported<
   };
 
 type NestedSerializerMapUniformed<
-  Entity extends AnyEntity<Entity>,
+  Entity extends AnyEntity,
   Value,
 > = Value extends NestedSerializerMap<Entity>
   ? Value
   : NestedSerializerMapEmpty<Entity>;
 
 type RelationExpansionsUniformed<
-  Entity extends AnyEntity<Entity>,
+  Entity extends AnyEntity,
   Value,
 > = Value extends EntityManagerExportExpansions<Entity>
   ? Value

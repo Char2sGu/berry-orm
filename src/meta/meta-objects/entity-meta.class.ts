@@ -10,7 +10,7 @@ import { EntityFieldMeta } from "./entity-field-meta.class";
  * inference of the primary field work.
  */
 export class EntityMeta<
-  Entity extends AnyEntity<Entity> = AnyEntity,
+  Entity extends AnyEntity = AnyEntity,
   Primary extends PrimaryFieldPossible<Entity> = PrimaryField<Entity>,
 > {
   primary!: Primary;

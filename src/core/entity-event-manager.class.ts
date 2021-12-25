@@ -8,14 +8,14 @@ import { BerryOrm } from "./berry-orm.class";
 const events = ["resolve", "update"] as const;
 
 type EntityEvent = typeof events[number];
-type Listener<Entity extends AnyEntity<Entity>> = (entity: Entity) => void;
+type Listener<Entity extends AnyEntity> = (entity: Entity) => void;
 
 export class EntityEventManager {
   private emitter = new EventEmitter();
 
   constructor(private orm: BerryOrm) {}
 
-  on<Entity extends AnyEntity<Entity>>(
+  on<Entity extends AnyEntity>(
     target: EventTarget<Entity>,
     event: EntityEvent,
     listener: Listener<Entity>,
@@ -24,7 +24,7 @@ export class EntityEventManager {
     return this;
   }
 
-  once<Entity extends AnyEntity<Entity>>(
+  once<Entity extends AnyEntity>(
     target: EventTarget<Entity>,
     event: EntityEvent,
     listener: Listener<Entity>,
@@ -33,18 +33,18 @@ export class EntityEventManager {
     return this;
   }
 
-  off<Entity extends AnyEntity<Entity>>(
+  off<Entity extends AnyEntity>(
     target: EventTarget<Entity>,
     event: EntityEvent,
     listener: Listener<Entity>,
   ): this;
-  off<Entity extends AnyEntity<Entity>>(
+  off<Entity extends AnyEntity>(
     target: EventTarget<Entity>,
     event: EntityEvent,
   ): this;
-  off<Entity extends AnyEntity<Entity>>(target: EventTarget<Entity>): this;
+  off<Entity extends AnyEntity>(target: EventTarget<Entity>): this;
   off(): void;
-  off<Entity extends AnyEntity<Entity>>(
+  off<Entity extends AnyEntity>(
     target?: EventTarget<Entity>,
     event?: EntityEvent,
     listener?: Listener<Entity>,
@@ -72,7 +72,7 @@ export class EntityEventManager {
     return this;
   }
 
-  private identify<Entity extends AnyEntity<Entity>>(
+  private identify<Entity extends AnyEntity>(
     target: EventTarget<Entity>,
     event: EntityEvent,
   ) {
@@ -89,7 +89,7 @@ export class EntityEventManager {
   }
 }
 
-type EventTarget<Entity extends AnyEntity<Entity> = AnyEntity> =
+type EventTarget<Entity extends AnyEntity = AnyEntity> =
   | Entity
   | EntityType<Entity>
   | "any";

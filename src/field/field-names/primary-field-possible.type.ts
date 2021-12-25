@@ -3,7 +3,7 @@ import { AnyEntity } from "../../entity/any-entity.type";
 import { PrimaryKeyPossible } from "../field-values/primary-key-possible.type";
 import { EntityFieldBase } from "./entity-field-base.type";
 
-export type PrimaryFieldPossible<Entity extends AnyEntity<Entity>> = Extract<
+export type PrimaryFieldPossible<Entity extends AnyEntity> = Extract<
   EntityFieldBase<Entity>,
   {
     [Type in PrimaryKeyPossible]: MatchedKeys<Entity, Type>;

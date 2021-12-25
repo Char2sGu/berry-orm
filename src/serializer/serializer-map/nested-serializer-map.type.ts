@@ -3,7 +3,7 @@ import { EntityFromRelationFieldValue } from "../../entity/entity-from-relation-
 import { RelationField } from "../../field/field-names/relation-field.type";
 import { SerializerMap } from "./serializer-map.type";
 
-export type NestedSerializerMap<Entity extends AnyEntity<Entity>> =
+export type NestedSerializerMap<Entity extends AnyEntity> =
   SerializerMap<Entity> &
     {
       [Field in RelationField<Entity>]?: NestedSerializerMap<

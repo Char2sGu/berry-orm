@@ -5,7 +5,7 @@ import { BaseFieldAccessor } from "./base-field.accessor";
 import { FieldAccessDeniedError } from "./field-access-denied.error";
 
 export class PrimaryFieldAccessor<
-  Entity extends AnyEntity<Entity>,
+  Entity extends AnyEntity,
 > extends BaseFieldAccessor<Entity, PrimaryField<Entity>> {
   handleSet(newValue: PrimaryKey<Entity>): void {
     if (this.value)

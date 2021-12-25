@@ -8,7 +8,7 @@ export class IdentityMap {
 
   constructor(private orm: BerryOrm) {}
 
-  get<Entity extends AnyEntity<Entity>>(
+  get<Entity extends AnyEntity>(
     type: EntityType<Entity>,
     primaryKey: PrimaryKey<Entity>,
   ): Entity {
@@ -22,7 +22,7 @@ export class IdentityMap {
     return entity as Entity;
   }
 
-  set<Entity extends AnyEntity<Entity>>(
+  set<Entity extends AnyEntity>(
     type: EntityType<Entity>,
     primaryKey: PrimaryKey<Entity>,
     entity: Entity,
@@ -33,7 +33,7 @@ export class IdentityMap {
     return this;
   }
 
-  has<Entity extends AnyEntity<Entity>>(
+  has<Entity extends AnyEntity>(
     type: EntityType<Entity>,
     primaryKey: PrimaryKey<Entity>,
   ): boolean {
@@ -57,16 +57,14 @@ export class IdentityMap {
     yield* this.map[Symbol.iterator]();
   }
 
-  private identify<Entity extends AnyEntity<Entity>>(
+  private identify<Entity extends AnyEntity>(
     type: EntityType<Entity>,
     key: PrimaryKey<Entity>,
   ) {
     return `${type.name}:${key}` as const;
   }
 
-  private checkType<Entity extends AnyEntity<Entity>>(
-    type: EntityType<Entity>,
-  ) {
+  private checkType<Entity extends AnyEntity>(type: EntityType<Entity>) {
     if (!this.orm.registry.has(type as EntityType))
       throw new Error(`${type.name} is not a known entity type`);
   }

@@ -58,9 +58,7 @@ export class BerryOrm {
     });
   }
 
-  private inspectEntity<Entity extends AnyEntity<Entity>>(
-    type: EntityType<Entity>,
-  ) {
+  private inspectEntity<Entity extends AnyEntity>(type: EntityType<Entity>) {
     const meta = type.prototype[META];
 
     if (!meta?.completed)
@@ -71,7 +69,7 @@ export class BerryOrm {
     }
   }
 
-  private inspectEntityField<Entity extends AnyEntity<Entity>>(
+  private inspectEntityField<Entity extends AnyEntity>(
     type: EntityType<Entity>,
     field: EntityField<Entity>,
   ) {

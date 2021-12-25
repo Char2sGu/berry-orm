@@ -14,7 +14,7 @@ export class EntityRelationManager {
    * @param entity
    * @param field
    */
-  clearRelations<Entity extends AnyEntity<Entity>>(
+  clearRelations<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
   ): this {
@@ -43,7 +43,7 @@ export class EntityRelationManager {
    * @param field
    * @param targetEntity
    */
-  constructRelation<Entity extends AnyEntity<Entity>>(
+  constructRelation<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,
@@ -65,7 +65,7 @@ export class EntityRelationManager {
    * @param field
    * @param targetEntity
    */
-  destructRelation<Entity extends AnyEntity<Entity>>(
+  destructRelation<Entity extends AnyEntity>(
     entity: Entity,
     field: RelationField<Entity>,
     targetEntity: AnyEntity,

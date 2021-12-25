@@ -8,7 +8,7 @@ import { EntityMeta } from "../meta-objects/entity-meta.class";
 
 export const Field =
   () =>
-  <Entity extends AnyEntity<Entity>>(
+  <Entity extends AnyEntity>(
     prototype: Entity,
     field: EntityField<Entity>,
   ): void => {

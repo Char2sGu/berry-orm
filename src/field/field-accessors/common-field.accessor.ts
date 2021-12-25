@@ -3,6 +3,6 @@ import { CommonField } from "../field-names/common-field.type";
 import { BaseFieldAccessor } from "./base-field.accessor";
 
 export class CommonFieldAccessor<
-  Entity extends AnyEntity<Entity> = AnyEntity,
+  Entity extends AnyEntity = AnyEntity,
   Field extends CommonField<Entity> = CommonField<Entity>,
 > extends BaseFieldAccessor<Entity, Field> {}

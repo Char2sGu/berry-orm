@@ -49,7 +49,11 @@ export class EntityManager {
           entity[field] = serializer.deserialize(data[field] as any);
         }
       } else {
-        this.resolveRelation(entity, field, data[field]);
+        this.resolveRelation(
+          entity,
+          field,
+          data[field] as RelationFieldData<Entity, typeof field>,
+        );
       }
     }
 
@@ -68,7 +72,7 @@ export class EntityManager {
    * @returns
    */
   resolveRelation<
-    Entity extends AnyEntity<Entity>,
+    Entity extends AnyEntity,
     Field extends RelationField<Entity>,
   >(
     entity: Entity,
@@ -117,7 +121,7 @@ export class EntityManager {
    * @param expand
    */
   export<
-    Entity extends AnyEntity<Entity>,
+    Entity extends AnyEntity,
     Expansions extends EntityManagerExportExpansions<Entity> = EntityManagerExportExpansionsEmpty<Entity>,
     Serializers extends NestedSerializerMap<Entity> = NestedSerializerMapEmpty<Entity>,
   >(
@@ -148,9 +152,8 @@ export class EntityManager {
         }
       } else {
         if (!expansions?.[field]) {
-          const getPrimaryKey = <Entity extends AnyEntity<Entity>>(
-            entity: Entity,
-          ) => entity[entity[META].primary] as PrimaryKey<Entity>;
+          const getPrimaryKey = <Entity extends AnyEntity>(entity: Entity) =>
+            entity[entity[META].primary] as PrimaryKey<Entity>;
 
           if (FieldDiscriminator.isRelationFieldToOne(entity, field)) {
             data[field] = getPrimaryKey(entity[field] as AnyEntity);

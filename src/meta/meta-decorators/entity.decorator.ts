@@ -6,7 +6,7 @@ import { EntityMeta } from "../meta-objects/entity-meta.class";
 
 export const Entity =
   () =>
-  <Entity extends AnyEntity<Entity>>(type: EntityType<Entity>): void => {
+  <Entity extends AnyEntity>(type: EntityType<Entity>): void => {
     const meta = type.prototype[META] as EntityMeta<Entity> | undefined;
 
     if (!meta)

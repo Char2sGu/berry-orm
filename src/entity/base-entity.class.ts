@@ -33,7 +33,7 @@ import { EntityType } from "./entity-type.interface";
  * is defined getters so that the metadata can be accessed more conveniently.
  */
 export abstract class BaseEntity<
-  Entity extends BaseEntity<Entity, Primary>,
+  Entity extends AnyEntity<Entity>,
   Primary extends PrimaryFieldPossible<Entity>,
 > {
   private static init<Entity extends AnyEntity<Entity>>(
@@ -47,7 +47,7 @@ export abstract class BaseEntity<
     entity[entity[META].primary] = primaryKey;
   }
 
-  private static initField<Entity extends AnyEntity<Entity>>(
+  private static initField<Entity extends AnyEntity>(
     orm: BerryOrm,
     entity: Entity,
     field: EntityField<Entity>,

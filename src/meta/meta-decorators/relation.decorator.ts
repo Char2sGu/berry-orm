@@ -9,15 +9,12 @@ import { EntityMeta } from "../meta-objects/entity-meta.class";
 import { EntityRelationMeta } from "../meta-objects/entity-relation-meta.class";
 
 export const Relation =
-  <
-    TargetEntity extends AnyEntity<TargetEntity>,
-    Multi extends boolean = false,
-  >(options: {
+  <TargetEntity extends AnyEntity, Multi extends boolean = false>(options: {
     target: () => EntityType<TargetEntity>;
     inverse: RelationField<TargetEntity>;
     multi?: Multi;
   }) =>
-  <Entity extends AnyEntity<Entity>>(
+  <Entity extends AnyEntity>(
     prototype: Entity,
     field: Multi extends true
       ? RelationFieldToMany<Entity>

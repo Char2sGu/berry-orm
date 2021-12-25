@@ -4,6 +4,8 @@
 
 A lightweight ORM with **_❗SUPER AWESOME TYPINGS❗_**
 
+> **The types currently only apply to TypeScript 4.3 and 4.4.**
+
 ```sh
 npm i berry-orm
 ```

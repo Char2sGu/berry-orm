@@ -2,7 +2,7 @@ import { BerryOrm } from "../core/berry-orm.class";
 import { PrimaryKey } from "../field/field-values/primary-key.type";
 import { AnyEntity } from "./any-entity.type";
 
-export interface EntityType<Entity extends AnyEntity = AnyEntity> {
+export interface EntityType<Entity extends AnyEntity<Entity> = AnyEntity> {
   new (orm: BerryOrm, primaryKey: PrimaryKey<Entity>): Entity;
   prototype: Entity;
 }

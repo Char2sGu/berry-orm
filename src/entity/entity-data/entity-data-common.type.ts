@@ -7,7 +7,7 @@ import { SerializerType } from "../../serializer/serializer-type.interface";
 import { AnyEntity } from "../any-entity.type";
 
 export type EntityDataCommon<
-  Entity extends AnyEntity,
+  Entity extends AnyEntity<Entity>,
   Serializers extends SerializerMap<Entity> = SerializerMapEmpty<Entity>,
 > = {
   [Field in

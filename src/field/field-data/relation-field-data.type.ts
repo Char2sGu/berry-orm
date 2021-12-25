@@ -10,7 +10,7 @@ export type RelationFieldData<
 > = Entity[Field] extends AnyEntity
   ? EntityRepresentation<Entity[Field]> | EmptyValue
   : Entity[Field] extends Collection<infer E>
-  ? E extends AnyEntity
+  ? E extends AnyEntity<E>
     ? EntityRepresentation<E>[]
     : never
   : never;

@@ -18,7 +18,7 @@ Don't worry about the type error. It is an intentional behavior because the prim
 
 ::: tip Recommended Practices
 
-- Write a `@Entity()` at the very beginning to have a type error when forgetting to extend the `BaseEntity`.
+- Write a `@Entity()` at the very beginning to have a type error when the entity class is defined incorrectly.
 - Define entities in separate files to avoid potential issues caused by circular references. (e.g. `src/entities/user.entity.ts`)
 
 :::
@@ -99,11 +99,11 @@ In the code above, we defined a relation field in the `Book` class with `multi` 
 
 ::: tip Recommended Practices
 
-Use the optional operator `?` instead of the non-nullable operator `!`, because it may be `undefined` if there is no plain data object specifying its relation, and what's more, we can assign an `undefined` to the field to destruct its relation, which will be talked about in [Accessing Fields](./accessing-fields.html#relation-fields)
+Use the optional operator `?` instead of the non-nullable operator `!`. Because values of such relation fields may be `undefined` if there is no plain data object specifying its relation, and what's more, we can assign an `undefined` to the field to destruct its relation, which will be talked about in [Accessing Fields](./accessing-fields.html#relation-fields)
 
 :::
 
-The value of `inverse` should be a field of the target entity which points back to this entity. And of course, it is strictly typed, with value limited and auto-completion enabled.
+The value of `inverse` should be a relation field of the target entity class which points back to this entity class. And of course, it is strictly typed, with value limited and auto-completion enabled.
 
 ```ts {2,4}
 // class Author
@@ -129,13 +129,13 @@ _ToMany_ relation fields should have a `Collection` type and will be automatical
 ::: warning
 
 - There will be an `EntityMetaError` when `@Relation()` is applied before(below) `@Field()` or is applied for multiple times on one field.
-- There will be a type error unless `@Relation()` is applied to a field with type `Collection<...>` matching the specified `target`.
+- There will be a type error unless `@Relation()` is applied to a field with type `Collection<...>` matching the `target` option specified.
 
 :::
 
 ## Accessors and Methods
 
-You can define **accessors** and **methods** to move some logic here.
+You can define accessors and methods on entity classes.
 
 ```ts
 get fullName() {

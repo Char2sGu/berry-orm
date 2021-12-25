@@ -52,6 +52,7 @@ module.exports = {
               "/zh/guide/defining-entities",
               "/zh/guide/preparing-the-orm",
               "/zh/guide/resolving-data",
+              "/zh/guide/accessing-fields",
             ],
           },
           {

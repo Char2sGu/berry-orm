@@ -3,9 +3,9 @@ import { AnyEntity } from "../../entity/any-entity.type";
 
 export class Collection<Entity extends AnyEntity> extends Set<Entity> {
   constructor(
-    private orm: BerryOrm,
-    private owner: AnyEntity,
-    private field: string,
+    readonly orm: BerryOrm,
+    readonly owner: AnyEntity,
+    readonly field: string,
   ) {
     super();
   }

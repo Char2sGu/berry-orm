@@ -22,7 +22,7 @@ import { EntityManagerExportExpansions } from "./entity-manager-export-expansion
 import { EntityManagerExportExpansionsEmpty } from "./entity-manager-export-expansions-empty.type";
 
 export class EntityManager {
-  constructor(private orm: BerryOrm) {}
+  constructor(readonly orm: BerryOrm) {}
 
   resolve<
     Entity extends AnyEntity<Entity>,

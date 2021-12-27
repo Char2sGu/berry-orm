@@ -6,7 +6,7 @@ import { BerryOrm } from "./berry-orm.class";
 export class IdentityMap {
   private map = new Map<string, AnyEntity>();
 
-  constructor(private orm: BerryOrm) {}
+  constructor(readonly orm: BerryOrm) {}
 
   get<Entity extends AnyEntity>(
     type: EntityType<Entity>,

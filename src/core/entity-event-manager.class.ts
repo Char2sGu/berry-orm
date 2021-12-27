@@ -13,7 +13,7 @@ type Listener<Entity extends AnyEntity> = (entity: Entity) => void;
 export class EntityEventManager {
   private emitter = new EventEmitter();
 
-  constructor(private orm: BerryOrm) {}
+  constructor(readonly orm: BerryOrm) {}
 
   on<Entity extends AnyEntity>(
     target: EventTarget<Entity>,

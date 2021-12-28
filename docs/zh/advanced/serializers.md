@@ -41,7 +41,7 @@ typeof data.joinedAt; // "string"
 
 ::: tip
 
-`orm.em.export()` 的返回值类型时动态的，基于你所指定的 `serializers` 参数。
+`orm.em.export()` 的返回值类型是动态的，基于你所指定的 `serializers` 参数。
 
 :::
 

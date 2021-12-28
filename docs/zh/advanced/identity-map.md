@@ -71,7 +71,7 @@ orm3.version; // 4
 const orm = new BerryOrm({ entities: [Book] });
 const book1 = orm.resolve(Book, { id: 1 });
 orm.reset();
-const book2 = ormChild.resolve(Book, { id: 1 });
+const book2 = orm.resolve(Book, { id: 1 });
 
 book1 == book2; // false，因为它们来自不同的 `IdentityMap` 实例
 book1[VERSION]; // 1

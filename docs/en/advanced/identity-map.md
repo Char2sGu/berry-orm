@@ -71,7 +71,7 @@ When an entity is instantiated, its ORM instance's current version will be store
 const orm = new BerryOrm({ entities: [Book] });
 const book1 = orm.resolve(Book, { id: 1 });
 orm.reset();
-const book2 = ormChild.resolve(Book, { id: 1 });
+const book2 = orm.resolve(Book, { id: 1 });
 
 book1 == book2; // false because they are from different `IdentityMap`s
 book1[VERSION]; // 1

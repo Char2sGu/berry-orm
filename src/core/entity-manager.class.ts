@@ -4,7 +4,6 @@ import { EntityDataExported } from "../entity/entity-data/entity-data-exported.t
 import { EntityRepresentation } from "../entity/entity-representation.type";
 import { EntityType } from "../entity/entity-type.interface";
 import { RelationFieldData } from "../field/field-data/relation-field-data.type";
-import { FieldDiscriminator } from "../field/field-discriminator.class";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { RelationField } from "../field/field-names/relation-field.type";
 import { Collection } from "../field/field-values/collection.class";
@@ -38,9 +37,9 @@ export class EntityManager {
     for (const k in entity[META].fields) {
       const field = k as EntityField<Entity>;
       if (!(field in data)) continue;
-      if (FieldDiscriminator.isPrimaryField(entity, field)) continue;
+      if (this.orm.discriminator.isPrimaryField(entity, field)) continue;
 
-      if (!FieldDiscriminator.isRelationField(entity, field)) {
+      if (!this.orm.discriminator.isRelationField(entity, field)) {
         if (!serializers || !(field in serializers)) {
           entity[field] = data[field] as Entity[typeof field];
         } else {
@@ -84,7 +83,7 @@ export class EntityManager {
     if (!data) return;
 
     const representations = (
-      FieldDiscriminator.isRelationFieldToOne(entity, field) ? [data] : data
+      this.orm.discriminator.isRelationFieldToOne(entity, field) ? [data] : data
     ) as EntityRepresentation<Entity>[];
 
     representations.forEach((data) => {
@@ -139,7 +138,7 @@ export class EntityManager {
     for (const k in meta.fields) {
       const field = k as EntityField<Entity>;
 
-      if (!FieldDiscriminator.isRelationField(entity, field)) {
+      if (!this.orm.discriminator.isRelationField(entity, field)) {
         const serializerType = serializers?.[
           field
         ] as SerializerType<AbstractSerializer>;
@@ -155,7 +154,7 @@ export class EntityManager {
           const getPrimaryKey = <Entity extends AnyEntity>(entity: Entity) =>
             entity[entity[META].primary] as PrimaryKey<Entity>;
 
-          if (FieldDiscriminator.isRelationFieldToOne(entity, field)) {
+          if (this.orm.discriminator.isRelationFieldToOne(entity, field)) {
             data[field] = getPrimaryKey(entity[field] as AnyEntity);
           } else {
             const collection = entity[field] as Collection<AnyEntity>;
@@ -175,7 +174,7 @@ export class EntityManager {
             );
           };
 
-          if (FieldDiscriminator.isRelationFieldToOne(entity, field)) {
+          if (this.orm.discriminator.isRelationFieldToOne(entity, field)) {
             data[field] = exportNested(
               entity[field] as AnyEntity,
             ) as typeof data[typeof field];

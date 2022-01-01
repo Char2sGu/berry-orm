@@ -1,3 +1,4 @@
+import { BerryOrm } from "../core/berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
 import { META } from "../symbols";
 import { CommonField } from "./field-names/common-field.type";
@@ -8,14 +9,16 @@ import { RelationFieldToMany } from "./field-names/relation-field-to-many.type";
 import { RelationFieldToOne } from "./field-names/relation-field-to-one.type";
 
 export class FieldDiscriminator {
-  static isPrimaryField<Entity extends AnyEntity>(
+  constructor(readonly orm: BerryOrm) {}
+
+  isPrimaryField<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is PrimaryField<Entity> {
     return entity[META].primary == field;
   }
 
-  static isCommonField<Entity extends AnyEntity>(
+  isCommonField<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is CommonField<Entity> {
@@ -25,14 +28,14 @@ export class FieldDiscriminator {
     );
   }
 
-  static isRelationField<Entity extends AnyEntity>(
+  isRelationField<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is RelationField<Entity> {
     return !!entity[META].fields[field].relation;
   }
 
-  static isRelationFieldToOne<Entity extends AnyEntity>(
+  isRelationFieldToOne<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is RelationFieldToOne<Entity> {
@@ -42,7 +45,7 @@ export class FieldDiscriminator {
     );
   }
 
-  static isRelationFieldToMany<Entity extends AnyEntity>(
+  isRelationFieldToMany<Entity extends AnyEntity>(
     entity: Entity,
     field: EntityField<Entity>,
   ): field is RelationFieldToMany<Entity> {

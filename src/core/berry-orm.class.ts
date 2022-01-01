@@ -1,5 +1,6 @@
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.interface";
+import { FieldDiscriminator } from "../field/field-discriminator.class";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { EntityMetaError } from "../meta/entity-meta.error";
 import { META } from "../symbols";
@@ -18,6 +19,7 @@ export class BerryOrm {
   readonly erm = new EntityRelationManager(this);
   readonly eem = new EntityEventManager(this);
   readonly map = new IdentityMap(this);
+  readonly discriminator = new FieldDiscriminator(this);
 
   constructor(options: BerryOrmOptions) {
     this.registry = new Set(options.entities);

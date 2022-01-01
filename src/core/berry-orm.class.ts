@@ -1,12 +1,12 @@
 import { AnyEntity } from "../entity/any-entity.type";
 import { EntityType } from "../entity/entity-type.interface";
+import { FieldDiscriminator } from "../field/field-discriminator.class";
 import { EntityField } from "../field/field-names/entity-field.type";
 import { EntityMetaError } from "../meta/entity-meta.error";
 import { META } from "../symbols";
 import { EntityEventManager } from "./entity-event-manager.class";
 import { EntityManager } from "./entity-manager.class";
 import { EntityRelationManager } from "./entity-relation-manager.class";
-import { FieldDiscriminator } from "./field-discriminator.class";
 import { IdentityMap } from "./identity-map.class";
 
 export class BerryOrm {

@@ -1,12 +1,12 @@
+import { BerryOrm } from "../core/berry-orm.class";
 import { AnyEntity } from "../entity/any-entity.type";
-import { CommonField } from "../field/field-names/common-field.type";
-import { EntityField } from "../field/field-names/entity-field.type";
-import { PrimaryField } from "../field/field-names/primary-field.type";
-import { RelationField } from "../field/field-names/relation-field.type";
-import { RelationFieldToMany } from "../field/field-names/relation-field-to-many.type";
-import { RelationFieldToOne } from "../field/field-names/relation-field-to-one.type";
 import { META } from "../symbols";
-import { BerryOrm } from "./berry-orm.class";
+import { CommonField } from "./field-names/common-field.type";
+import { EntityField } from "./field-names/entity-field.type";
+import { PrimaryField } from "./field-names/primary-field.type";
+import { RelationField } from "./field-names/relation-field.type";
+import { RelationFieldToMany } from "./field-names/relation-field-to-many.type";
+import { RelationFieldToOne } from "./field-names/relation-field-to-one.type";
 
 export class FieldDiscriminator {
   constructor(readonly orm: BerryOrm) {}

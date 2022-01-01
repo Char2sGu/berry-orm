@@ -7,7 +7,7 @@ import { META } from "../symbols";
 import { BerryOrm } from "./berry-orm.class";
 
 export class EntityRelationManager {
-  constructor(private orm: BerryOrm) {}
+  constructor(readonly orm: BerryOrm) {}
 
   /**
    * Destruct any bilateral relation on the specified field of the entity.

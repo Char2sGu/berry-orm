@@ -15,15 +15,17 @@ export class BerryOrm {
   readonly parent?: BerryOrm;
   readonly registry: Set<EntityType>;
   readonly version = BerryOrm.nextVersion++;
-  readonly em = new EntityManager(this);
-  readonly erm = new EntityRelationManager(this);
-  readonly eem = new EntityEventManager(this);
-  readonly map = new IdentityMap(this);
-  readonly discriminator = new FieldDiscriminator(this);
+
+  readonly em!: EntityManager;
+  readonly erm!: EntityRelationManager;
+  readonly eem!: EntityEventManager;
+  readonly map!: IdentityMap;
+  readonly discriminator!: FieldDiscriminator;
 
   constructor(options: BerryOrmOptions) {
     this.registry = new Set(options.entities);
     this.inspect();
+    this.provide();
   }
 
   fork(): BerryOrm {
@@ -31,11 +33,7 @@ export class BerryOrm {
     orm.define("parent", this);
     orm.define("registry", this.registry);
     orm.define("version", BerryOrm.nextVersion++);
-    orm.define("em", new EntityManager(orm));
-    orm.define("erm", new EntityRelationManager(orm));
-    orm.define("eem", new EntityEventManager(orm));
-    orm.define("map", new IdentityMap(orm));
-    orm.define("discriminator", new FieldDiscriminator(orm));
+    orm.provide();
     return orm;
   }
 
@@ -49,6 +47,14 @@ export class BerryOrm {
     this.eem.off();
     this.define("version", BerryOrm.nextVersion++);
     return this;
+  }
+
+  private provide() {
+    this.define("em", new EntityManager(this));
+    this.define("erm", new EntityRelationManager(this));
+    this.define("eem", new EntityEventManager(this));
+    this.define("map", new IdentityMap(this));
+    this.define("discriminator", new FieldDiscriminator(this));
   }
 
   private inspect() {

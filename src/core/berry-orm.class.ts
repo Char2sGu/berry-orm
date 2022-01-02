@@ -35,6 +35,7 @@ export class BerryOrm {
     orm.define("erm", new EntityRelationManager(orm));
     orm.define("eem", new EntityEventManager(orm));
     orm.define("map", new IdentityMap(orm));
+    orm.define("discriminator", new FieldDiscriminator(orm));
     return orm;
   }
 

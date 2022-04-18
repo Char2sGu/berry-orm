@@ -2,25 +2,117 @@
 
 [中文](./README_zh.md)
 
-A lightweight ORM with **_❗SUPER AWESOME TYPINGS❗_**
+A pure ORM that takes full advantage of TypeScript's type system.
 
 ```sh
 npm i berry-orm
 ```
 
-**NOTE!** Berry ORM is a generic object relation mapper that is only responsible for mapping relations and you can freely combine it with other data management solutions.
+> **Tested TypeScript Compiler Version: 4.1/4.2/4.3/4.4/4.5**
 
-> **Requires: TypeScript 4.1/4.2/4.3/4.4/4.5**
+# Why? What for?
 
-# Basic Usage
+Berry ORM is a **pure** ORM designed mainly for type-safe Web frontend development. It only focuses on mapping data to class instances, no database, no query.
 
-## Defining Entities
+Wait, frontend? Why we need an ORM for frontend?
 
-<details>
+## The Issue
+
+Let's say we have two entities at our backend:
+
+```ts
+interface User {
+  id: number;
+  name: string;
+  posts: Post[];
+}
+
+interface Post {
+  id: number;
+  owner: User;
+  title: string;
+}
+```
+
+And we have an API `/users` that returns a list of user data:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Charles",
+    "posts": [
+      { "id": 1, "title": "Hello" },
+      { "id": 2, "title": "World" }
+    ]
+  }
+]
+```
+
+How would we process the data at the frontend?
+
+Since the `owner` field of `Post` doesn't exist, we cannot simply copy the entity type from the backend, so maybe we could adjust the interface and simply store it without any processing:
+
+```ts
+interface User {
+  id: number;
+  name: string;
+  posts: Post[];
+}
+
+interface Post {
+  id: number;
+  title: string;
+  // owner: User;
+}
+```
+
+This works, but we loss the ability to access the inverse relation from posts:
+
+```ts
+user.posts[0].owner;
+```
+
+What's more, what if we call an API elsewhere that returns the data of the updated post?
+
+```json
+{ "id": 1, "title": "Hello!!!" }
+```
+
+Yes, there would be two objects storing different data for one post. Data inconsistencies can occur.
+
+Now let's consider another API `/posts` that returns a list of post data:
+
+```json
+[
+  {
+    "id": 1,
+    "owner": { "id": 1, "name": "Charles" },
+    "title": "Hello"
+  },
+  {
+    "id": 2,
+    "owner": { "id": 1, "name": "Charles" },
+    "title": "World"
+  }
+]
+```
+
+Now the `owner` field of `Post` is back, while the `posts` field of `User` is gone.
+
+How should we define the interfaces?
+
+We can repeat ourselves by defining another two interfaces, or we can make a mess by using utility types `Pick` and `Omit` everywhere.
+
+## The Solution
+
+Berry ORM is here!
+
+With Berry ORM, we can define the schema of the entities just like at the backend:
 
 ```ts
 @Entity()
-class Book extends BaseEntity<Book, "id"> {
+class User extends BaseEntity<User, "id"> {
   @Primary()
   @Field()
   id!: number;
@@ -28,83 +120,62 @@ class Book extends BaseEntity<Book, "id"> {
   @Field()
   name!: string;
 
-  @Relation({
-    target: () => Author,
-    inverse: "books",
-  })
+  @Relation({ target: () => Post, inverse: "owner", multi: true })
   @Field()
-  author!: Author;
+  posts!: Collection<Post>;
 }
 
 @Entity()
-class Author extends BaseEntity<Author, "id"> {
+class Post extends BaseEntity<Post, "id"> {
   @Primary()
   @Field()
   id!: number;
 
+  @Relation({ target: () => User, inverse: "posts" })
   @Field()
-  name!: string;
+  owner?: User;
 
-  @Relation({
-    target: () => Book,
-    inverse: "author",
-    multi: true,
-  })
   @Field()
-  books!: Collection<Book>;
+  title!: string;
 }
 ```
 
-</details>
-
-![](./res/defining-entities.gif)
-
-## Resolving Data
+You never have to worry about relational fields again:
 
 ```ts
-const orm = new BerryOrm({ entities: [Book, Author] });
-
-const book1 = orm.em.resolve(Book, {
+const user = orm.em.resolve(User, {
   id: 1,
-  name: "1000 Ways to Code",
-  author: 1,
+  name: "Charles",
+  posts: [
+    { id: 1, title: "Hello" },
+    { id: 2, title: "World" },
+  ],
 });
-
-book1[RESOLVED]; // true
-book1.author[RESOLVED]; // false
-
-const book2 = orm.em.resolve(Book, {
-  id: 2,
-  name: "2000 Ways to Code",
-  author: { id: 1, name: "Char2s" },
-});
-
-book2[RESOLVED]; // true
-book2.author[RESOLVED]; // true
-
-book1.author == book2.author; // true
 ```
 
-## Exporting Entities
-
-<details>
+Berry ORM will flatten the nested data, construct the missing relations and ensure that there is only one object for one entity.
 
 ```ts
-const orm = new BerryOrm({ entities: [Book, Author] });
-
-const book = orm.em.resolve(Book, {
-  id: 1,
-  name: "1000 Ways to Code",
-  author: { id: 1, name: "Char2s" },
-});
-
-const data = orm.em.export(book, { author: { books: { author: true } } });
-data.author.books[0].author.
+for (const post of user.posts) {
+  console.log(post.owner == user); // true
+}
 ```
 
-</details>
+```ts
+user.posts.clear();
+for (const post of user.posts) {
+  console.log(post.owner); // undefined
+}
+```
 
-![](./res/exporting-entities.gif)
+```ts
+user.name = "Berry";
+for (const post of user.posts) {
+  console.log(post.owner.name); // "Berry"
+}
+```
+
+If you have read until here, it's time to give it a try!
 
 # Documents
 
